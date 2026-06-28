@@ -1,0 +1,135 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 1,
+ "autoname": "field:cost_entry_code",
+ "creation": "2026-06-28 14:50:30.085578",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_t9sd",
+  "amended_from",
+  "cost_entry_code",
+  "cost_entry_date",
+  "cost_entry_category",
+  "cost_entry_description",
+  "cost_entry_currency",
+  "cost_entry_exchange_rate",
+  "cost_entry_foreign_amount",
+  "cost_entry_base_currency",
+  "cost_entry_base_amount"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_t9sd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Cost Entry",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "cost_entry_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "\u0634\u0646\u0627\u0633\u0647",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "cost_entry_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "\u062a\u0627\u0631\u06cc\u062e \u0647\u0632\u06cc\u0646\u0647",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cost_entry_category",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "\u0646\u0648\u0639 \u0647\u0632\u06cc\u0646\u0647",
+   "options": "Cost Category",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cost_entry_description",
+   "fieldtype": "Small Text",
+   "label": "\u0634\u0631\u062d"
+  },
+  {
+   "fieldname": "cost_entry_currency",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "\u0627\u0631\u0632",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cost_entry_exchange_rate",
+   "fieldtype": "Currency",
+   "label": "\u0646\u0631\u062e \u0627\u0631\u0632",
+   "length": 10,
+   "precision": "2",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cost_entry_foreign_amount",
+   "fieldtype": "Currency",
+   "label": "\u0645\u0628\u0644\u063a \u0627\u0631\u0632",
+   "length": 30,
+   "precision": "2",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cost_entry_base_currency",
+   "fieldtype": "Link",
+   "label": "\u0627\u0631\u0632 \u067e\u0627\u06cc\u0647",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cost_entry_base_amount",
+   "fieldtype": "Currency",
+   "label": "\u0645\u0628\u0644\u063a \u067e\u0627\u06cc\u0647",
+   "length": 30,
+   "precision": "2",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-06-28 15:42:09.271792",
+ "modified_by": "Administrator",
+ "module": "Vehicle Import",
+ "name": "Cost Entry",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

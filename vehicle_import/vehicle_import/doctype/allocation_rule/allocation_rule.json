@@ -1,0 +1,85 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 1,
+ "autoname": "field:allocation_rule_code",
+ "creation": "2026-06-28 14:08:56.071950",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_1ctb",
+  "allocation_rule_code",
+  "allocation_rule_title",
+  "allocation_rule_description",
+  "allocation_python_class",
+  "allocation_rule_active"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_1ctb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "allocation_rule_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "allocation_rule_code",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "allocation_rule_title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "allocation_rule_title",
+   "reqd": 1,
+   "translatable": 1
+  },
+  {
+   "fieldname": "allocation_rule_description",
+   "fieldtype": "Small Text",
+   "label": "allocation_rule_description"
+  },
+  {
+   "fieldname": "allocation_python_class",
+   "fieldtype": "Data",
+   "label": "allocation_python_class"
+  },
+  {
+   "default": "1",
+   "fieldname": "allocation_rule_active",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "allocation_rule_active",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-06-28 14:44:53.281341",
+ "modified_by": "Administrator",
+ "module": "Vehicle Import",
+ "name": "Allocation Rule",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
