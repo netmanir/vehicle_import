@@ -1,18 +1,20 @@
 {
  "actions": [],
  "allow_bulk_edit": 1,
- "allow_rename": 1,
- "autoname": "field:cost_entry_code",
+ "autoname": "UUID",
  "creation": "2026-06-28 14:50:30.085578",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "section_break_t9sd",
   "amended_from",
-  "cost_entry_code",
   "cost_entry_date",
-  "cost_entry_category",
+  "cost_entry_cost_category",
   "cost_entry_description",
+  "\u0627\u0637\u0644\u0627\u0639\u0627\u062a_\u0645\u0646\u0628\u0639_section",
+  "cost_entry_source_type",
+  "cost_entry_source_name",
+  "\u0627\u0637\u0644\u0627\u0639\u0627\u062a_\u0645\u0627\u0644\u06cc_section",
   "cost_entry_currency",
   "cost_entry_exchange_rate",
   "cost_entry_foreign_amount",
@@ -22,7 +24,8 @@
  "fields": [
   {
    "fieldname": "section_break_t9sd",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "\u0627\u0637\u0644\u0627\u0639\u0627\u062a \u067e\u0627\u06cc\u0647"
   },
   {
    "fieldname": "amended_from",
@@ -35,26 +38,10 @@
    "search_index": 1
   },
   {
-   "fieldname": "cost_entry_code",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "\u0634\u0646\u0627\u0633\u0647",
-   "reqd": 1,
-   "unique": 1
-  },
-  {
    "fieldname": "cost_entry_date",
    "fieldtype": "Date",
    "in_list_view": 1,
    "label": "\u062a\u0627\u0631\u06cc\u062e \u0647\u0632\u06cc\u0646\u0647",
-   "reqd": 1
-  },
-  {
-   "fieldname": "cost_entry_category",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "\u0646\u0648\u0639 \u0647\u0632\u06cc\u0646\u0647",
-   "options": "Cost Category",
    "reqd": 1
   },
   {
@@ -100,17 +87,48 @@
    "length": 30,
    "precision": "2",
    "reqd": 1
+  },
+  {
+   "fieldname": "cost_entry_cost_category",
+   "fieldtype": "Link",
+   "label": "\u0646\u0648\u0639 \u0647\u0632\u06cc\u0646\u0647",
+   "options": "Cost Category",
+   "reqd": 1
+  },
+  {
+   "fieldname": "\u0627\u0637\u0644\u0627\u0639\u0627\u062a_\u0645\u0646\u0628\u0639_section",
+   "fieldtype": "Section Break",
+   "label": "\u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0645\u0646\u0628\u0639"
+  },
+  {
+   "fieldname": "cost_entry_source_type",
+   "fieldtype": "Link",
+   "label": "\u0646\u0648\u0639 \u0645\u0646\u0628\u0639",
+   "options": "DocType",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cost_entry_source_name",
+   "fieldtype": "Dynamic Link",
+   "label": "\u0646\u0627\u0645 \u0645\u0646\u0628\u0639",
+   "options": "cost_entry_source_type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "\u0627\u0637\u0644\u0627\u0639\u0627\u062a_\u0645\u0627\u0644\u06cc_section",
+   "fieldtype": "Section Break",
+   "label": "\u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0645\u0627\u0644\u06cc"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-06-28 15:42:09.271792",
+ "modified": "2026-06-29 13:27:10.671263",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Cost Entry",
- "naming_rule": "By fieldname",
+ "naming_rule": "UUID",
  "owner": "Administrator",
  "permissions": [
   {
