@@ -5,3 +5,14 @@
 "VAT", "ارزش افزوده"
 "INSURANCE", "بیمه"
 "FREIGHT", "باربری"
+
+"Row", "ردیف"
+"Validation completed successfully.", "اعتبارسنجی با موفقیت انجام شد."
+"Invalid VIN.", "VIN نامعتبر."
+"Duplicate VIN.", "VIN تکراری."
+"Assign VINs", "اختصاص VIN"
+"VINs", "VINها"
+"Enter one VIN per line.", "یک VIN در هر سطر وارد کنید."
+"Assign", "اختصاص"
+"Assigning VINs...", "در حال اختصاص VINها ..."
+

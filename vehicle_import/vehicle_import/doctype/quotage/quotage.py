@@ -4,7 +4,7 @@
 import frappe
 from frappe.model.document import Document
 from frappe.desk.search import validate_and_sanitize_search_inputs
-
+from vehicle_import.vehicle_import.services.quotage_service import QuotageService
 
 class Quotage(Document):
     pass
@@ -59,3 +59,16 @@ def get_quotage_detail(name):
         "product": doc.quotage_detail_product,
         "qty": doc.quotage_detail_quantity,
     }
+
+@frappe.whitelist()
+def assign_vins(
+    quotage,
+    quotage_detail,
+    vins,
+):
+
+    return QuotageService().assign_vins(
+        quotage_name=quotage,
+        quotage_detail_name=quotage_detail,
+        vins_text=vins,
+    )

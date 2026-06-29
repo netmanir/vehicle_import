@@ -85,7 +85,29 @@ function open_assign_vins_dialog(frm) {
 
         primary_action(values) {
 
-            console.log(values);
+            frappe.call({
+
+                method: "vehicle_import.vehicle_import.doctype.quotage.quotage.assign_vins",
+
+                args: {
+
+                    quotage: frm.doc.name,
+                    quotage_detail: values.quotage_detail,
+                    vins: values.vins,
+
+                },
+
+                freeze: true,
+                freeze_message: __("Assigning VINs..."),
+
+                callback() {
+
+                    dialog.hide();
+                    frm.reload_doc();
+
+                },
+
+            });
 
         },
 
