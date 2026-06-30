@@ -122,16 +122,17 @@
   {
    "fieldname": "quotage_packing_list",
    "fieldtype": "Table",
+   "in_filter": 1,
+   "in_standard_filter": 1,
    "label": "\u067e\u06a9\u06cc\u0646\u06af \u0644\u06cc\u0633\u062a",
    "options": "Quotage Packing List",
-   "read_only": 1,
    "search_index": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-06-30 14:41:12.372446",
+ "modified": "2026-06-30 15:53:16.410041",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Quotage",
@@ -147,6 +148,29 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Stock Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Stock User",
    "share": 1,
    "write": 1
   }

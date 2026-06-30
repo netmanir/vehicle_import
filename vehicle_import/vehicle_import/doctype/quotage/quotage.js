@@ -10,8 +10,28 @@ frappe.form.link_formatters["Quotage Detail"] = function (value, doc) {
     return `${detail.quotage_detail_product}`;
 };
 
+function can_edit_quotage_children() {
+    return (
+        frappe.user.has_role("System Manager")
+        || frappe.user.has_role("Stock Manager")
+    );
+}
+
+const editable = can_edit_quotage_children();
+
 frappe.ui.form.on("Quotage", {
     refresh(frm) {
+        frm.set_df_property(
+            "quotage_products",
+            "read_only",
+            !editable
+        );
+
+        frm.set_df_property(
+            "quotage_packing_list",
+            "read_only",
+            !editable
+        );
 
         if (frm.is_new()) return;
 
