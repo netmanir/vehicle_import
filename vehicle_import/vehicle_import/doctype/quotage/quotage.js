@@ -1,6 +1,15 @@
 // Copyright (c) 2026, ACP and contributors
 // For license information, please see license.txt
 
+frappe.form.link_formatters["Quotage Detail"] = function (value, doc) {
+
+    const detail = (cur_frm.doc.quotage_products || []).find(
+        d => String(d.name) === String(value)
+    );
+
+    return `${detail.quotage_detail_product}`;
+};
+
 frappe.ui.form.on("Quotage", {
     refresh(frm) {
 
@@ -12,8 +21,8 @@ frappe.ui.form.on("Quotage", {
                 open_assign_vins_dialog(frm);
             }
         );
-
     }
+
 });
 
 function open_assign_vins_dialog(frm) {
@@ -41,20 +50,27 @@ function open_assign_vins_dialog(frm) {
                     }
 
                     frappe.call({
-                        method: "vehicle_import.vehicle_import.doctype.quotage.quotage.get_quotage_detail",
+                        method:
+                            "vehicle_import.vehicle_import.doctype.quotage.quotage.get_quotage_detail",
+
                         args: {
                             name: name,
                         },
+
                         callback(r) {
 
-                            dialog.fields_dict.selected_product.$wrapper.html(
-                                `<div class="mb-3">
-                                    <strong>${r.message.product}</strong>
-                                    (${r.message.qty})
-                                </div>`
-                            );
+                            if (!r.message) return;
 
-                        }
+                            dialog.fields_dict.selected_product.$wrapper.html(`
+                <div class="mb-3">
+                    <b>${__("Selected Product")}:</b>
+                    ${frappe.utils.escape_html(r.message.product)}
+                    (${r.message.qty})
+                </div>
+            `);
+
+                        },
+
                     });
 
                 }
@@ -86,24 +102,45 @@ function open_assign_vins_dialog(frm) {
         primary_action(values) {
 
             frappe.call({
-
-                method: "vehicle_import.vehicle_import.doctype.quotage.quotage.assign_vins",
-
-                args: {
-
-                    quotage: frm.doc.name,
-                    quotage_detail: values.quotage_detail,
-                    vins: values.vins,
-
-                },
+                method:
+                    "vehicle_import.vehicle_import.doctype.quotage.quotage.assign_vins",
 
                 freeze: true,
                 freeze_message: __("Assigning VINs..."),
 
-                callback() {
+                args: {
+                    quotage: frm.doc.name,
+                    quotage_detail: values.quotage_detail,
+                    vins: values.vins,
+                },
+
+                callback(r) {
+
+                    if (!r.message) {
+                        return;
+                    }
+
+                    if (!r.message.success) {
+
+                        frappe.msgprint({
+                            title: __("Validation Errors"),
+                            indicator: "red",
+                            message: r.message.errors.join("<br>"),
+                        });
+
+                        frm.reload_doc();
+
+                        return;
+                    }
 
                     dialog.hide();
+
                     frm.reload_doc();
+
+                    frappe.show_alert({
+                        message: __("VINs assigned successfully."),
+                        indicator: "green",
+                    });
 
                 },
 

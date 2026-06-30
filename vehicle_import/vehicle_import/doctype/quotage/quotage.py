@@ -20,7 +20,6 @@ def quotage_detail_query(
     page_len,
     filters,
 ):
-
     return frappe.db.sql(
         """
         SELECT
@@ -52,13 +51,20 @@ def quotage_detail_query(
 
 @frappe.whitelist()
 def get_quotage_detail(name):
-
-    doc = frappe.get_doc("Quotage Detail", name)
+    product, qty = frappe.db.get_value(
+        "Quotage Detail",
+        name,
+        [
+            "quotage_detail_product",
+            "quotage_detail_quantity",
+        ],
+    )
 
     return {
-        "product": doc.quotage_detail_product,
-        "qty": doc.quotage_detail_quantity,
+        "product": product,
+        "qty": qty,
     }
+
 
 @frappe.whitelist()
 def assign_vins(
@@ -72,3 +78,4 @@ def assign_vins(
         quotage_detail_name=quotage_detail,
         vins_text=vins,
     )
+

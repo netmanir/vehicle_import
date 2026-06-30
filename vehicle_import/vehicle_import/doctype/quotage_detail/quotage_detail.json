@@ -1,6 +1,5 @@
 {
  "actions": [],
- "allow_bulk_edit": 1,
  "autoname": "autoincrement",
  "creation": "2026-06-29 13:40:14.378108",
  "doctype": "DocType",
@@ -9,10 +8,15 @@
  "field_order": [
   "section_break_xmjm",
   "quotage_detail_registrationcode",
+  "column_break_yuhg",
   "quotage_detail_warehouse_receipt_number",
+  "column_break_38kh",
   "quotage_detail_warehouse_tracking_number",
+  "section_break_6jem",
   "quotage_detail_product",
+  "column_break_qss1",
   "quotage_detail_quantity",
+  "column_break_jqzr",
   "quotage_detail_country"
  ],
  "fields": [
@@ -57,13 +61,33 @@
    "label": "\u062a\u0639\u062f\u0627\u062f",
    "non_negative": 1,
    "reqd": 1
+  },
+  {
+   "fieldname": "column_break_yuhg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_38kh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_6jem",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_qss1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_jqzr",
+   "fieldtype": "Column Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-06-29 16:32:43.104470",
+ "modified": "2026-06-30 12:14:08.177311",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Quotage Detail",

@@ -1,18 +1,22 @@
-"WAREHOUSE", "انبار"
-"CUSTOMS", "عوارض گمرکی"
-"ENV", "محیط زیست"
-"RED_CCRESCENT", "هلال احمر"
-"VAT", "ارزش افزوده"
-"INSURANCE", "بیمه"
-"FREIGHT", "باربری"
+WAREHOUSE, انبار
+CUSTOMS, عوارض گمرکی
+ENV, محیط زیست
+RED_CCRESCENT, هلال احمر
+VAT, ارزش افزوده
+INSURANCE, بیمه
+FREIGHT, باربری
 
-"Row", "ردیف"
-"Validation completed successfully.", "اعتبارسنجی با موفقیت انجام شد."
-"Invalid VIN.", "VIN نامعتبر."
-"Duplicate VIN.", "VIN تکراری."
-"Assign VINs", "اختصاص VIN"
-"VINs", "VINها"
-"Enter one VIN per line.", "یک VIN در هر سطر وارد کنید."
-"Assign", "اختصاص"
-"Assigning VINs...", "در حال اختصاص VINها ..."
-
+Quotage Detail, مشخصات محصول
+Row, ردیف
+Validation completed successfully., اعتبارسنجی با موفقیت انجام شد.
+Invalid VIN., VIN نامعتبر.
+Duplicate VIN., VIN تکراری.
+Assign VINs, اختصاص VIN
+VINs, VINها
+Enter one VIN per line., یک VIN در هر سطر وارد کنید.
+Assign, اختصاص
+Assigning VINs..., در حال اختصاص VINها ...
+Packing List is already complete., پکینگ لیست تکمیل شده است
+Validation Errors, خطای اعتبارسنجی
+VINs assigned successfully., VINها با موفقیت تخصیص داده شد.
+Selected Product, محصول انتخاب شده
