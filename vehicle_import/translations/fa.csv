@@ -1,6 +1,6 @@
 Vehicle Import, واردات
 Quotage, کوتاژ
-								Add row							, اضافه کردن سطر
+Add row, اضافه کردن سطر
 Add multiple, اضافه کردن چند سطر
 Delete row, حذف سطر
 Duplicate row, کپی کردن سطر
@@ -34,3 +34,16 @@ Quotage Validation, اعتبارسنجی کوتاژ
 Product, محصول
 is duplicated, تکراری است
 Assigned VINs exceed quantity, تعداد VINهای اختصاص یافته بیش از تعداد مجاز است
+
+
+Add Quotage Cost, ثبت هزینه کوتاژ
+Add Cost, ثبت هزینه
+Cost Date, تاریخ هزینه
+Cost Category, نوع هزینه
+Currency, ارز
+Exchange Rate, نرخ ارز
+Amount, مبلغ
+Description, شرح
+Save, ثبت
+Saving..., در حال ذخیره...
+Cost Entry created., رکورد هزینه ثبت شد.

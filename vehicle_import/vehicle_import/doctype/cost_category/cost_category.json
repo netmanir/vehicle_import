@@ -1,7 +1,6 @@
 {
  "actions": [],
  "allow_bulk_edit": 1,
- "allow_rename": 1,
  "autoname": "field:cost_category_code",
  "creation": "2026-06-29 09:46:11.213332",
  "doctype": "DocType",
@@ -43,8 +42,10 @@
   },
   {
    "fieldname": "cost_category_default_allocation_rule",
-   "fieldtype": "Data",
-   "label": "\u0631\u0648\u0634 \u0627\u062e\u062a\u0635\u0627\u0635"
+   "fieldtype": "Link",
+   "label": "\u0631\u0648\u0634 \u0627\u062e\u062a\u0635\u0627\u0635",
+   "options": "Allocation Rule",
+   "reqd": 1
   },
   {
    "default": "1",
@@ -57,7 +58,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-01 15:42:08.105487",
+ "modified": "2026-07-01 21:03:09.006302",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Cost Category",

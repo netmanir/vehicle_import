@@ -5,6 +5,10 @@ app_description = "Vehicle Import Cost Management"
 app_email = "netman@mail.ir"
 app_license = "mit"
 
+app_include_js = [
+    "/assets/vehicle_import/js/cost_entry_dialog.js",
+]
+
 # Apps
 # ------------------
 

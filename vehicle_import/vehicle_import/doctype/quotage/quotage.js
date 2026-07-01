@@ -49,8 +49,21 @@ frappe.ui.form.on("Quotage", {
                 open_assign_vins_dialog(frm);
             }
         );
-    }
 
+        frm.add_custom_button(
+            __("Add Quotage Cost"),
+            () => {
+                vehicle_import.open_cost_entry_dialog({
+                    reference_doctype: "Quotage",
+                    reference_name: frm.doc.name,
+
+                    callback() {
+                        frm.reload_doc();
+                    },
+                });
+            }
+        );
+    }
 });
 
 function open_assign_vins_dialog(frm) {

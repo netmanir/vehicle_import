@@ -6,26 +6,26 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_t9sd",
   "amended_from",
+  "section_break_zu60",
+  "cost_entry_reference_doctype",
+  "cost_entry_reference_name",
+  "section_break_t9sd",
   "cost_entry_date",
   "cost_entry_cost_category",
-  "cost_entry_description",
-  "\u0627\u0637\u0644\u0627\u0639\u0627\u062a_\u0645\u0646\u0628\u0639_section",
-  "cost_entry_source_type",
-  "cost_entry_source_name",
   "\u0627\u0637\u0644\u0627\u0639\u0627\u062a_\u0645\u0627\u0644\u06cc_section",
   "cost_entry_currency",
   "cost_entry_exchange_rate",
   "cost_entry_foreign_amount",
   "cost_entry_base_currency",
-  "cost_entry_base_amount"
+  "cost_entry_base_amount",
+  "section_break_ar5l",
+  "cost_entry_description"
  ],
  "fields": [
   {
    "fieldname": "section_break_t9sd",
-   "fieldtype": "Section Break",
-   "label": "\u0627\u0637\u0644\u0627\u0639\u0627\u062a \u067e\u0627\u06cc\u0647"
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "amended_from",
@@ -40,19 +40,26 @@
   {
    "fieldname": "cost_entry_date",
    "fieldtype": "Date",
+   "in_filter": 1,
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "\u062a\u0627\u0631\u06cc\u062e \u0647\u0632\u06cc\u0646\u0647",
    "reqd": 1
   },
   {
    "fieldname": "cost_entry_description",
    "fieldtype": "Small Text",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "\u0634\u0631\u062d"
   },
   {
    "fieldname": "cost_entry_currency",
    "fieldtype": "Link",
+   "in_filter": 1,
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "\u0627\u0631\u0632",
    "options": "Currency",
    "reqd": 1
@@ -60,6 +67,9 @@
   {
    "fieldname": "cost_entry_exchange_rate",
    "fieldtype": "Currency",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "\u0646\u0631\u062e \u0627\u0631\u0632",
    "length": 10,
    "precision": "2",
@@ -68,7 +78,10 @@
   {
    "fieldname": "cost_entry_foreign_amount",
    "fieldtype": "Currency",
-   "label": "\u0645\u0628\u0644\u063a \u0627\u0631\u0632",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "\u0645\u0628\u0644\u063a",
    "length": 30,
    "precision": "2",
    "reqd": 1
@@ -78,7 +91,7 @@
    "fieldtype": "Link",
    "label": "\u0627\u0631\u0632 \u067e\u0627\u06cc\u0647",
    "options": "Currency",
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fieldname": "cost_entry_base_amount",
@@ -86,45 +99,56 @@
    "label": "\u0645\u0628\u0644\u063a \u067e\u0627\u06cc\u0647",
    "length": 30,
    "precision": "2",
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fieldname": "cost_entry_cost_category",
    "fieldtype": "Link",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "\u0646\u0648\u0639 \u0647\u0632\u06cc\u0646\u0647",
    "options": "Cost Category",
    "reqd": 1
   },
   {
-   "fieldname": "\u0627\u0637\u0644\u0627\u0639\u0627\u062a_\u0645\u0646\u0628\u0639_section",
-   "fieldtype": "Section Break",
-   "label": "\u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0645\u0646\u0628\u0639"
+   "fieldname": "\u0627\u0637\u0644\u0627\u0639\u0627\u062a_\u0645\u0627\u0644\u06cc_section",
+   "fieldtype": "Section Break"
   },
   {
-   "fieldname": "cost_entry_source_type",
+   "fieldname": "section_break_zu60",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "cost_entry_reference_doctype",
    "fieldtype": "Link",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "\u0646\u0648\u0639 \u0645\u0646\u0628\u0639",
    "options": "DocType",
    "reqd": 1
   },
   {
-   "fieldname": "cost_entry_source_name",
+   "fieldname": "cost_entry_reference_name",
    "fieldtype": "Dynamic Link",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "\u0646\u0627\u0645 \u0645\u0646\u0628\u0639",
-   "options": "cost_entry_source_type",
+   "options": "cost_entry_reference_doctype",
    "reqd": 1
   },
   {
-   "fieldname": "\u0627\u0637\u0644\u0627\u0639\u0627\u062a_\u0645\u0627\u0644\u06cc_section",
-   "fieldtype": "Section Break",
-   "label": "\u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0645\u0627\u0644\u06cc"
+   "fieldname": "section_break_ar5l",
+   "fieldtype": "Section Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-06-29 13:27:10.671263",
+ "modified": "2026-07-01 21:50:23.642438",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Cost Entry",
