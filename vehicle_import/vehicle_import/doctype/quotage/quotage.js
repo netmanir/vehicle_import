@@ -30,6 +30,7 @@ const editable = can_edit_quotage_children();
 frappe.ui.form.on("Quotage", {
     refresh(frm) {
 
+        // جلوگیری از ویرایش جداول کالاها و پکینگ لیست برای کاربران غیرمجاز
         frm.set_df_property(
             "quotage_products",
             "read_only",
@@ -43,6 +44,7 @@ frappe.ui.form.on("Quotage", {
 
         if (frm.is_new()) return;
 
+        // کلید اختصاص VIN
         frm.add_custom_button(
             __("Assign VINs"),
             () => {
@@ -50,6 +52,7 @@ frappe.ui.form.on("Quotage", {
             }
         );
 
+        // کلید ثبت هزینه کوتاژ
         frm.add_custom_button(
             __("Add Quotage Cost"),
             () => {
@@ -63,6 +66,24 @@ frappe.ui.form.on("Quotage", {
                 });
             }
         );
+
+        
+        // محدود کردن ارتفاع جدوال کالاها و پکینگ لیست
+        frm.fields_dict.quotage_products.grid.wrapper
+            .find(".grid-body")
+            .css({
+                "max-height": "250px",
+                "overflow-y": "auto"
+            });
+        frm.fields_dict.quotage_packing_list.grid.wrapper
+            .find(".grid-body")
+            .css({
+                "max-height": "250px",
+                "overflow-y": "auto"
+            });
+
+        // اضافه کردن دکمه سرچ جدول پکینگ لیست
+        add_packing_list_search(frm);
     }
 });
 
@@ -207,4 +228,42 @@ function open_assign_vins_dialog(frm) {
 
     };
 
+}
+
+function add_packing_list_search(frm) {
+
+    const grid = frm.fields_dict.quotage_packing_list.grid;
+
+    if (!grid) return;
+
+    if (grid.wrapper.find(".vi-vin-search").length) return;
+
+    const search = $(`
+        <input
+            type="text"
+            class="form-control bold vi-vin-search"
+            style="width: 250px; margin-right: 8px; margin-left: 8px; "
+            placeholder="🔍 VIN..."
+        >
+    `);
+
+    // صبر کن تا toolbar ساخته شود
+    setTimeout(() => {
+        grid.wrapper.find(".grid-buttons").append(search);
+    }, 200);
+
+    search.on("input", function () {
+
+        const keyword = $(this).val().trim().toLowerCase();
+
+        grid.grid_rows.forEach(row => {
+            const vin = (row.doc.quotage_packing_list_vin || "").toLowerCase();
+
+            $(row.row).toggle(
+                !keyword || vin.includes(keyword) 
+            );
+
+        });
+
+    });
 }
