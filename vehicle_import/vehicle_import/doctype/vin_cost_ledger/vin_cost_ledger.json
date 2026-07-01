@@ -94,7 +94,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-06-29 12:02:33.946808",
+ "modified": "2026-07-01 15:37:35.414982",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "VIN Cost Ledger",
@@ -119,5 +119,6 @@
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
- "track_changes": 1
+ "track_changes": 1,
+ "translated_doctype": 1
 }

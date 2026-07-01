@@ -10,8 +10,7 @@
   "vin",
   "product",
   "engine_number",
-  "color",
-  "description"
+  "color"
  ],
  "fields": [
   {
@@ -55,17 +54,12 @@
    "fieldname": "color",
    "fieldtype": "Data",
    "label": "\u0631\u0646\u06af"
-  },
-  {
-   "fieldname": "description",
-   "fieldtype": "Data",
-   "label": "\u062a\u0648\u0636\u06cc\u062d\u0627\u062a"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-06-30 15:55:12.274857",
+ "modified": "2026-07-01 15:43:24.444868",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "VINs",
@@ -108,8 +102,11 @@
  ],
  "row_format": "Dynamic",
  "rows_threshold_for_grid_search": 20,
+ "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
- "track_changes": 1
+ "title_field": "vin",
+ "track_changes": 1,
+ "translated_doctype": 1
 }

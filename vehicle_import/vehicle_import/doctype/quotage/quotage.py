@@ -2,13 +2,65 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 from frappe.desk.search import validate_and_sanitize_search_inputs
 from vehicle_import.vehicle_import.services.quotage_service import QuotageService
 
 class Quotage(Document):
-    pass
 
+    def validate(self):
+        # قبل از هر ذخیره (Save / Submit) اجرا می‌شود.
+        self.validate_quotage_details()
+        self._validate_duplicate_vins()
+        self._validate_packing_list_quantities()
+
+    def validate_quotage_details(self):
+        # اعتبارسنجی‌های Quotage
+        self._validate_duplicate_products()
+        # self._validate_quantities()
+
+    def _validate_duplicate_products(self):
+        seen = set()
+        for row in self.quotage_products:
+            product = row.quotage_detail_product
+            if product in seen:
+                frappe.throw(
+                    f"{_('Product')} {product} {_('is duplicated')}.",
+                    title=_("Quotage Validation"),
+                )
+            seen.add(product)
+
+    def _validate_duplicate_vins(self):
+        seen = set()
+        for row in self.quotage_packing_list:
+            vin = row.quotage_packing_list_vin
+            if not vin:
+                continue
+            if vin in seen:
+                frappe.throw(
+                    f"{vin} {_('is duplicated')}.",
+                    title=_("Quotage Validation"),
+                )
+            seen.add(vin)
+
+    def _validate_packing_list_quantities(self):
+        assigned = {}
+        for row in self.quotage_packing_list:
+            detail = row.quotage_packing_list_quotage_detail
+            if not detail:
+                continue
+            assigned[detail] = assigned.get(detail, 0) + 1
+
+        for detail in self.quotage_products:
+            qty = int(detail.quotage_detail_quantity or 0)
+            count = assigned.get(detail.name, 0)
+            if count > qty:
+                frappe.throw(
+                    f"{_('Product')} {detail.quotage_detail_product}: "
+                    f"{_('Assigned VINs exceed quantity')}.",
+                    title=_("Quotage Validation"),
+                )
 
 @frappe.whitelist()
 @validate_and_sanitize_search_inputs

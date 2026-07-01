@@ -1,13 +1,21 @@
 // Copyright (c) 2026, ACP and contributors
 // For license information, please see license.txt
 
-frappe.form.link_formatters["Quotage Detail"] = function (value, doc) {
+frappe.form.link_formatters["Quotage Detail"] = function (value) {
+
+    if (!cur_frm?.doc) {
+        return value;
+    }
 
     const detail = (cur_frm.doc.quotage_products || []).find(
         d => String(d.name) === String(value)
     );
 
-    return `${detail.quotage_detail_product}`;
+    if (!detail) {
+        return value;
+    }
+
+    return detail.quotage_detail_product || value;
 };
 
 function can_edit_quotage_children() {
@@ -21,12 +29,12 @@ const editable = can_edit_quotage_children();
 
 frappe.ui.form.on("Quotage", {
     refresh(frm) {
+
         frm.set_df_property(
             "quotage_products",
             "read_only",
             !editable
         );
-
         frm.set_df_property(
             "quotage_packing_list",
             "read_only",

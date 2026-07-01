@@ -12,6 +12,7 @@
   "quotage_bill_nr",
   "column_break_v6p2",
   "quotage_date",
+  "column_break_k1yl",
   "quotage_transport_type",
   "section_break_nroy",
   "quotage_currency",
@@ -100,6 +101,7 @@
    "fieldname": "quotage_products",
    "fieldtype": "Table",
    "label": "\u06a9\u0627\u0644\u0627\u0647\u0627",
+   "no_copy": 1,
    "options": "Quotage Detail",
    "search_index": 1
   },
@@ -125,14 +127,19 @@
    "in_filter": 1,
    "in_standard_filter": 1,
    "label": "\u067e\u06a9\u06cc\u0646\u06af \u0644\u06cc\u0633\u062a",
+   "no_copy": 1,
    "options": "Quotage Packing List",
    "search_index": 1
+  },
+  {
+   "fieldname": "column_break_k1yl",
+   "fieldtype": "Column Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-01 09:18:58.830542",
+ "modified": "2026-07-01 16:02:02.439481",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Quotage",
@@ -148,6 +155,7 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "select": 1,
    "share": 1,
    "write": 1
   },
@@ -175,8 +183,11 @@
  ],
  "row_format": "Dynamic",
  "rows_threshold_for_grid_search": 20,
+ "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
- "track_changes": 1
+ "title_field": "quotage_code",
+ "track_changes": 1,
+ "translated_doctype": 1
 }

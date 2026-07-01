@@ -1,5 +1,9 @@
 Vehicle Import, واردات
 Quotage, کوتاژ
+								Add row							, اضافه کردن سطر
+Add multiple, اضافه کردن چند سطر
+Delete row, حذف سطر
+Duplicate row, کپی کردن سطر
 
 WAREHOUSE, انبار
 CUSTOMS, عوارض گمرکی
@@ -23,3 +27,10 @@ Packing List is already complete., پکینگ لیست تکمیل شده است
 Validation Errors, خطای اعتبارسنجی
 VINs assigned successfully., VINها با موفقیت تخصیص داده شد.
 Selected Product, محصول انتخاب شده
+
+Please fill the following mandatory fields before saving:, قبل از ذخیره، فیلد(های) اجباری زیر را وارد کنید: 
+"In {0}, {1} is required in row {2}.", در {0}، در سطر {2}، فیلد {1} وارد نشده است.
+Quotage Validation, اعتبارسنجی کوتاژ
+Product, محصول
+is duplicated, تکراری است
+Assigned VINs exceed quantity, تعداد VINهای اختصاص یافته بیش از تعداد مجاز است

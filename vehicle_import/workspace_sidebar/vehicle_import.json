@@ -7,7 +7,7 @@
  "idx": 2,
  "items": [
   {
-   "child": 0,
+   "child": 1,
    "collapsible": 1,
    "icon": "file-spreadsheet",
    "indent": 0,
@@ -18,9 +18,21 @@
    "navigate_to_tab": "",
    "show_arrow": 0,
    "type": "Link"
+  },
+  {
+   "child": 1,
+   "collapsible": 1,
+   "icon": "scan-barcode",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "VINs",
+   "link_to": "VINs",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
   }
  ],
- "modified": "2026-07-01 14:03:05.175487",
+ "modified": "2026-07-01 15:35:18.552363",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Vehicle Import",
