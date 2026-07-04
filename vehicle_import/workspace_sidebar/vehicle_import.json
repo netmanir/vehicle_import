@@ -9,6 +9,30 @@
   {
    "child": 1,
    "collapsible": 1,
+   "icon": "file-large",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Vehicle Holder",
+   "link_to": "Vehicle Holder",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 1,
+   "collapsible": 1,
+   "icon": "scan-barcode",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Vehicles",
+   "link_to": "Vehicle Unit",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 1,
+   "collapsible": 1,
    "icon": "file-spreadsheet",
    "indent": 0,
    "keep_closed": 0,
@@ -32,7 +56,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-07-01 15:35:18.552363",
+ "modified": "2026-07-04 21:03:31.009595",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Vehicle Import",

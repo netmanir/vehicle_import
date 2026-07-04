@@ -1,0 +1,154 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 1,
+ "autoname": "autoincrement",
+ "creation": "2026-07-04 16:33:05.524050",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_oy6u",
+  "vehicle_holder_parent",
+  "vehicle_holder_type",
+  "section_break_mexa",
+  "vehicle_holder_company",
+  "column_break_zemk",
+  "vehicle_holder_posting_date",
+  "section_break_bq12",
+  "vehicle_holder_title",
+  "vehicle_holder_doc_nr",
+  "section_break_rwno",
+  "vehicle_holder_remark",
+  "section_break_e08a",
+  "vehicle_holder_detail",
+  "section_break_i3hp",
+  "vehicle_holder_history"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_oy6u",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vehicle_holder_type",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Type",
+   "options": "Vehicle Holder Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vehicle_holder_title",
+   "fieldtype": "Data",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Title",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vehicle_holder_company",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company",
+   "remember_last_selected_value": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "vehicle_holder_parent",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Parent",
+   "options": "Vehicle Holder"
+  },
+  {
+   "fieldname": "vehicle_holder_doc_nr",
+   "fieldtype": "Data",
+   "label": "Document Nr"
+  },
+  {
+   "fieldname": "section_break_rwno",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "vehicle_holder_posting_date",
+   "fieldtype": "Date",
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vehicle_holder_remark",
+   "fieldtype": "Small Text",
+   "label": "Remark"
+  },
+  {
+   "fieldname": "section_break_mexa",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "vehicle_holder_detail",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Vehicle Holder Detail"
+  },
+  {
+   "fieldname": "column_break_zemk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_bq12",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_e08a",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_i3hp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vehicle_holder_history",
+   "fieldtype": "Table",
+   "label": "History",
+   "options": "Vehicle History"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-07-04 20:46:13.703231",
+ "modified_by": "Administrator",
+ "module": "Vehicle Import",
+ "name": "Vehicle Holder",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "show_title_field_in_link": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "vehicle_holder_title",
+ "track_changes": 1,
+ "translated_doctype": 1
+}

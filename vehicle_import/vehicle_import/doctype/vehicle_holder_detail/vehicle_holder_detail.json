@@ -1,0 +1,132 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 1,
+ "autoname": "autoincrement",
+ "creation": "2026-07-04 17:43:27.319670",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_9gcg",
+  "vehicle_holder_detail_item",
+  "vehicle_holder_detail_quantity",
+  "section_break_kmu3",
+  "vehicle_holder_detail_currency",
+  "vehicle_holder_detail_exchange_rate",
+  "vehicle_holder_detail_amount",
+  "section_break_qlzd",
+  "vehicle_holder_detail_weight",
+  "vehicle_holder_detail_volume",
+  "vehicle_holder_detail_remark"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_9gcg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vehicle_holder_detail_item",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Item",
+   "options": "Item",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "vehicle_holder_detail_quantity",
+   "fieldtype": "Int",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Quantity",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_kmu3",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vehicle_holder_detail_currency",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Currency",
+   "options": "Currency",
+   "remember_last_selected_value": 1
+  },
+  {
+   "fieldname": "vehicle_holder_detail_exchange_rate",
+   "fieldtype": "Currency",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Exchange Rate",
+   "length": 10,
+   "non_negative": 1,
+   "precision": "1"
+  },
+  {
+   "fieldname": "vehicle_holder_detail_amount",
+   "fieldtype": "Currency",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Amount",
+   "length": 32,
+   "non_negative": 1,
+   "precision": "2"
+  },
+  {
+   "fieldname": "section_break_qlzd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vehicle_holder_detail_weight",
+   "fieldtype": "Float",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Weight",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "vehicle_holder_detail_volume",
+   "fieldtype": "Float",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Volume",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "vehicle_holder_detail_remark",
+   "fieldtype": "Small Text",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Remark"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-07-04 18:39:42.944164",
+ "modified_by": "Administrator",
+ "module": "Vehicle Import",
+ "name": "Vehicle Holder Detail",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

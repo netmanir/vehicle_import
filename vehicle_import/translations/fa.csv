@@ -47,3 +47,13 @@ Description, شرح
 Save, ثبت
 Saving..., در حال ذخیره...
 Cost Entry created., رکورد هزینه ثبت شد.
+
+
+
+
+
+Vehicle Holder, سند تراکنش
+Vehicle Holder Detail, آیتم
+Vehicle Holder Validation, اعتبارسنجی سند تراکنش
+Item {0} is duplicated., آیتم {0} تکراری است.
+Quantity for item {0} cannot be less than assigned vehicles ({1})., مقدار آیتم {0} نمی‌تواند کمتر از تعداد کدهای اختصاص یافته ({1}) باشد. 

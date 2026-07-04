@@ -242,25 +242,32 @@ function add_packing_list_search(frm) {
         <input
             type="text"
             class="form-control bold vi-vin-search"
-            style="width: 250px; margin-right: 8px; margin-left: 8px; "
+            style="width: 250px; margin-right: 8px; margin-left: 8px;"
             placeholder="🔍 VIN..."
         >
     `);
 
-    // صبر کن تا toolbar ساخته شود
-    setTimeout(() => {
-        grid.wrapper.find(".grid-buttons").append(search);
-    }, 200);
+    frappe.after_ajax(() => {
+
+        const buttons = grid.wrapper.find(".grid-buttons");
+
+        if (buttons.length) {
+            buttons.append(search);
+        }
+
+    });
 
     search.on("input", function () {
 
         const keyword = $(this).val().trim().toLowerCase();
 
         grid.grid_rows.forEach(row => {
-            const vin = (row.doc.quotage_packing_list_vin || "").toLowerCase();
+
+            const vin = (row.doc.quotage_packing_list_vin || "")
+                .toLowerCase();
 
             $(row.row).toggle(
-                !keyword || vin.includes(keyword) 
+                !keyword || vin.includes(keyword)
             );
 
         });

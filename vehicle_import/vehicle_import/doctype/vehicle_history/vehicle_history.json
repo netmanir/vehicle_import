@@ -1,0 +1,82 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "autoname": "autoincrement",
+ "creation": "2026-07-04 18:01:52.247045",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_ouky",
+  "vehicle_history_vehicle",
+  "vehicle_history_vehicle_holder",
+  "vehicle_history_vehicle_holder_detail",
+  "vehicle_history_valid_from",
+  "vehicle_history_valid_to",
+  "vehicle_history_remark"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_ouky",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vehicle_history_vehicle",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Vehicle",
+   "options": "Vehicle Unit",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "vehicle_history_vehicle_holder",
+   "fieldtype": "Link",
+   "label": "Vehicle Holder",
+   "options": "Vehicle Holder",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "vehicle_history_vehicle_holder_detail",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Vehicle Holder Detail",
+   "options": "Vehicle Holder Detail",
+   "search_index": 1
+  },
+  {
+   "fieldname": "vehicle_history_valid_from",
+   "fieldtype": "Datetime",
+   "label": "Valid From",
+   "search_index": 1
+  },
+  {
+   "fieldname": "vehicle_history_valid_to",
+   "fieldtype": "Datetime",
+   "label": "Valid To",
+   "search_index": 1
+  },
+  {
+   "fieldname": "vehicle_history_remark",
+   "fieldtype": "Small Text",
+   "label": "Remark"
+  }
+ ],
+ "grid_page_length": 15,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-07-04 20:59:48.817623",
+ "modified_by": "Administrator",
+ "module": "Vehicle Import",
+ "name": "Vehicle History",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 10,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

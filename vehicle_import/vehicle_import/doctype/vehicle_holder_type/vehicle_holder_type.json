@@ -1,0 +1,79 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 1,
+ "autoname": "field:vehicle_holder_type_code",
+ "creation": "2026-07-04 17:19:13.778947",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_l9tn",
+  "vehicle_holder_type_code",
+  "vehicle_holder_type_title",
+  "vehicle_holder_type_remark"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_l9tn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vehicle_holder_type_code",
+   "fieldtype": "Data",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Code",
+   "reqd": 1,
+   "translatable": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "vehicle_holder_type_title",
+   "fieldtype": "Data",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Title",
+   "reqd": 1,
+   "translatable": 1
+  },
+  {
+   "fieldname": "vehicle_holder_type_remark",
+   "fieldtype": "Small Text",
+   "label": "Remark"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-07-04 19:27:24.653870",
+ "modified_by": "Administrator",
+ "module": "Vehicle Import",
+ "name": "Vehicle Holder Type",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "show_title_field_in_link": 1,
+ "sort_field": "creation",
+ "sort_order": "ASC",
+ "states": [],
+ "title_field": "vehicle_holder_type_title",
+ "track_changes": 1,
+ "translated_doctype": 1
+}
