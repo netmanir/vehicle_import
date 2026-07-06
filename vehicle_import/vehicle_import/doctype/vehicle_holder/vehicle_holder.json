@@ -7,8 +7,8 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "amended_from",
   "section_break_oy6u",
-  "vehicle_holder_parent",
   "vehicle_holder_type",
   "section_break_mexa",
   "vehicle_holder_company",
@@ -17,6 +17,7 @@
   "section_break_bq12",
   "vehicle_holder_title",
   "vehicle_holder_doc_nr",
+  "vehicle_holder_type_independent",
   "section_break_rwno",
   "vehicle_holder_remark",
   "section_break_e08a",
@@ -60,13 +61,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "vehicle_holder_parent",
-   "fieldtype": "Link",
-   "hidden": 1,
-   "label": "Parent",
-   "options": "Vehicle Holder"
-  },
-  {
    "fieldname": "vehicle_holder_doc_nr",
    "fieldtype": "Data",
    "label": "Document Nr"
@@ -94,6 +88,7 @@
    "fieldname": "vehicle_holder_detail",
    "fieldtype": "Table",
    "label": "Items",
+   "no_copy": 1,
    "options": "Vehicle Holder Detail"
   },
   {
@@ -115,14 +110,39 @@
   {
    "fieldname": "vehicle_holder_history",
    "fieldtype": "Table",
-   "label": "History",
-   "options": "Vehicle History"
+   "label": "Vehicles",
+   "no_copy": 1,
+   "options": "Vehicle History",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fetch_from": "vehicle_holder_type.vehicle_holder_type_independent",
+   "fieldname": "vehicle_holder_type_independent",
+   "fieldtype": "Check",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Independent",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Vehicle Holder",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2026-07-04 20:46:13.703231",
+ "modified": "2026-07-06 20:20:40.628388",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Vehicle Holder",
@@ -139,6 +159,7 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "submit": 1,
    "write": 1
   }
  ],

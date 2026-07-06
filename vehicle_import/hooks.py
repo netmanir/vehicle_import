@@ -7,6 +7,7 @@ app_license = "mit"
 
 app_include_js = [
     "/assets/vehicle_import/js/cost_entry_dialog.js",
+    "/assets/vehicle_import/js/explorers/vehicle_holder_explorer.js",
 ]
 
 # Apps

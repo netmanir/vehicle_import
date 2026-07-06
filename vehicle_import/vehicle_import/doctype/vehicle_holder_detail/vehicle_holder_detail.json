@@ -1,6 +1,5 @@
 {
  "actions": [],
- "allow_bulk_edit": 1,
  "allow_rename": 1,
  "autoname": "autoincrement",
  "creation": "2026-07-04 17:43:27.319670",
@@ -10,14 +9,18 @@
  "field_order": [
   "section_break_9gcg",
   "vehicle_holder_detail_item",
+  "column_break_5z2y",
   "vehicle_holder_detail_quantity",
   "section_break_kmu3",
   "vehicle_holder_detail_currency",
+  "column_break_ulql",
   "vehicle_holder_detail_exchange_rate",
+  "column_break_nqae",
   "vehicle_holder_detail_amount",
   "section_break_qlzd",
   "vehicle_holder_detail_weight",
   "vehicle_holder_detail_volume",
+  "column_break_st4g",
   "vehicle_holder_detail_remark"
  ],
  "fields": [
@@ -34,7 +37,8 @@
    "label": "Item",
    "options": "Item",
    "reqd": 1,
-   "search_index": 1
+   "search_index": 1,
+   "set_only_once": 1
   },
   {
    "fieldname": "vehicle_holder_detail_quantity",
@@ -111,13 +115,29 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Remark"
+  },
+  {
+   "fieldname": "column_break_5z2y",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ulql",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_nqae",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_st4g",
+   "fieldtype": "Column Break"
   }
  ],
- "grid_page_length": 50,
+ "grid_page_length": 5,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-07-04 18:39:42.944164",
+ "modified": "2026-07-06 19:53:38.765183",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Vehicle Holder Detail",
@@ -125,7 +145,7 @@
  "owner": "Administrator",
  "permissions": [],
  "row_format": "Dynamic",
- "rows_threshold_for_grid_search": 20,
+ "rows_threshold_for_grid_search": 999999,
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": []

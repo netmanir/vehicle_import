@@ -21,10 +21,7 @@
   {
    "fieldname": "vehicle_item",
    "fieldtype": "Link",
-   "in_filter": 1,
    "in_list_view": 1,
-   "in_preview": 1,
-   "in_standard_filter": 1,
    "label": "\u0645\u062f\u0644",
    "options": "Item",
    "reqd": 1
@@ -32,11 +29,7 @@
   {
    "fieldname": "vehicle_vin",
    "fieldtype": "Data",
-   "in_filter": 1,
-   "in_global_search": 1,
    "in_list_view": 1,
-   "in_preview": 1,
-   "in_standard_filter": 1,
    "label": "VIN",
    "unique": 1
   },
@@ -53,7 +46,6 @@
    "fieldtype": "Data",
    "in_filter": 1,
    "in_list_view": 1,
-   "in_standard_filter": 1,
    "label": "\u0634\u0627\u0633\u06cc \u0627\u06cc\u0631\u0627\u0646\u06cc"
   },
   {
@@ -65,7 +57,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-04 21:02:10.823812",
+ "modified": "2026-07-05 13:02:39.287738",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Vehicle Unit",
@@ -87,7 +79,7 @@
  ],
  "row_format": "Dynamic",
  "rows_threshold_for_grid_search": 20,
- "search_fields": "vehicle_vin, vehicle_engine_no, vehicle_chassis_no",
+ "search_fields": "vehicle_vin",
  "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",

@@ -1,8 +1,15 @@
 Vehicle Import, واردات
+
+Vehicle Holder Type, نوع سند تراکنش
 Quotage, کوتاژ
+Proforma, پروفرما
+Container, کانتینر
+Packing List, پکینگ لیست
+
 Add row, اضافه کردن سطر
 Add multiple, اضافه کردن چند سطر
 Delete row, حذف سطر
+Delete {0} rows, حذف {0} سطر
 Duplicate row, کپی کردن سطر
 
 WAREHOUSE, انبار
@@ -51,9 +58,24 @@ Cost Entry created., رکورد هزینه ثبت شد.
 
 
 
-
+Independent, سند پایه
 Vehicle Holder, سند تراکنش
+Vehicle Holders, اسناد تراکنش
 Vehicle Holder Detail, آیتم
+Vehicle Holder Details, آیتم‌ها
+Document Nr, شماره سند
+Vehicles, وسایل نقلیه
 Vehicle Holder Validation, اعتبارسنجی سند تراکنش
 Item {0} is duplicated., آیتم {0} تکراری است.
 Quantity for item {0} cannot be less than assigned vehicles ({1})., مقدار آیتم {0} نمی‌تواند کمتر از تعداد کدهای اختصاص یافته ({1}) باشد. 
+
+Import Vehicles, ورود خودروها
+Vehicle Holder Explorer, مرور سند تراکنش
+Search Holder, جستجوی اسناد
+Search by Title or Document No, جستجوی عنوان یا شماره سند
+No Data, داده‌ای موجود نیست
+{0} rows selected, {0} ردیف انتخاب شد
+Duplicate Vehicles, آیتم تکراری
+The following vehicles were duplicated and were skipped:{0}{1}, آیتم‌های زیر تکراری بود و درج نشد:{0}{1}
+First, اولی
+Last, آخری  
