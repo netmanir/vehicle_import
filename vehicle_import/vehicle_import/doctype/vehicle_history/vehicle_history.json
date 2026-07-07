@@ -11,7 +11,6 @@
   "column_break_xwuo",
   "vehicle_history_remark",
   "column_break_09he",
-  "vehicle_history_vehicle_holder",
   "vehicle_history_vehicle_holder_detail",
   "section_break_mxeb",
   "vehicle_history_valid_from",
@@ -32,13 +31,6 @@
    "options": "Vehicle Unit",
    "read_only": 1,
    "reqd": 1
-  },
-  {
-   "fieldname": "vehicle_history_vehicle_holder",
-   "fieldtype": "Link",
-   "label": "Vehicle Holder",
-   "options": "Vehicle Holder",
-   "read_only": 1
   },
   {
    "fieldname": "vehicle_history_vehicle_holder_detail",
@@ -97,7 +89,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-07-06 19:58:16.056808",
+ "modified": "2026-07-07 10:04:36.027137",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Vehicle History",

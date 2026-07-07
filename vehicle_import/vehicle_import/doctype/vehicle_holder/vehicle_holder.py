@@ -6,6 +6,12 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.query_builder import DocType
 from pypika import Case
+from frappe.desk.search import validate_and_sanitize_search_inputs
+from frappe import qb
+from frappe.query_builder.functions import Concat
+
+from vehicle_import.vehicle_import.services.vehicle_holder_service import VehicleHolderService
+
 
 class VehicleHolder(Document):
 
@@ -101,7 +107,6 @@ class VehicleHolder(Document):
     def _create_vehicle_history(self, vehicle, detail):
         self.append("vehicle_holder_history", {
             "vehicle_history_vehicle": vehicle.name,
-            "vehicle_history_vehicle_holder": self.name,
             "vehicle_history_vehicle_holder_detail": detail.name,
         })
 
@@ -129,7 +134,7 @@ class VehicleHolder(Document):
         self.append("vehicle_holder_history", {
             "vehicle_history_vehicle": vehicle["vehicle_history_vehicle"],
             "vehicle_history_vehicle_holder_detail": detail.name,
-            "vehicle_history_reference": vehicle["vehicle_history_vehicle_holder"],
+            "vehicle_history_reference": vehicle["parent"],
         })
 
 
@@ -219,8 +224,8 @@ def get_holder_histories(detail_name):
         .on(VehicleHistory.vehicle_history_vehicle == VehicleUnit.name)
         .select(
             VehicleHistory.name,
+            VehicleHistory.parent,
             VehicleHistory.vehicle_history_vehicle,
-            VehicleHistory.vehicle_history_vehicle_holder,
             VehicleHistory.vehicle_history_vehicle_holder_detail,
             VehicleHistory.vehicle_history_remark,
             VehicleUnit.vehicle_item,
@@ -290,3 +295,73 @@ def import_vehicles(holder, vehicles):
 
     return doc.name
 
+
+@frappe.whitelist()
+def get_holder_detail(name):
+    product, qty = frappe.db.get_value(
+        "Vehicle Holder Detail",
+        name,
+        [
+            "vehicle_holder_detail_item",
+            "vehicle_holder_detail_quantity",
+        ],
+    )
+
+    return {
+        "product": product,
+        "qty": qty,
+    }
+
+
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def vehicle_holder_detail_query(
+    doctype,
+    txt,
+    searchfield,
+    start,
+    page_len,
+    filters,
+):
+    VehicleHolderDetail = DocType("Vehicle Holder Detail")
+    result = (
+        frappe.qb
+        .from_(VehicleHolderDetail)
+        .select(
+            VehicleHolderDetail.name,
+            VehicleHolderDetail.vehicle_holder_detail_item,
+            VehicleHolderDetail.vehicle_holder_detail_quantity,
+        )
+        .where(
+            (VehicleHolderDetail.parent == filters.get("parent"))
+            & (
+                VehicleHolderDetail.vehicle_holder_detail_item.like(f"%{txt}%")
+            )
+        )
+        .orderby(VehicleHolderDetail.idx)
+        .limit(page_len)
+        .offset(start)
+        .run(as_list=True)
+    )
+
+    return [
+        [
+            row[0],
+            f"{row[1]} ({row[2]})",
+        ]
+        for row in result
+    ]
+
+
+@frappe.whitelist()
+def assign_vins(
+    vehicle_holder,
+    vehicle_holder_detail,
+    vins,
+):
+
+    return VehicleHolderService().assign_vins(
+        holder_name=vehicle_holder,
+        holder_detail_name=vehicle_holder_detail,
+        vins_text=vins,
+    )

@@ -1,7 +1,6 @@
 {
  "actions": [],
  "allow_bulk_edit": 1,
- "allow_rename": 1,
  "autoname": "autoincrement",
  "creation": "2026-07-04 16:33:05.524050",
  "doctype": "DocType",
@@ -89,7 +88,8 @@
    "fieldtype": "Table",
    "label": "Items",
    "no_copy": 1,
-   "options": "Vehicle Holder Detail"
+   "options": "Vehicle Holder Detail",
+   "search_index": 1
   },
   {
    "fieldname": "column_break_zemk",
@@ -142,7 +142,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-07-06 20:20:40.628388",
+ "modified": "2026-07-07 14:05:09.674607",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Vehicle Holder",
@@ -158,6 +158,7 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "select": 1,
    "share": 1,
    "submit": 1,
    "write": 1

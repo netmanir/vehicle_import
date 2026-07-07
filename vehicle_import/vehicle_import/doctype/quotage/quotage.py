@@ -119,7 +119,7 @@ def get_quotage_detail(name):
 
 
 @frappe.whitelist()
-def assign_vins(
+def _assign_vins(
     quotage,
     quotage_detail,
     vins,

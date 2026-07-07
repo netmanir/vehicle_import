@@ -1,9 +1,9 @@
-class VehicleHolderExplorer {
+class ImportVehicles_Dialog {
 
     static async show(options = {}) {
 
-        const explorer = new VehicleHolderExplorer(options);
-        return await explorer.show();
+        const import_vehicle_dialog = new ImportVehicles_Dialog(options);
+        return await import_vehicle_dialog.show();
     }
 
     constructor(options = {}) {

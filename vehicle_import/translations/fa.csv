@@ -20,43 +20,9 @@ VAT, ارزش افزوده
 INSURANCE, بیمه
 FREIGHT, باربری
 
-Quotage Detail, مشخصات محصول
-Row, ردیف
-Validation completed successfully., اعتبارسنجی با موفقیت انجام شد.
-Invalid VIN., VIN نامعتبر.
-Duplicate VIN., VIN تکراری.
-Assign VINs, اختصاص VIN
-VINs, VINها
-Enter one VIN per line., یک VIN در هر سطر وارد کنید.
-Assign, اختصاص
-Assigning VINs..., در حال اختصاص VINها ...
-Packing List is already complete., پکینگ لیست تکمیل شده است
-Validation Errors, خطای اعتبارسنجی
-VINs assigned successfully., VINها با موفقیت تخصیص داده شد.
-Selected Product, محصول انتخاب شده
-
 Please fill the following mandatory fields before saving:, قبل از ذخیره، فیلد(های) اجباری زیر را وارد کنید: 
 "In {0}, {1} is required in row {2}.", در {0}، در سطر {2}، فیلد {1} وارد نشده است.
-Quotage Validation, اعتبارسنجی کوتاژ
 Product, محصول
-is duplicated, تکراری است
-Assigned VINs exceed quantity, تعداد VINهای اختصاص یافته بیش از تعداد مجاز است
-
-
-Add Quotage Cost, ثبت هزینه کوتاژ
-Add Cost, ثبت هزینه
-Cost Date, تاریخ هزینه
-Cost Category, نوع هزینه
-Currency, ارز
-Exchange Rate, نرخ ارز
-Amount, مبلغ
-Description, شرح
-Save, ثبت
-Saving..., در حال ذخیره...
-Cost Entry created., رکورد هزینه ثبت شد.
-
-
-
 
 Independent, سند پایه
 Vehicle Holder, سند تراکنش
@@ -79,3 +45,30 @@ Duplicate Vehicles, آیتم تکراری
 The following vehicles were duplicated and were skipped:{0}{1}, آیتم‌های زیر تکراری بود و درج نشد:{0}{1}
 First, اولی
 Last, آخری  
+
+Assign VINs, اختصاص VIN
+Selected Product, آیتم انتخاب شده
+VINs, VINها
+Enter one VIN per line., یک VIN در هر سطر وارد کنید.
+Assign, اختصاص
+Validation Errors, خطای اعتبارسنجی
+VINs assigned successfully., VINها با موفقیت تخصیص داده شد.
+Invalid VIN., VIN نامعتبر.
+Duplicate VIN., VIN تکراری.
+Unassigned VIN not found!, VIN اختصاص نیافته پیدا نشد!
+Row, ردیف
+Assigning VINs..., در حال اختصاص VINها ...
+
+
+
+Add Quotage Cost, ثبت هزینه کوتاژ
+Add Cost, ثبت هزینه
+Cost Date, تاریخ هزینه
+Cost Category, نوع هزینه
+Currency, ارز
+Exchange Rate, نرخ ارز
+Amount, مبلغ
+Description, شرح
+Save, ثبت
+Saving..., در حال ذخیره...
+Cost Entry created., رکورد هزینه ثبت شد.
