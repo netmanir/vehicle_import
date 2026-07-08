@@ -9,6 +9,7 @@ from pypika import Case
 from frappe.desk.search import validate_and_sanitize_search_inputs
 from frappe import qb
 from frappe.query_builder.functions import Concat
+from frappe.model.delete_doc import check_if_doc_is_linked
 
 from vehicle_import.vehicle_import.services.vehicle_holder_service import VehicleHolderService
 
@@ -25,6 +26,10 @@ class VehicleHolder(Document):
         if not getattr(self, "_is_importing", False):
             self._sync_vehicle_units()
             self._remove_orphan_histories()
+
+
+    def before_cancel(self):
+        check_if_doc_is_linked(self)
 
 
     # ---------------------------------------------------------
@@ -212,36 +217,58 @@ def get_holder_details(holder_name):
 
 
 @frappe.whitelist()
-def get_holder_histories(detail_name):
+def get_holder_histories(
+    current_holder,
+    reference_detail_name,
+):
 
-    VehicleHistory = frappe.qb.DocType("Vehicle History")
-    VehicleUnit = frappe.qb.DocType("Vehicle Unit")
+    ReferenceHistory = DocType("Vehicle History")
+    CurrentHistory = DocType("Vehicle History")
+    VehicleUnit = DocType("Vehicle Unit")
 
     return (
         frappe.qb
-        .from_(VehicleHistory)
+        .from_(ReferenceHistory)
+
         .left_join(VehicleUnit)
-        .on(VehicleHistory.vehicle_history_vehicle == VehicleUnit.name)
+        .on(
+            ReferenceHistory.vehicle_history_vehicle == VehicleUnit.name
+        )
+
+        .left_join(CurrentHistory)
+        .on(
+            (CurrentHistory.parent == current_holder)
+            &
+            (CurrentHistory.vehicle_history_vehicle == ReferenceHistory.vehicle_history_vehicle)
+        )
+
         .select(
-            VehicleHistory.name,
-            VehicleHistory.parent,
-            VehicleHistory.vehicle_history_vehicle,
-            VehicleHistory.vehicle_history_vehicle_holder_detail,
-            VehicleHistory.vehicle_history_remark,
+            ReferenceHistory.name,
+            ReferenceHistory.parent,
+            ReferenceHistory.vehicle_history_vehicle,
+            ReferenceHistory.vehicle_history_vehicle_holder_detail,
+            ReferenceHistory.vehicle_history_remark,
             VehicleUnit.vehicle_item,
+
             Case()
                 .when(
-                    (VehicleUnit.vehicle_vin.isnull()) |
+                    (VehicleUnit.vehicle_vin.isnull())
+                    |
                     (VehicleUnit.vehicle_vin == ""),
-                    VehicleUnit.name
+                    VehicleUnit.name,
                 )
                 .else_(VehicleUnit.vehicle_vin)
                 .as_("vehicle"),
         )
+
         .where(
-            (VehicleHistory.vehicle_history_vehicle_holder_detail == detail_name)
+            (ReferenceHistory.vehicle_history_vehicle_holder_detail == reference_detail_name)
+            &
+            CurrentHistory.name.isnull()
         )
+
         .orderby(VehicleUnit.vehicle_vin)
+
         .run(as_dict=True)
     )
 
@@ -365,3 +392,5 @@ def assign_vins(
         holder_detail_name=vehicle_holder_detail,
         vins_text=vins,
     )
+    
+

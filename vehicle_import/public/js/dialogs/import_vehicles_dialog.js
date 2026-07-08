@@ -341,10 +341,12 @@ class ImportVehicles_Dialog {
     async load_histories(detail_name) {
 
         const r = await frappe.call({
-            method: "vehicle_import.vehicle_import.doctype.vehicle_holder.vehicle_holder.get_holder_histories",
+            method:
+                "vehicle_import.vehicle_import.doctype.vehicle_holder.vehicle_holder.get_holder_histories",
             args: {
-                detail_name: detail_name
-            }
+                current_holder: this.options.current_holder,
+                reference_detail_name: detail_name,
+            },
         });
 
         this.histories = r.message;

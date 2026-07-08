@@ -101,9 +101,9 @@ class VehicleHolderService:
     ):
 
         if frappe.db.exists(
-            "VINs",
+            "Vehicle Unit",
             {
-                "vin": vin,
+                "vehicle_vin": vin,
             },
         ):
             raise frappe.ValidationError(

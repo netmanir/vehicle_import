@@ -35,7 +35,7 @@ Vehicle Holder Validation, اعتبارسنجی سند تراکنش
 Item {0} is duplicated., آیتم {0} تکراری است.
 Quantity for item {0} cannot be less than assigned vehicles ({1})., مقدار آیتم {0} نمی‌تواند کمتر از تعداد کدهای اختصاص یافته ({1}) باشد. 
 
-Import Vehicles, ورود خودروها
+Import Vehicles, ورود از سند مرجع
 Vehicle Holder Explorer, مرور سند تراکنش
 Search Holder, جستجوی اسناد
 Search by Title or Document No, جستجوی عنوان یا شماره سند

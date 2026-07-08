@@ -142,7 +142,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-07-07 14:05:09.674607",
+ "modified": "2026-07-08 08:36:41.405122",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Vehicle Holder",
@@ -150,6 +150,7 @@
  "owner": "Administrator",
  "permissions": [
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,

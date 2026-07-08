@@ -33,12 +33,17 @@ frappe.ui.form.on("Vehicle Holder", {
         }
 
         // Add "Assign VINs" button
-        frm.add_custom_button(
-            __("Assign VINs"),
-            () => {
-                open_assign_vins_dialog(frm);
-            }
-        );
+        if (
+            !frm.is_new()
+            && !!frm.doc.vehicle_holder_history.length
+        ) {
+            frm.add_custom_button(
+                __("Assign VINs"),
+                () => {
+                    open_assign_vins_dialog(frm);
+                }
+            );
+        }
         
         // frm.add_custom_button(__("Assign VINs"), async () => {
             
