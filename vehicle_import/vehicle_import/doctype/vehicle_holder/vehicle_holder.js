@@ -3,7 +3,14 @@
 
 frappe.ui.form.on("Vehicle Holder", {
     refresh(frm) {
-
+        
+        // Make "Vehicle Holder Dewtail" read-only if "Vehicle Holder" is not "Independent"
+        frm.set_df_property(
+            "vehicle_holder_detail", 
+            "read_only", 
+            !frm.doc.vehicle_holder_type_independent);
+        frm.refresh_field("vehicle_holder_detail");
+        
         // Add "Import Vehicles" button
         const can_import =
             !frm.is_new() &&
@@ -64,13 +71,12 @@ frappe.ui.form.on("Vehicle Holder", {
                 }
             );
         }
-        
-        // Make "Vehicle Holder Dewtail" read-only if "Vehicle Holder" is not "Independent"
-        frm.set_df_property(
-            "vehicle_holder_detail", 
-            "read_only", 
-            !frm.doc.vehicle_holder_type_independent);
-        frm.refresh_field("vehicle_holder_detail");
+
+        // Render Vehicle Holder Cost Report
+        vehicle_import.load_vehicle_holder_cost_report(
+            frm
+        );
+
     }
 });
 

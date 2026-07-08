@@ -110,7 +110,7 @@ window.vehicle_import.open_cost_entry_dialog = function (options) {
                 },
 
                 callback(r) {
-
+                    
                     dialog.hide();
 
                     frappe.show_alert({
