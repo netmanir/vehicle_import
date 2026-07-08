@@ -13,9 +13,9 @@ IGNORE_TEST_RECORD_DEPENDENCIES = []  # eg. ["User"]
 
 
 
-class IntegrationTestQuotagePackingList(IntegrationTestCase):
+class IntegrationTestCostLedger(IntegrationTestCase):
 	"""
-	Integration tests for QuotagePackingList.
+	Integration tests for CostLedger.
 	Use this class for testing interactions between multiple components.
 	"""
 

@@ -6,7 +6,6 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "amended_from",
   "section_break_zu60",
   "cost_entry_reference_doctype",
   "cost_entry_reference_name",
@@ -26,16 +25,6 @@
   {
    "fieldname": "section_break_t9sd",
    "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Cost Entry",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
   },
   {
    "fieldname": "cost_entry_date",
@@ -143,9 +132,8 @@
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
- "is_submittable": 1,
  "links": [],
- "modified": "2026-07-08 12:47:32.419688",
+ "modified": "2026-07-08 12:55:31.864246",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Cost Entry",
@@ -162,7 +150,6 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
-   "submit": 1,
    "write": 1
   }
  ],
@@ -170,5 +157,6 @@
  "rows_threshold_for_grid_search": 20,
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "track_changes": 1
 }

@@ -1,7 +1,7 @@
 // Copyright (c) 2026, ACP and contributors
 // For license information, please see license.txt
 
-// frappe.ui.form.on("Quotage Detail", {
+// frappe.ui.form.on("Cost Ledger", {
 // 	refresh(frm) {
 
 // 	},

@@ -7,32 +7,31 @@
  "engine": "InnoDB",
  "field_order": [
   "section_break_90qf",
-  "vin_cost_ledger_vin",
-  "vin_cost_ledger_cost_entry",
-  "___amounts_section",
-  "vin_cost_ledger_currency",
-  "vin_cost_ledger_exchange_rate",
-  "vin_cost_ledger_foreign_amount",
-  "vin_cost_ledger_base_currency",
-  "vin_cost_ledger_base_amount",
-  "vin_cost_ledger_remark"
+  "cost_ledger_vin",
+  "cost_ledger_cost_entry",
+  "section_break_wljw",
+  "cost_ledger_currency",
+  "cost_ledger_exchange_rate",
+  "cost_ledger_foreign_amount",
+  "cost_ledger_base_currency",
+  "cost_ledger_base_amount",
+  "cost_ledger_remark"
  ],
  "fields": [
   {
    "fieldname": "section_break_90qf",
-   "fieldtype": "Section Break",
-   "label": "___Identity"
+   "fieldtype": "Section Break"
   },
   {
-   "fieldname": "vin_cost_ledger_vin",
+   "fieldname": "cost_ledger_vin",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "VIN",
-   "options": "VINs",
+   "label": "Vehicle",
+   "options": "Vehicle Unit",
    "reqd": 1
   },
   {
-   "fieldname": "vin_cost_ledger_cost_entry",
+   "fieldname": "cost_ledger_cost_entry",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Cost Entry",
@@ -40,64 +39,63 @@
    "reqd": 1
   },
   {
-   "fieldname": "___amounts_section",
-   "fieldtype": "Section Break",
-   "label": "___Amounts"
+   "fieldname": "section_break_wljw",
+   "fieldtype": "Section Break"
   },
   {
-   "fieldname": "vin_cost_ledger_currency",
+   "fieldname": "cost_ledger_currency",
    "fieldtype": "Link",
-   "label": "\u0627\u0631\u0632",
+   "label": "Currency",
    "options": "Currency",
    "reqd": 1
   },
   {
-   "fieldname": "vin_cost_ledger_exchange_rate",
+   "fieldname": "cost_ledger_exchange_rate",
    "fieldtype": "Currency",
-   "label": "\u0646\u0631\u062e \u0627\u0631\u0632",
+   "label": "Exchange Rate",
    "length": 10,
    "non_negative": 1,
    "precision": "2",
    "reqd": 1
   },
   {
-   "fieldname": "vin_cost_ledger_foreign_amount",
+   "fieldname": "cost_ledger_foreign_amount",
    "fieldtype": "Currency",
-   "label": "\u0645\u0628\u0644\u063a \u0627\u0631\u0632",
+   "label": "Foreign Amount",
    "length": 30,
    "non_negative": 1,
    "precision": "2",
    "reqd": 1
   },
   {
-   "fieldname": "vin_cost_ledger_base_currency",
+   "fieldname": "cost_ledger_base_currency",
    "fieldtype": "Link",
-   "label": "\u0627\u0631\u0632 \u067e\u0627\u06cc\u0647",
+   "label": "Base Currency",
    "options": "Currency",
    "reqd": 1
   },
   {
-   "fieldname": "vin_cost_ledger_base_amount",
+   "fieldname": "cost_ledger_base_amount",
    "fieldtype": "Currency",
-   "label": "\u0645\u0628\u0644\u063a \u067e\u0627\u06cc\u0647",
+   "label": "Base Amount",
    "length": 30,
    "non_negative": 1,
    "precision": "2",
    "reqd": 1
   },
   {
-   "fieldname": "vin_cost_ledger_remark",
+   "fieldname": "cost_ledger_remark",
    "fieldtype": "Small Text",
-   "label": "\u062a\u0648\u0636\u06cc\u062d\u0627\u062a"
+   "label": "Remark"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-01 15:37:35.414982",
+ "modified": "2026-07-08 13:13:46.599205",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
- "name": "VIN Cost Ledger",
+ "name": "Cost Ledger",
  "naming_rule": "UUID",
  "owner": "Administrator",
  "permissions": [

@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class QuotageDetail(Document):
+class CostLedger(Document):
 	pass
