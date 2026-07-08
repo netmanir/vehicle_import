@@ -1,151 +1,132 @@
-class AssignVINs_Dialog {
+window.vehicle_import = window.vehicle_import || {};
 
-    static async show(frm = {}) {
+window.vehicle_import.open_assign_vins_dialog = function (frm) {
 
-        const assign_vins_dialog = new AssignVINs_Dialog(frm);
-        return await assign_vins_dialog.show();
-    }
+    const dialog = new frappe.ui.Dialog({
 
-    constructor(frm) {
+        title: __("Assign VINs"),
+        size: "large",
 
-        this.frm = frm;
-    }
+        fields: [
 
+            {
+                fieldtype: "Select",
+                fieldname: "vehicle_holder_detail",
+                label: __("Vehicle Holder Detail"),
+                reqd: 1,
 
-    async show() {
+                change() {
 
-        const dialog = new frappe.ui.Dialog({
+                    const name = dialog.get_value("vehicle_holder_detail");
 
-            title: __("Assign VINs"),
-            size: "large",
+                    if (!name) {
+                        dialog.fields_dict.selected_product.$wrapper.empty();
+                        return;
+                    }
 
-            fields: [
+                    const detail = (frm.doc.vehicle_holder_detail || []).find(
+                        d => String(d.name) === String(name)
+                    );
 
-                {
-                    fieldtype: "Link",
-                    fieldname: "vehicle_holder_detail",
-                    label: __("Vehicle Holder Detail"),
-                    options: "Vehicle Holder Detail",
-                    reqd: 1,
+                    if (!detail) {
+                        dialog.fields_dict.selected_product.$wrapper.empty();
+                        return;
+                    }
 
-                    change: async () => {
-
-                        const name = dialog.get_value("vehicle_holder_detail");
-
-                        console.log("name =", name);
-                        console.log("type =", typeof name);
-                        console.log("field =", dialog.fields_dict.vehicle_holder_detail.value);
-
-                        if (!name) {
-                            dialog.fields_dict.selected_product.$wrapper.empty();
-                            return;
-                        }
-
-                        const holder_detail_result = await frappe.call({
-                            method:
-                                "vehicle_import.vehicle_import.doctype.vehicle_holder.vehicle_holder.get_holder_detail",
-                            args: {
-                                name: name,
-                            },
-                        });
-
-                        console.log("Selected:", dialog.get_value("vehicle_holder_detail"));
-
-
-                        if (!holder_detail_result.message) {
-                            return;
-                        }
-
-                        dialog.fields_dict.selected_product.$wrapper.html(`
-                            <div class="mb-3">
-                                <b>${__("Selected Product")}:</b>
-                                ${frappe.utils.escape_html(holder_detail_result.message.product)}
-                                (${holder_detail_result.message.qty})
-                            </div>
-                        `);
-                    },
+                    dialog.fields_dict.selected_product.$wrapper.html(`
+                        <div class="mb-3">
+                            <b>${__("Selected Product")}:</b>
+                            ${frappe.utils.escape_html(detail.vehicle_holder_detail_item)}
+                            (${detail.vehicle_holder_detail_quantity})
+                        </div>
+                    `);
                 },
-
-                {
-                    fieldtype: "HTML",
-                    fieldname: "selected_product",
-                },
-
-                {
-                    fieldtype: "Section Break",
-                },
-
-                {
-                    fieldtype: "Code",
-                    fieldname: "vins",
-                    label: __("VINs"),
-                    reqd: 1,
-                    options: "Text",
-                    description: __("Enter one VIN per line."),
-                },
-
-            ],
-
-            primary_action_label: __("Assign"),
-
-            primary_action: async (values) => {
-
-                const assign_vins_result = await frappe.call({
-
-                    method:
-                        "vehicle_import.vehicle_import.doctype.vehicle_holder.vehicle_holder.assign_vins",
-
-                    freeze: true,
-                    freeze_message: __("Assigning VINs..."),
-
-                    args: {
-                        vehicle_holder: this.frm.doc.name,
-                        vehicle_holder_detail: values.vehicle_holder_detail,
-                        vins: values.vins,
-                    },
-                });
-
-                if (!assign_vins_result.message) {
-                    return;
-                }
-
-                if (!assign_vins_result.message.success) {
-
-                    frappe.msgprint({
-                        title: __("Validation Errors"),
-                        indicator: "red",
-                        message: assign_vins_result.message.errors.join("<br>"),
-                    });
-
-                    await this.frm.reload_doc();
-                    return;
-                }
-
-                dialog.hide();
-
-                await this.frm.reload_doc();
-
-                frappe.show_alert({
-                    message: __("VINs assigned successfully."),
-                    indicator: "green",
-                });
             },
 
+            {
+                fieldtype: "HTML",
+                fieldname: "selected_product",
+            },
+
+            {
+                fieldtype: "Section Break",
+            },
+
+            {
+                fieldtype: "Code",
+                fieldname: "vins",
+                label: __("VINs"),
+                reqd: 1,
+                options: "Text",
+                description: __("Enter one VIN per line."),
+            },
+
+        ],
+
+        primary_action_label: __("Assign"),
+
+        primary_action(values) {
+
+            frappe.call({
+
+                method:
+                    "vehicle_import.vehicle_import.doctype.vehicle_holder.vehicle_holder.assign_vins",
+
+                freeze: true,
+                freeze_message: __("Assigning VINs..."),
+
+                args: {
+                    vehicle_holder: frm.doc.name,
+                    vehicle_holder_detail: values.vehicle_holder_detail,
+                    vins: values.vins,
+                },
+
+                callback(r) {
+
+                    if (!r.message) {
+                        return;
+                    }
+
+                    if (!r.message.success) {
+
+                        frappe.msgprint({
+                            title: __("Validation Errors"),
+                            indicator: "red",
+                            message: r.message.errors.join("<br>"),
+                        });
+
+                        frm.reload_doc();
+                        return;
+                    }
+
+                    dialog.hide();
+
+                    frm.reload_doc();
+
+                    frappe.show_alert({
+                        message: __("VINs assigned successfully."),
+                        indicator: "green",
+                    });
+                },
+            });
+        },
+    });
+
+    const options = [""];
+
+    (frm.doc.vehicle_holder_detail || []).forEach(detail => {
+
+        options.push({
+            value: detail.name,
+            label:
+                `${detail.vehicle_holder_detail_item} (${detail.vehicle_holder_detail_quantity})`,
         });
 
-        dialog.fields_dict.vehicle_holder_detail.get_query = () => {
+    });
 
-            return {
-                query:
-                    "vehicle_import.vehicle_import.doctype.vehicle_holder.vehicle_holder.vehicle_holder_detail_query",
-                filters: {
-                    parent: this.frm.doc.name,
-                },
-            };
-        };
+    dialog.fields_dict.vehicle_holder_detail.df.options = options;
 
-        dialog.show();       
+    dialog.refresh();
 
-        return dialog;
-    }
+    dialog.show();
 }
