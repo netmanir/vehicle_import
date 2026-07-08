@@ -19,7 +19,8 @@
   "cost_entry_base_currency",
   "cost_entry_base_amount",
   "section_break_ar5l",
-  "cost_entry_description"
+  "cost_entry_description",
+  "amended_from"
  ],
  "fields": [
   {
@@ -148,12 +149,23 @@
   {
    "fieldname": "section_break_ar5l",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Cost Entry",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2026-07-08 14:36:53.288104",
+ "modified": "2026-07-08 18:14:51.002779",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Cost Entry",
@@ -161,6 +173,7 @@
  "owner": "Administrator",
  "permissions": [
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -170,6 +183,7 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "submit": 1,
    "write": 1
   }
  ],

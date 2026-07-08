@@ -79,7 +79,7 @@ window.vehicle_import.open_cost_entry_dialog = function (options) {
             frappe.call({
 
                 method:
-                    "vehicle_import.vehicle_import.api.cost_entry.create_cost_entry",
+                    "vehicle_import.vehicle_import.services.cost_entry_service.create_cost_entry",
 
                 freeze: true,
 

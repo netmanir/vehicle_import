@@ -1,3 +1,5 @@
+import frappe
+
 from .allocation_context import AllocationContext
 from .ledger_builder import LedgerBuilder
 from .strategy_factory import StrategyFactory
@@ -5,7 +7,7 @@ from .strategy_factory import StrategyFactory
 
 class AllocationEngine:
 
-    def rebuild(
+    def submit(
         self,
         cost_entry,
     ):
@@ -23,9 +25,44 @@ class AllocationEngine:
             context,
         )
 
-        rows = LedgerBuilder().build(
+        docs = LedgerBuilder().build(
             context,
             result,
         )
 
-        return rows
+        for doc in docs:
+            ledger = frappe.get_doc(doc)
+
+            ledger.insert()
+
+            ledger.submit()
+
+        return docs
+
+
+    def cancel(
+        self,
+        cost_entry,
+    ):
+
+        ledgers = frappe.get_all(
+            "Cost Ledger",
+            filters={
+                "cost_ledger_cost_entry":
+                    cost_entry.name,
+                "docstatus":
+                    1,
+            },
+            pluck="name",
+        )
+
+        for ledger_name in ledgers:
+
+            ledger = frappe.get_doc(
+                "Cost Ledger",
+                ledger_name,
+            )
+
+            ledger.cancel()
+
+        return ledgers
