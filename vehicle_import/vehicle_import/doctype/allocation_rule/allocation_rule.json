@@ -1,13 +1,12 @@
 {
  "actions": [],
  "allow_bulk_edit": 1,
- "autoname": "field:allocation_rule_code",
+ "autoname": "field:allocation_rule_title",
  "creation": "2026-06-28 14:08:56.071950",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "section_break_1ctb",
-  "allocation_rule_code",
   "allocation_rule_title",
   "allocation_rule_description",
   "allocation_python_class",
@@ -19,20 +18,13 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "allocation_rule_code",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "\u06a9\u062f",
-   "reqd": 1,
-   "unique": 1
-  },
-  {
    "fieldname": "allocation_rule_title",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "\u0639\u0646\u0648\u0627\u0646",
    "reqd": 1,
-   "translatable": 1
+   "translatable": 1,
+   "unique": 1
   },
   {
    "fieldname": "allocation_rule_description",
@@ -41,7 +33,10 @@
   },
   {
    "fieldname": "allocation_python_class",
-   "fieldtype": "Data",
+   "fieldtype": "Small Text",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "\u06a9\u0644\u0627\u0633 \u06a9\u062f"
   },
   {
@@ -56,7 +51,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-01 19:09:09.207016",
+ "modified": "2026-07-08 16:00:09.261012",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Allocation Rule",
