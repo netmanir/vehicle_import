@@ -30,7 +30,9 @@ Independent, سند پایه
 Vehicle Holder, سند تراکنش
 Vehicle Holders, اسناد تراکنش
 Vehicle Holder Detail, آیتم
+Holder Detail, آیتم
 Vehicle Holder Details, آیتم‌ها
+Holder Details, آیتم‌ها
 Document Nr, شماره سند
 Vehicles, وسایل نقلیه
 Vehicle Holder Validation, اعتبارسنجی سند تراکنش
@@ -75,3 +77,8 @@ Saving..., در حال ذخیره...
 Cost Entry created., رکورد هزینه ثبت شد.
 
 No costs found., هزینه‌ای ثبت نشده است.
+
+Please use the 'Cancel Vehicle Holder' action., از کلید 'لغو سند تراکنش' استفاده کنید.
+Cancel Vehicle Holder, لغو سند تراکنش
+The following related documents will also be cancelled:, این اسناد مرتبط نیز لغو می‌شود:
+Do you want to continue?, آیا ادامه می‌دهید؟

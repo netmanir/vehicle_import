@@ -15,8 +15,7 @@
   "section_break_mxeb",
   "vehicle_history_valid_from",
   "column_break_ixa5",
-  "vehicle_history_valid_to",
-  "section_break_tlhd"
+  "vehicle_history_valid_to"
  ],
  "fields": [
   {
@@ -75,10 +74,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "section_break_tlhd",
-   "fieldtype": "Section Break"
-  },
-  {
    "fieldname": "vehicle_history_reference",
    "fieldtype": "Link",
    "label": "Reference",
@@ -89,7 +84,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-07-07 10:04:36.027137",
+ "modified": "2026-07-11 09:46:50.563595",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Vehicle History",

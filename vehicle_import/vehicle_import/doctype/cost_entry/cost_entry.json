@@ -79,6 +79,7 @@
    "in_standard_filter": 1,
    "label": "\u0645\u0628\u0644\u063a",
    "length": 30,
+   "options": "cost_entry_currency",
    "precision": "2",
    "read_only": 1,
    "reqd": 1
@@ -102,6 +103,7 @@
    "in_standard_filter": 1,
    "label": "\u0645\u0628\u0644\u063a \u067e\u0627\u06cc\u0647",
    "length": 30,
+   "options": "cost_entry_base_currency",
    "precision": "2",
    "read_only": 1
   },
@@ -165,7 +167,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-07-08 18:14:51.002779",
+ "modified": "2026-07-11 20:05:59.757029",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Cost Entry",

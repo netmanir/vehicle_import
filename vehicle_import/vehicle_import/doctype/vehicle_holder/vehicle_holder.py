@@ -8,8 +8,11 @@ from frappe.query_builder import DocType
 from pypika import Case
 from frappe.desk.search import validate_and_sanitize_search_inputs
 from frappe import qb
-from frappe.query_builder.functions import Concat
-from frappe.model.delete_doc import check_if_doc_is_linked
+
+from frappe.model.delete_doc import (
+    get_linked_docs,
+    get_dynamic_linked_docs,
+)
 
 from vehicle_import.vehicle_import.services.vehicle_holder_service import VehicleHolderService
 
@@ -29,7 +32,10 @@ class VehicleHolder(Document):
 
 
     def before_cancel(self):
-        check_if_doc_is_linked(self)
+        if not frappe.flags.vehicle_holder_cancel:
+            frappe.throw(
+                _("Please use the 'Cancel Vehicle Holder' action.")
+            )
 
 
     # ---------------------------------------------------------
@@ -130,7 +136,7 @@ class VehicleHolder(Document):
         ]
 
 
-    def _import_vehicle(self, vehicle):
+    def _import_vehicle(self, vehicle, reference):
 
         detail = self._find_or_create_detail(
             vehicle["vehicle_item"]
@@ -139,7 +145,7 @@ class VehicleHolder(Document):
         self.append("vehicle_holder_history", {
             "vehicle_history_vehicle": vehicle["vehicle_history_vehicle"],
             "vehicle_history_vehicle_holder_detail": detail.name,
-            "vehicle_history_reference": vehicle["parent"],
+            "vehicle_history_reference": reference,
         })
 
 
@@ -274,7 +280,7 @@ def get_holder_histories(
 
 
 @frappe.whitelist()
-def import_vehicles(holder, vehicles):
+def import_vehicles(holder, vehicles, reference):
 
     doc = frappe.get_doc("Vehicle Holder", holder)
 
@@ -288,8 +294,6 @@ def import_vehicles(holder, vehicles):
     doc.save()
 
     # Step 2: Create Histories
-    doc = frappe.get_doc("Vehicle Holder", holder)    
-
     duplicate_vehicles = []
     for vehicle in vehicles:
         if frappe.db.exists(
@@ -302,7 +306,7 @@ def import_vehicles(holder, vehicles):
             duplicate_vehicles.append(vehicle["vehicle"])
             continue
 
-        doc._import_vehicle(vehicle)
+        doc._import_vehicle(vehicle, reference)
 
     doc._is_importing = True
     doc.save()
@@ -394,3 +398,24 @@ def assign_vins(
     )
     
 
+@frappe.whitelist()
+def get_cancel_preview(holder):
+
+    doc = frappe.get_doc("Vehicle Holder", holder)
+    links = (
+        get_linked_docs(doc, "Cancel")
+        + get_dynamic_linked_docs(doc, "Cancel")
+    )
+    return links
+
+
+@frappe.whitelist()
+def cancel_vehicle_holder(holder):
+
+    frappe.flags.vehicle_holder_cancel = True
+
+    try:
+        VehicleHolderService().cascade_cancel(holder)
+
+    finally:
+        frappe.flags.cascade_cancel = False

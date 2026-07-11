@@ -82,6 +82,7 @@
    "label": "Amount",
    "length": 32,
    "non_negative": 1,
+   "options": "vehicle_holder_detail_currency",
    "precision": "2"
   },
   {
@@ -135,7 +136,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-07-08 08:55:16.935338",
+ "modified": "2026-07-11 20:07:39.862321",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Vehicle Holder Detail",

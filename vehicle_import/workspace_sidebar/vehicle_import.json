@@ -29,34 +29,9 @@
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
-  },
-  {
-   "child": 1,
-   "collapsible": 1,
-   "icon": "file-spreadsheet",
-   "indent": 0,
-   "keep_closed": 0,
-   "label": "Quotage",
-   "link_to": "Quotage",
-   "link_type": "DocType",
-   "navigate_to_tab": "",
-   "show_arrow": 0,
-   "type": "Link"
-  },
-  {
-   "child": 1,
-   "collapsible": 1,
-   "icon": "scan-barcode",
-   "indent": 0,
-   "keep_closed": 0,
-   "label": "VINs",
-   "link_to": "VINs",
-   "link_type": "DocType",
-   "show_arrow": 0,
-   "type": "Link"
   }
  ],
- "modified": "2026-07-04 21:03:31.009595",
+ "modified": "2026-07-11 15:41:06.893180",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Vehicle Import",

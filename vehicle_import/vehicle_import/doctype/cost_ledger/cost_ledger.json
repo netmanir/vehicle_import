@@ -48,6 +48,7 @@
   {
    "fieldname": "cost_ledger_currency",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Currency",
    "options": "Currency",
    "read_only": 1,
@@ -56,6 +57,7 @@
   {
    "fieldname": "cost_ledger_exchange_rate",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "Exchange Rate",
    "length": 10,
    "non_negative": 1,
@@ -66,9 +68,11 @@
   {
    "fieldname": "cost_ledger_foreign_amount",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "Foreign Amount",
    "length": 30,
    "non_negative": 1,
+   "options": "cost_ledger_currency",
    "precision": "2",
    "read_only": 1,
    "reqd": 1
@@ -84,9 +88,11 @@
   {
    "fieldname": "cost_ledger_base_amount",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "Base Amount",
    "length": 30,
    "non_negative": 1,
+   "options": "cost_ledger_base_currency",
    "precision": "2",
    "read_only": 1,
    "reqd": 1
@@ -112,7 +118,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-07-08 18:15:01.165816",
+ "modified": "2026-07-11 20:03:45.372832",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Cost Ledger",

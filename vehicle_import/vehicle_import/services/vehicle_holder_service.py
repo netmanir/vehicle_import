@@ -222,3 +222,21 @@ class VehicleHolderService:
         self,
     ):
         frappe.db.commit()
+
+
+    def cascade_cancel(self, holder):
+
+        cost_entries = frappe.get_all(
+            "Cost Entry",
+            filters={
+                "docstatus": 1,
+                "cost_entry_reference_doctype": "Vehicle Holder",
+                "cost_entry_reference_name": holder.name,
+            },
+            pluck="name",
+        )
+
+        for name in cost_entries:
+            frappe.get_doc("Cost Entry", name).cancel()
+
+        holder.cancel()

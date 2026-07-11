@@ -1,7 +1,7 @@
 import frappe
 from frappe import _
 from frappe.query_builder import DocType
-
+from pypika import Table
 
 class VehicleHolderCostReport:
 
@@ -77,11 +77,11 @@ class VehicleHolderCostReport:
                 "width": 120,
             },
 
-            {
-                "id": "holder_detail",
-                "name": _("Holder Detail"),
-                "width": 120,
-            },
+            # {
+            #     "id": "holder_detail",
+            #     "name": _("Holder Detail"),
+            #     "width": 120,
+            # },
 
             {
                 "id": "reference",
@@ -101,74 +101,58 @@ class VehicleHolderCostReport:
         CostEntry = DocType("Cost Entry")
         VehicleUnit = DocType("Vehicle Unit")
         VehicleHistory = DocType("Vehicle History")
+        VehicleHolder = DocType("Vehicle Holder")
         VehicleHolderDetail = DocType("Vehicle Holder Detail")
 
         rows = (
 
             frappe.qb
 
-            .from_(CostLedger)
+            .from_(VehicleHolder)
 
-            .inner_join(CostEntry)
-
+            .inner_join(VehicleHolderDetail)
             .on(
-                CostLedger.cost_ledger_cost_entry
-                ==
-                CostEntry.name
-            )
-
-            .inner_join(VehicleUnit)
-
-            .on(
-                CostLedger.cost_ledger_vin
-                ==
-                VehicleUnit.name
+                VehicleHolderDetail.parent == VehicleHolder.name
             )
 
             .inner_join(VehicleHistory)
-
             .on(
-                VehicleHistory.vehicle_history_vehicle
-                ==
-                VehicleUnit.name
+                (VehicleHistory.parent == VehicleHolder.name)
+                &
+                (VehicleHistory.vehicle_history_vehicle_holder_detail == VehicleHolderDetail.name)
             )
 
-            .left_join(VehicleHolderDetail)
-
+            .inner_join(VehicleUnit)
             .on(
-                VehicleHolderDetail.name
-                ==
-                VehicleHistory.vehicle_history_vehicle_holder_detail
+                VehicleUnit.name == VehicleHistory.vehicle_history_vehicle
             )
+
+            .inner_join(CostLedger)
+            .on(
+                CostLedger.cost_ledger_vin == VehicleUnit.name
+            )
+
+            .inner_join(CostEntry)
+            .on(
+                CostEntry.name == CostLedger.cost_ledger_cost_entry
+            )
+
 
             .select(
-
                 VehicleUnit.name.as_("vehicle"),
-
                 VehicleHolderDetail.vehicle_holder_detail_item.as_("item"),
-
                 CostEntry.docstatus.as_("status"),
-
                 CostEntry.cost_entry_date.as_("cost_date"),
-
                 CostEntry.cost_entry_cost_category.as_("cost_category"),
-
                 CostLedger.cost_ledger_base_amount.as_("base_amount"),
-
                 CostLedger.cost_ledger_currency.as_("currency"),
-
                 CostLedger.cost_ledger_foreign_amount.as_("foreign_amount"),
-
-                VehicleHistory.parent.as_("holder"),
-
-                VehicleHistory.vehicle_history_vehicle_holder_detail.as_("holder_detail"),
-
-                CostEntry.cost_entry_reference_name.as_("reference"),
-
+                CostEntry.cost_entry_reference_name.as_("holder"),
+                VehicleHistory.vehicle_history_reference.as_("reference"),
             )
 
             .where(
-                VehicleHistory.parent == vehicle_holder
+                VehicleHolder.name == vehicle_holder
             )
 
             .orderby(
@@ -183,11 +167,9 @@ class VehicleHolderCostReport:
         for row in rows:
 
             row["status"] = {
-
                 0: _("Draft"),
                 1: _("Submitted"),
                 2: _("Cancelled"),
-
             }.get(row["status"])
 
             row["base_amount"] = frappe.format_value(
@@ -198,8 +180,7 @@ class VehicleHolderCostReport:
             )
 
         return rows
-
-
+    
 @frappe.whitelist()
 def get_vehicle_holder_cost_report(
     vehicle_holder,

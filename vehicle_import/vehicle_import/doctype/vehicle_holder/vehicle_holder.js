@@ -30,7 +30,8 @@ frappe.ui.form.on("Vehicle Holder", {
                     method: "vehicle_import.vehicle_import.doctype.vehicle_holder.vehicle_holder.import_vehicles",
                     args: {
                         holder: frm.doc.name,
-                        vehicles: result.vehicles
+                        vehicles: result.vehicles,
+                        reference: result.holder.name
                     }
                 });
 
@@ -63,6 +64,7 @@ frappe.ui.form.on("Vehicle Holder", {
                     vehicle_import.open_cost_entry_dialog({
                         reference_doctype: "Vehicle Holder",
                         reference_name: frm.doc.name,
+                        reference_date: frm.doc.vehicle_holder_posting_date,
 
                         callback() {
                             frm.reload_doc();
@@ -72,12 +74,57 @@ frappe.ui.form.on("Vehicle Holder", {
             );
         }
 
-        // Render Vehicle Holder Cost Report
-        vehicle_import.load_vehicle_holder_cost_report(
-            frm
-        );
+        // Vehicle Holder Cost Report
+        vehicle_import.load_vehicle_holder_cost_report(frm);
+        frm.layout.tabs[2].tab_link
+            .off("click.vehicle_holder_report")
+            .on("click.vehicle_holder_report", function () {
+                setTimeout(() => {
+                    vehicle_import.load_vehicle_holder_cost_report(frm);
+                }, 50);
+            });
 
-    }
+        // Add "Cancel Vehicle Holder" button
+        frm.add_custom_button(
+            __("Cancel Vehicle Holder"),
+            async () => {
+                const { message: links } = await frappe.call({
+                    method: "vehicle_import.vehicle_import.doctype.vehicle_holder.vehicle_holder.get_cancel_preview",
+                    args: {
+                        holder: frm.doc.name
+                    }
+                });
+
+            let message = __("The following related documents will also be cancelled:");
+
+            if (links.length) {
+
+                message += "<hr>";
+
+                links.forEach(link => {
+                    message += 
+                        `<span> • ${frappe.utils.get_form_link(
+                            link.reference_doctype,
+                            link.reference_docname,
+                            true
+                        )}  </span>`;
+                });
+            }
+
+            message += "<hr>" + __("Do you want to continue?");
+
+            frappe.confirm(message, async () => {
+                await frappe.call({
+                    method: "vehicle_import.vehicle_import.doctype.vehicle_holder.vehicle_holder.cancel_vehicle_holder",
+                    args: {
+                        holder: frm.doc.name
+                    }
+                });
+                frm.reload_doc();
+            });
+
+        }, __("Actions"));        
+    },
 });
 
 frappe.form.link_formatters["Vehicle Holder Detail"] = function (value) {
