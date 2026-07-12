@@ -231,7 +231,7 @@ class VehicleHolderService:
             filters={
                 "docstatus": 1,
                 "cost_entry_reference_doctype": "Vehicle Holder",
-                "cost_entry_reference_name": holder.name,
+                "cost_entry_reference_name": holder,
             },
             pluck="name",
         )
@@ -239,4 +239,4 @@ class VehicleHolderService:
         for name in cost_entries:
             frappe.get_doc("Cost Entry", name).cancel()
 
-        holder.cancel()
+        frappe.get_doc("Vehicle Holder", holder).cancel()

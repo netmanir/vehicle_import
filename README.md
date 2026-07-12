@@ -10,6 +10,8 @@ You can install this app using the [bench](https://github.com/frappe/bench) CLI:
 cd $PATH_TO_YOUR_BENCH
 bench get-app $URL_OF_THIS_REPO --branch version-16
 bench install-app vehicle_import
+
+bench pip install jdatetime
 ```
 
 ### Contributing

@@ -13,7 +13,7 @@ window.vehicle_import.load_vehicle_holder_cost_report = function (frm) {
     field.$wrapper.empty();
 
     const wrapper = $(
-        `<div style="height:600px;"></div>`
+        `<div></div>`
     );
 
     field.$wrapper.append(
@@ -39,29 +39,14 @@ window.vehicle_import.load_vehicle_holder_cost_report = function (frm) {
             r.message.columns.forEach(col => {
 
                 switch (col.id) {
-
-                    case "vehicle":
-                        col.format = value =>
-                            `<a target="_blank" href="/app/vehicle-unit/${value}">${value}</a>`;
+                    case "vin":
+                        col.format = (value, row, column, data) =>
+                            `<a target="_blank" href="/app/vehicle-unit/${data.vehicle}">${value}</a>`;
                         break;
 
                     case "holder":
                         col.format = value =>
                             `<a target="_blank" href="/app/vehicle-holder/${value}">${value}</a>`;
-                        break;
-
-                    // case "holder_detail":
-                    //     col.format = value =>
-                    //         `<a href="/app/vehicle-holder-detail/${value}">${value}</a>`;
-                    //     break;
-
-                    case "reference":
-                        col.format = value =>
-                            `<a target="_blank" href="/app/vehicle-holder/${value}">${value}</a>`;
-                        break;
-
-                    case "cost_category":
-                        col.format = value => __(value);
                         break;
                 }
 
@@ -72,9 +57,9 @@ window.vehicle_import.load_vehicle_holder_cost_report = function (frm) {
                 {
                     columns: r.message.columns,
                     data: r.message.rows,
-                    inlineFilters: false,
+                    inlineFilters: true,
                     checkboxColumn: false,
-                    serialNoColumn: false,
+                    serialNoColumn: true,
                     layout: "fluid",
                     noDataMessage: __("No costs found."),
                 }

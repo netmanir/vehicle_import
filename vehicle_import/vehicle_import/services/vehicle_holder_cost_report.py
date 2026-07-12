@@ -1,7 +1,9 @@
 import frappe
 from frappe import _
 from frappe.query_builder import DocType
-from pypika import Table
+from pypika import Table, Case
+from frappe.utils import fmt_money
+import jdatetime
 
 class VehicleHolderCostReport:
 
@@ -24,8 +26,8 @@ class VehicleHolderCostReport:
         return [
 
             {
-                "id": "vehicle",
-                "name": _("Vehicle"),
+                "id": "vin",
+                "name": _("VIN"),
                 "width": 90,
             },
 
@@ -55,7 +57,7 @@ class VehicleHolderCostReport:
 
             {
                 "id": "base_amount",
-                "name": _("Base Amount"),
+                "name": _("Amount"),
                 "width": 130,
             },
 
@@ -84,10 +86,11 @@ class VehicleHolderCostReport:
             # },
 
             {
-                "id": "reference",
-                "name": _("Reference"),
-                "width": 120,
+                "id": "creation_date",
+                "name": _("Creation"),
+                "width": 110,
             },
+
 
         ]
 
@@ -140,15 +143,24 @@ class VehicleHolderCostReport:
 
             .select(
                 VehicleUnit.name.as_("vehicle"),
+                Case()
+                    .when(
+                        (VehicleUnit.vehicle_vin.isnull())
+                        |
+                        (VehicleUnit.vehicle_vin == ""),
+                        VehicleUnit.name,
+                    )
+                    .else_(VehicleUnit.vehicle_vin)
+                .as_("vin"),
                 VehicleHolderDetail.vehicle_holder_detail_item.as_("item"),
                 CostEntry.docstatus.as_("status"),
                 CostEntry.cost_entry_date.as_("cost_date"),
+                CostEntry.creation.as_("creation_date"),
                 CostEntry.cost_entry_cost_category.as_("cost_category"),
                 CostLedger.cost_ledger_base_amount.as_("base_amount"),
                 CostLedger.cost_ledger_currency.as_("currency"),
                 CostLedger.cost_ledger_foreign_amount.as_("foreign_amount"),
                 CostEntry.cost_entry_reference_name.as_("holder"),
-                VehicleHistory.vehicle_history_reference.as_("reference"),
             )
 
             .where(
@@ -172,12 +184,16 @@ class VehicleHolderCostReport:
                 2: _("Cancelled"),
             }.get(row["status"])
 
-            row["base_amount"] = frappe.format_value(
+            row["cost_category"] = _(row["cost_category"])
+
+            row["base_amount"] = fmt_money(
                 row["base_amount"],
-                {
-                    "fieldtype": "Currency",
-                },
+                precision=0,
             )
+
+            if frappe.local.lang == "fa":
+                row["cost_date"] = jdatetime.date.fromgregorian(date=row["cost_date"]).strftime("%Y/%m/%d")
+                row["creation_date"] = jdatetime.date.fromgregorian(date=row["creation_date"]).strftime("%Y/%m/%d")
 
         return rows
     
