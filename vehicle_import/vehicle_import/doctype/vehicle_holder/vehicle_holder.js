@@ -124,6 +124,18 @@ frappe.ui.form.on("Vehicle Holder", {
             });
 
         }, __("Actions"));        
+
+
+        // Add "Export to Excel" button
+        frm.add_custom_button(
+            __("Export to Excel"),
+            () => {
+                window.open(
+                    `/api/method/vehicle_import.vehicle_import.services.vehicle_holder_cost_report.export_vehicle_holder_cost_report?vehicle_holder=${frm.doc.name}`
+                );
+            },
+            __("Actions")
+        );
     },
 });
 

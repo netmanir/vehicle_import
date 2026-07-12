@@ -5,6 +5,15 @@ from pypika import Table, Case
 from frappe.utils import fmt_money
 import jdatetime
 
+from io import BytesIO
+
+import openpyxl
+from openpyxl.styles import Font
+from openpyxl.worksheet.table import Table, TableStyleInfo
+from openpyxl.utils import get_column_letter
+from openpyxl.styles import Font, Alignment
+
+
 class VehicleHolderCostReport:
 
     def execute(
@@ -12,14 +21,14 @@ class VehicleHolderCostReport:
         vehicle_holder,
     ):
 
+        rows = self.get_rows( vehicle_holder, )
+        self.append_total_row( rows, )
+
         return {
-
             "columns": self.get_columns(),
-
-            "rows": self.get_rows(
-                vehicle_holder,
-            ),
+            "rows": rows,
         }
+
 
     def get_columns(self):
 
@@ -186,8 +195,9 @@ class VehicleHolderCostReport:
 
             row["cost_category"] = _(row["cost_category"])
 
+            row["base_amount_raw"] = row["base_amount"]
             row["base_amount"] = fmt_money(
-                row["base_amount"],
+                row["base_amount_raw"],
                 precision=0,
             )
 
@@ -196,12 +206,193 @@ class VehicleHolderCostReport:
                 row["creation_date"] = jdatetime.date.fromgregorian(date=row["creation_date"]).strftime("%Y/%m/%d")
 
         return rows
-    
+
+
+    def append_total_row(
+        self,
+        rows,
+    ):
+        total = sum(
+            row["base_amount_raw"]
+            for row in rows
+        )
+
+        rows.append({
+            "vin": "",
+            "item": "",
+            "status": "",
+            "cost_date": "",
+            "cost_category": _("Total"),
+            "base_amount_raw": total,
+            "base_amount": fmt_money(
+                total,
+                precision=0,
+            ),
+            "holder": "",
+            "creation_date": "",
+        })
+
+        return rows
+
+
+    def export_excel(
+        self,
+        vehicle_holder,
+    ):
+
+        rows = self.get_rows(vehicle_holder)
+        columns = self.get_columns()
+
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = _("Cost Report")
+
+        #
+        # Header
+        #
+        header_font = Font(
+            bold=True,
+        )
+
+        header_alignment = Alignment(
+            horizontal="center",
+            vertical="center",
+        )
+
+        headers = ["#"] + [
+            str(column["name"])
+            for column in columns
+        ]
+
+        for col_index, title in enumerate(headers, start=1):
+
+            cell = ws.cell(
+                row=1,
+                column=col_index,
+                value=title,
+            )
+
+            cell.font = header_font
+            cell.alignment = header_alignment
+
+        #
+        # Data
+        #
+        for row_index, row in enumerate(rows, start=2):
+
+            ws.cell(
+                row=row_index,
+                column=1,
+                value=row_index - 1,
+            )
+
+            for col_index, column in enumerate(columns, start=2):
+
+                value = row.get(column["id"])
+
+                if column["id"] == "base_amount":
+                    value = row["base_amount_raw"]
+
+                cell = ws.cell(
+                    row=row_index,
+                    column=col_index,
+                    value=value,
+                )
+
+                if column["id"] == "base_amount":
+                    cell.number_format = "#,##0"
+
+        #
+        # Table
+        #        
+        last_row = len(rows) + 1           # Header + Data
+        last_col = len(columns) + 1        # + Row Number column
+        table = Table(
+            displayName="CostReport",
+            ref=f"A1:{get_column_letter(last_col)}{last_row}",
+        )
+        style = TableStyleInfo(
+            name="TableStyleMedium2",
+            showFirstColumn=False,
+            showLastColumn=False,
+            showRowStripes=True,
+            showColumnStripes=False,
+        )
+        table.tableStyleInfo = style
+        table.headerRowCount = 1
+        table.totalsRowShown = False
+
+        ws.add_table(table)
+
+        #
+        # Total Row
+        # 
+        total_row = last_row + 1
+        ws.cell(
+            row=total_row,
+            column=6,
+            value=_("Total"),
+        ).font = Font(bold=True)
+        amount_col = 7    # با احتساب ستون شماره ردیف
+        letter = get_column_letter(amount_col)
+        cell = ws.cell(
+            row=total_row,
+            column=amount_col,
+        )
+        cell.value = f"=SUBTOTAL(9,{letter}2:{letter}{last_row})"
+        cell.font = Font(bold=True)
+        cell.number_format = '#,##0'
+
+        #
+        # Auto Filter
+        #
+        # ws.auto_filter.ref = ws.dimensions
+
+        #
+        # Freeze Header
+        #
+        ws.freeze_panes = "A2"
+
+        #
+        # Auto Width
+        #
+        for column_cells in ws.columns:
+
+            length = max(
+                len(str(cell.value or ""))
+                for cell in column_cells
+            )
+
+            ws.column_dimensions[
+                get_column_letter(column_cells[0].column)
+            ].width = min(length + 3, 50)
+
+        #
+        # Download
+        #
+        output = BytesIO()
+        wb.save(output)
+        frappe.response.filename = (
+            f"Cost Report - {vehicle_holder}.xlsx"
+        )
+        frappe.response.filecontent = output.getvalue()
+        frappe.response.type = "binary"
+
 @frappe.whitelist()
 def get_vehicle_holder_cost_report(
     vehicle_holder,
 ):
 
     return VehicleHolderCostReport().execute(
+        vehicle_holder,
+    )
+
+
+@frappe.whitelist()
+def export_vehicle_holder_cost_report(
+    vehicle_holder,
+):
+
+    VehicleHolderCostReport().export_excel(
         vehicle_holder,
     )

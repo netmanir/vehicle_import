@@ -12,6 +12,7 @@ bench get-app $URL_OF_THIS_REPO --branch version-16
 bench install-app vehicle_import
 
 bench pip install jdatetime
+bench pip install openpyxl
 ```
 
 ### Contributing
