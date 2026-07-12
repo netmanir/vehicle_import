@@ -4,7 +4,7 @@
 frappe.ui.form.on("Vehicle Holder", {
     refresh(frm) {
         
-        // Make "Vehicle Holder Dewtail" read-only if "Vehicle Holder" is not "Independent"
+        // Make "Vehicle Holder Detail" read-only if "Vehicle Holder" is not "Independent"
         frm.set_df_property(
             "vehicle_holder_detail", 
             "read_only", 
@@ -124,18 +124,6 @@ frappe.ui.form.on("Vehicle Holder", {
             });
 
         }, __("Actions"));        
-
-
-        // Add "Export to Excel" button
-        frm.add_custom_button(
-            __("Export to Excel"),
-            () => {
-                window.open(
-                    `/api/method/vehicle_import.vehicle_import.services.vehicle_holder_cost_report.export_vehicle_holder_cost_report?vehicle_holder=${frm.doc.name}`
-                );
-            },
-            __("Actions")
-        );
     },
 });
 

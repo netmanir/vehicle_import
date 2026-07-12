@@ -1,0 +1,16 @@
+.vehicle-holder-cost-summary {
+    display: flex;
+    justify-content: flex-end;
+    gap: 30px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    align-items: center;
+}
+
+.vehicle-holder-cost-summary b {
+    transition: opacity .5s;
+}
+
+.vehicle-holder-cost-summary b.summary-updated {
+    opacity: .35;
+}

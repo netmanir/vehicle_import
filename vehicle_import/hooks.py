@@ -9,7 +9,11 @@ app_include_js = [
     "/assets/vehicle_import/js/dialogs/import_vehicles_dialog.js",
     "/assets/vehicle_import/js/dialogs/assign_vins_dialog.js",
     "/assets/vehicle_import/js/dialogs/cost_entry_dialog.js",
-    "/assets/vehicle_import/js/vehicle_holder_cost_report.js"
+    "/assets/vehicle_import/js/vehicle_holder_cost_report.js",
+]
+
+app_include_css = [
+    "/assets/vehicle_import/css/vehicle_import.css"
 ]
 
 # Apps

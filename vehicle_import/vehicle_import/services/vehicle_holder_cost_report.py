@@ -21,8 +21,7 @@ class VehicleHolderCostReport:
         vehicle_holder,
     ):
 
-        rows = self.get_rows( vehicle_holder, )
-        self.append_total_row( rows, )
+        rows = self.get_rows(vehicle_holder)
 
         return {
             "columns": self.get_columns(),
@@ -37,37 +36,37 @@ class VehicleHolderCostReport:
             {
                 "id": "vin",
                 "name": _("VIN"),
-                "width": 90,
+                # "width": 90,
             },
 
             {
                 "id": "item",
                 "name": _("Item"),
-                "width": 120,
+                # "width": 120,
             },
 
             {
                 "id": "status",
                 "name": _("Status"),
-                "width": 90,
+                # "width": 90,
             },
 
             {
                 "id": "cost_date",
                 "name": _("Cost Date"),
-                "width": 110,
+                # "width": 110,
             },
 
             {
                 "id": "cost_category",
                 "name": _("Cost Category"),
-                "width": 120,
+                # "width": 120,
             },
 
             {
                 "id": "base_amount",
                 "name": _("Amount"),
-                "width": 130,
+                # "width": 200,
             },
 
             # {
@@ -84,20 +83,20 @@ class VehicleHolderCostReport:
 
             {
                 "id": "holder",
-                "name": _("Vehicle Holder"),
-                "width": 120,
+                "name": _("Document"),
+                # "width": 60,
             },
 
-            # {
-            #     "id": "holder_detail",
-            #     "name": _("Holder Detail"),
-            #     "width": 120,
-            # },
+            {
+                "id": "holder_type",
+                "name": _("Type"),
+                # "width": 60,
+            },
 
             {
                 "id": "creation_date",
                 "name": _("Creation"),
-                "width": 110,
+                # "width": 110,
             },
 
 
@@ -115,6 +114,7 @@ class VehicleHolderCostReport:
         VehicleHistory = DocType("Vehicle History")
         VehicleHolder = DocType("Vehicle Holder")
         VehicleHolderDetail = DocType("Vehicle Holder Detail")
+        RefVehicleHolder = DocType("Vehicle Holder")
 
         rows = (
 
@@ -149,6 +149,10 @@ class VehicleHolderCostReport:
                 CostEntry.name == CostLedger.cost_ledger_cost_entry
             )
 
+            .inner_join(RefVehicleHolder)
+            .on(
+                RefVehicleHolder.name == CostEntry.cost_entry_reference_name
+            )
 
             .select(
                 VehicleUnit.name.as_("vehicle"),
@@ -167,9 +171,11 @@ class VehicleHolderCostReport:
                 CostEntry.creation.as_("creation_date"),
                 CostEntry.cost_entry_cost_category.as_("cost_category"),
                 CostLedger.cost_ledger_base_amount.as_("base_amount"),
+                CostLedger.cost_ledger_base_amount.as_("base_amount_raw"),
                 CostLedger.cost_ledger_currency.as_("currency"),
                 CostLedger.cost_ledger_foreign_amount.as_("foreign_amount"),
                 CostEntry.cost_entry_reference_name.as_("holder"),
+                RefVehicleHolder.vehicle_holder_type.as_("holder_type"),
             )
 
             .where(
@@ -201,36 +207,11 @@ class VehicleHolderCostReport:
                 precision=0,
             )
 
+            row["holder_type"] = _(row["holder_type"])
+
             if frappe.local.lang == "fa":
                 row["cost_date"] = jdatetime.date.fromgregorian(date=row["cost_date"]).strftime("%Y/%m/%d")
                 row["creation_date"] = jdatetime.date.fromgregorian(date=row["creation_date"]).strftime("%Y/%m/%d")
-
-        return rows
-
-
-    def append_total_row(
-        self,
-        rows,
-    ):
-        total = sum(
-            row["base_amount_raw"]
-            for row in rows
-        )
-
-        rows.append({
-            "vin": "",
-            "item": "",
-            "status": "",
-            "cost_date": "",
-            "cost_category": _("Total"),
-            "base_amount_raw": total,
-            "base_amount": fmt_money(
-                total,
-                precision=0,
-            ),
-            "holder": "",
-            "creation_date": "",
-        })
 
         return rows
 

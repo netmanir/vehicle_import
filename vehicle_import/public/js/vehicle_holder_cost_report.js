@@ -12,33 +12,38 @@ window.vehicle_import.load_vehicle_holder_cost_report = function (frm) {
 
     field.$wrapper.empty();
 
+    const summary = $(`
+        <div class="vehicle-holder-cost-summary"></div>
+    `);
+
     const wrapper = $(
         `<div></div>`
     );
 
-    field.$wrapper.append(
-        wrapper
-    );
+    field.$wrapper.append(summary);
+    field.$wrapper.append(wrapper);
 
     frappe.call({
         method:
             "vehicle_import.vehicle_import.services.vehicle_holder_cost_report.get_vehicle_holder_cost_report",
         freeze: false,
         args: {
-            vehicle_holder:
-                frm.doc.name,
+            vehicle_holder: frm.doc.name,
         },
 
         callback(r) {
-                    
+
             if (!r.message) {
                 return;
             }
 
+            //
             // Format Columns
+            //
             r.message.columns.forEach(col => {
 
                 switch (col.id) {
+
                     case "vin":
                         col.format = (value, row, column, data) =>
                             `<a target="_blank" href="/app/vehicle-unit/${data.vehicle}">${value}</a>`;
@@ -52,6 +57,9 @@ window.vehicle_import.load_vehicle_holder_cost_report = function (frm) {
 
             });
 
+            //
+            // DataTable
+            //
             const datatable = new frappe.DataTable(
                 wrapper[0],
                 {
@@ -68,15 +76,88 @@ window.vehicle_import.load_vehicle_holder_cost_report = function (frm) {
             const dir = frappe.utils.is_rtl() ? "rtl" : "ltr";
             datatable.datatableWrapper.dir = dir;
 
-            // datatable.datamanager.data.forEach(row => {
-            //     row.vehicle = `<a href="/app/vehicle-unit/${row.vehicle}">${row.vehicle}</a>`;
-            //     // row.cost_category = `${__(row.cost_category)}`;
-            //     row.holder = `<a href="/app/vehicle-holder/${row.holder}">${row.holder}</a>`;
-            //     row.holder_detail = `<a href="/app/vehicle-holder-detail/${row.holder_detail}">${row.holder_detail}</a>`;
-            //     row.reference = `<a href="/app/vehicle-holder/${row.reference}">${row.reference}</a>`;
-            // });
+            const originalRenderRows =
+                datatable.bodyRenderer.renderRows.bind(
+                    datatable.bodyRenderer
+                );
+            datatable.bodyRenderer.renderRows = function (...args) {
+                const result = originalRenderRows(...args);
+                refresh_summary(
+                    summary,
+                    datatable,
+                    frm.doc.name,
+                );
 
-            datatable.refresh();
+                // Righ-Align in RTL mode
+                if (frappe.utils.is_rtl()) {
+                    datatable.datatableWrapper
+                        .querySelectorAll(".dt-cell:not(.dt-cell--header) > .dt-cell__content:not(.dt-cell__content--col-0)")
+                        .forEach(el => {
+                            el.style.textAlign = "right";
+                        });
+                }
+
+                return result;
+            };
+
+            datatable.refresh();         
         },
     });
 };
+
+function refresh_summary(
+    summary,
+    datatable,
+    vehicle_holder,
+) {
+    const dm = datatable.datamanager;
+    const rows = dm
+        .getFilteredRowIndices()
+        .map(i => dm.data[i]);
+
+    const total = rows.reduce(
+        (sum, row) => sum + flt(row.base_amount_raw || 0),
+        0
+    );
+
+    if (!summary.data("initialized")) {
+        summary.html(`
+            <span>
+                ${__("Records")}:
+                <b class="summary-records"></b>
+            </span>
+            <span>
+                ${__("Total Amount")}:
+                <b class="summary-amount"></b>
+            </span>
+            <button class="btn btn-primary btn-sm export-cost-report">
+                ${__("Export to Excel")}
+            </button>
+        `);
+
+        summary.find(".export-cost-report").on("click", () => {
+            window.open(
+                `/api/method/vehicle_import.vehicle_import.services.vehicle_holder_cost_report.export_vehicle_holder_cost_report?vehicle_holder=${vehicle_holder}`
+            );
+        });
+        summary.data("initialized", true);
+    }
+    summary.find(".summary-records").text(
+        rows.length
+    );
+    summary.find(".summary-amount").text(
+        format_number(total, null, 0)
+    );
+
+    // Add fade effect
+    const records = summary.find(".summary-records");
+    const amount = summary.find(".summary-amount");
+    records.text(rows.length);
+    amount.text(format_number(total, null, 0));
+    records.addClass("summary-updated");
+    amount.addClass("summary-updated");
+    setTimeout(() => {
+        records.removeClass("summary-updated");
+        amount.removeClass("summary-updated");
+    }, 500);
+}

@@ -4,9 +4,13 @@ Equal Distribution, توزیع برابر
 
 Vehicle Holder Type, نوع سند تراکنش
 Quotage, کوتاژ
+QUOTAGE, کوتاژ
 Proforma, پروفرما
+PROFORMA, پروفرما
 Container, کانتینر
+CONTAINER, کانتینر
 Packing List, پکینگ لیست
+PACKING_LIST, پکینگ لیست
 
 Add row, اضافه کردن سطر
 Add multiple, اضافه کردن چند سطر
@@ -84,3 +88,4 @@ The following related documents will also be cancelled:, این اسناد مر�
 Do you want to continue?, آیا ادامه می‌دهید؟
 
 Export to Excel, خروجی اکسل
+Records, تعداد سطر
