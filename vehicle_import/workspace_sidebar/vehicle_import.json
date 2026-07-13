@@ -15,13 +15,14 @@
    "label": "Vehicle Holder",
    "link_to": "Vehicle Holder",
    "link_type": "DocType",
+   "navigate_to_tab": "",
    "show_arrow": 0,
    "type": "Link"
   },
   {
    "child": 1,
    "collapsible": 1,
-   "icon": "scan-barcode",
+   "icon": "motorbike",
    "indent": 0,
    "keep_closed": 0,
    "label": "Vehicles",
@@ -31,8 +32,8 @@
    "type": "Link"
   }
  ],
- "modified": "2026-07-11 15:41:06.893180",
- "modified_by": "Administrator",
+ "modified": "2026-07-13 09:20:39.703381",
+ "modified_by": "netman@mail.ir",
  "module": "Vehicle Import",
  "name": "Vehicle Import",
  "owner": "Administrator",

@@ -74,6 +74,7 @@
   {
    "fieldname": "vehicle_holder_posting_date",
    "fieldtype": "Date",
+   "in_list_view": 1,
    "label": "Date",
    "reqd": 1
   },
@@ -159,7 +160,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-07-08 19:26:47.696102",
+ "modified": "2026-07-13 10:29:59.238681",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Vehicle Holder",

@@ -14,3 +14,7 @@
 .vehicle-holder-cost-summary b.summary-updated {
     opacity: .35;
 }
+
+jdp-container {
+    z-index: 999999 !important;
+}

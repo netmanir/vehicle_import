@@ -15,8 +15,8 @@ window.vehicle_import.open_cost_entry_dialog = function (options) {
                 fieldname: "cost_date",
                 label: __("Cost Date"),
                 // default: frappe.datetime.nowdate(),
-                default: options.reference_date,
-                reqd: 1,
+                // default: options.reference_date,
+                // reqd: 1,
             },
             {
                 fieldtype: "Column Break",
