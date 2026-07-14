@@ -9,23 +9,20 @@ window.vehicle_import.open_cost_entry_dialog = function (options) {
         size: "large",
 
         fields: [
-
-            {
-                fieldtype: "Date",
-                fieldname: "cost_date",
-                label: __("Cost Date"),
-                // default: frappe.datetime.nowdate(),
-                // default: options.reference_date,
-                // reqd: 1,
-            },
-            {
-                fieldtype: "Column Break",
-            },
             {
                 fieldtype: "Link",
                 fieldname: "cost_category",
                 label: __("Cost Category"),
                 options: "Cost Category",
+                reqd: 1,
+            },
+            {
+                fieldtype: "Column Break",
+            },
+            {
+                fieldtype: "Date",
+                fieldname: "cost_date",
+                label: __("Cost Date"),
                 reqd: 1,
             },
 
@@ -132,5 +129,16 @@ window.vehicle_import.open_cost_entry_dialog = function (options) {
     });
 
     dialog.show();
+
+    dialog.$wrapper.find(".modal-title").html(`
+        ${__("Add Cost")}
+        <small class="text-muted">
+            « ${__(options.reference_doctype)}: ${options.reference_name} »
+        </small>
+    `);
+
+    setTimeout(() => {
+        dialog.get_field("cost_date").$input.focus();
+    }, 2000);
 
 };

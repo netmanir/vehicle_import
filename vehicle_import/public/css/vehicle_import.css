@@ -18,3 +18,7 @@
 jdp-container {
     z-index: 999999 !important;
 }
+
+.frappe-control .link-btn {
+    display: none !important;
+}

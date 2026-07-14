@@ -38,6 +38,13 @@ class VehicleHolder(Document):
             )
 
 
+    def before_submit(self):
+        if not frappe.flags.vehicle_holder_submit:
+            frappe.throw(
+                _("Please use the 'Submit Vehicle Holder' action.")
+            )
+
+
     # ---------------------------------------------------------
     # Validation
     # ---------------------------------------------------------
@@ -419,3 +426,15 @@ def cancel_vehicle_holder(holder):
 
     finally:
         frappe.flags.cascade_cancel = False
+
+
+@frappe.whitelist()
+def submit_vehicle_holder(holder):
+
+    frappe.flags.vehicle_holder_submit = True
+
+    try:
+        VehicleHolderService().do_submit(holder)
+
+    finally:
+        frappe.flags.vehicle_holder_submit = False

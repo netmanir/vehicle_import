@@ -17,8 +17,8 @@
   "vehicle_holder_detail_amount",
   "section_break_qlzd",
   "vehicle_holder_detail_weight",
-  "vehicle_holder_detail_volume",
   "column_break_st4g",
+  "vehicle_holder_detail_volume",
   "vehicle_holder_detail_remark"
  ],
  "fields": [
@@ -110,6 +110,7 @@
   {
    "fieldname": "vehicle_holder_detail_remark",
    "fieldtype": "Small Text",
+   "hidden": 1,
    "in_filter": 1,
    "in_list_view": 1,
    "in_standard_filter": 1,
@@ -136,7 +137,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-07-11 20:07:39.862321",
+ "modified": "2026-07-14 09:38:33.079260",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Vehicle Holder Detail",

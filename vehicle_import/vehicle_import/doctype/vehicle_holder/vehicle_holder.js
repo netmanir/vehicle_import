@@ -10,7 +10,7 @@ frappe.ui.form.on("Vehicle Holder", {
             "read_only", 
             !frm.doc.vehicle_holder_type_independent);
         frm.refresh_field("vehicle_holder_detail");
-        
+
         // Add "Import Vehicles" button
         const can_import =
             !frm.is_new() &&
@@ -36,6 +36,11 @@ frappe.ui.form.on("Vehicle Holder", {
                 });
 
                 await frm.reload_doc();
+                
+                frappe.show_alert({
+                    message: __("Imported successfully."),
+                    indicator: "green",
+                });
             });
         }
 
@@ -49,11 +54,12 @@ frappe.ui.form.on("Vehicle Holder", {
                 __("Assign VINs"),
                 () => {
                     vehicle_import.open_assign_vins_dialog(frm);
+                    // frappe.show_alert is called inside method
                 }
             );
         }
         
-        // Add "Add Cost" button
+        // Add "Add Cost" button to Form
         const can_add_cost =
             !frm.is_new() &&
             frm.doc.docstatus === 1;
@@ -70,10 +76,14 @@ frappe.ui.form.on("Vehicle Holder", {
                             frm.reload_doc();
                         },
                     });
+                    // frappe.show_alert is called inside method
                 }
             );
         }
 
+        // Add "Add Cost" button to Vehicle Detial Grid
+        setup_cost_entry_button_in_detail_grid(frm);
+        
         // Vehicle Holder Cost Report
         vehicle_import.load_vehicle_holder_cost_report(frm);
         frm.layout.tabs[2].tab_link
@@ -84,46 +94,83 @@ frappe.ui.form.on("Vehicle Holder", {
                 }, 50);
             });
 
+        // Add "Submit Vehicle Holder" button
+        if (frm.doc.docstatus !== 1) {
+            frm.add_custom_button(
+                __("Submit Vehicle Holder"),
+                async () => {
+                    let message = __("This documents will submitted permanently!");
+                    message += "<br>" + __("Do you want to continue?");
+
+                    frappe.confirm(message, async () => {
+                        await frappe.call({
+                            method: "vehicle_import.vehicle_import.doctype.vehicle_holder.vehicle_holder.submit_vehicle_holder  ",
+                            args: {
+                                holder: frm.doc.name
+                            }
+                        });
+
+                        frm.reload_doc();
+
+                        frappe.show_alert({
+                            message: __("Submitted successfully."),
+                            indicator: "green",
+                        });
+                    });
+
+                }, __("Actions"));
+        } 
+
         // Add "Cancel Vehicle Holder" button
-        frm.add_custom_button(
-            __("Cancel Vehicle Holder"),
-            async () => {
-                const { message: links } = await frappe.call({
-                    method: "vehicle_import.vehicle_import.doctype.vehicle_holder.vehicle_holder.get_cancel_preview",
-                    args: {
-                        holder: frm.doc.name
+        if (frm.doc.docstatus === 1) {
+            frm.add_custom_button(
+                __("Cancel Vehicle Holder"),
+                async () => {
+                    const { message: links } = await frappe.call({
+                        method: "vehicle_import.vehicle_import.doctype.vehicle_holder.vehicle_holder.get_cancel_preview",
+                        args: {
+                            holder: frm.doc.name
+                        }
+                    });
+
+                    let message = __("The following related documents will also be cancelled:");
+
+                    if (links.length) {
+
+                        message += "<hr>";
+
+                        links.forEach(link => {
+                            message +=
+                                `<span> • ${frappe.utils.get_form_link(
+                                    link.reference_doctype,
+                                    link.reference_docname,
+                                    true
+                                )}  </span>`;
+                        });
                     }
-                });
 
-            let message = __("The following related documents will also be cancelled:");
+                    message += "<hr>" + __("Do you want to continue?");
 
-            if (links.length) {
+                    frappe.confirm(message, async () => {
+                        await frappe.call({
+                            method: "vehicle_import.vehicle_import.doctype.vehicle_holder.vehicle_holder.cancel_vehicle_holder",
+                            args: {
+                                holder: frm.doc.name
+                            }
+                        });
 
-                message += "<hr>";
+                        frm.reload_doc();
 
-                links.forEach(link => {
-                    message += 
-                        `<span> • ${frappe.utils.get_form_link(
-                            link.reference_doctype,
-                            link.reference_docname,
-                            true
-                        )}  </span>`;
-                });
-            }
+                        frappe.show_alert({
+                            message: __("Cancelled successfully."),
+                            indicator: "green",
+                        });
+                    });
 
-            message += "<hr>" + __("Do you want to continue?");
-
-            frappe.confirm(message, async () => {
-                await frappe.call({
-                    method: "vehicle_import.vehicle_import.doctype.vehicle_holder.vehicle_holder.cancel_vehicle_holder",
-                    args: {
-                        holder: frm.doc.name
-                    }
-                });
-                frm.reload_doc();
-            });
-
-        }, __("Actions"));        
+                }, __("Actions"));
+        }
+        
+        show_detail_names(frm);
     },
 });
 
@@ -144,3 +191,68 @@ frappe.form.link_formatters["Vehicle Holder Detail"] = function (value) {
     return detail.vehicle_holder_detail_item || value;
 };
 
+function setup_cost_entry_button_in_detail_grid(frm) {
+    if (frm.doc.docstatus !== 1) {
+        return;
+    }
+    const grid = frm.fields_dict.vehicle_holder_detail.grid;
+    grid.grid_rows.forEach(row => {
+        if (!row.open_form_button) {
+            row.add_open_form_button();
+        }
+        if (!row.open_form_button) {
+            return;
+        }
+
+        // قبلاً اضافه شده؟
+        if (row.open_form_button.find(".btn-cost-entry").length) {
+            return;
+        }
+        row.open_form_button.css({
+            display: "flex",
+            alignItems: "center",
+            gap: "6px"
+        });
+        const button = $(`
+            <a class="btn-cost-entry"
+               title="${__("Add Cost")}">
+                ${frappe.utils.icon("dollar-sign", "xs")}
+            </a>
+        `);
+        button.tooltip({
+            delay: {
+                show: 600,
+                hide: 100
+            }
+        });
+        button.on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            vehicle_import.open_cost_entry_dialog({
+                reference_doctype: row.doc.doctype,
+                reference_name: row.doc.name,
+                callback() {
+                    frm.reload_doc();
+                }
+            });
+            // frappe.show_alert is called inside method
+        });
+        row.open_form_button.append(button);
+    });
+}
+
+function show_detail_names(frm) {
+
+    const grid = frm.fields_dict.vehicle_holder_detail.grid;
+
+    grid.grid_rows.forEach(row => {
+
+        const index = row.wrapper.find(".row-index span");
+
+        if (index.length) {
+            index.text(row.doc.name);
+        }
+
+    });
+
+}

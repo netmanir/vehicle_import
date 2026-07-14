@@ -58,7 +58,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-06 11:57:44.312073",
+ "modified": "2026-07-14 09:13:58.685746",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Vehicle Holder Type",
@@ -85,6 +85,5 @@
  "sort_order": "ASC",
  "states": [],
  "title_field": "vehicle_holder_type_title",
- "track_changes": 1,
- "translated_doctype": 1
+ "track_changes": 1
 }

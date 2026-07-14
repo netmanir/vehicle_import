@@ -225,7 +225,6 @@ class VehicleHolderService:
 
 
     def cascade_cancel(self, holder):
-
         cost_entries = frappe.get_all(
             "Cost Entry",
             filters={
@@ -240,3 +239,7 @@ class VehicleHolderService:
             frappe.get_doc("Cost Entry", name).cancel()
 
         frappe.get_doc("Vehicle Holder", holder).cancel()
+
+
+    def do_submit(self, holder):
+        frappe.get_doc("Vehicle Holder", holder).submit()

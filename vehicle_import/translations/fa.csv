@@ -1,4 +1,11 @@
 Vehicle Import, واردات
+Submit, تایید
+Submited, تایید شده
+Permanently Submit {0}?, سند «{0}» به طور دائمی و بدون برگشت تایید شود؟
+This documents will submitted permanently!, این سند به طور دائمی و بدون برگشت تایید می‌شود!
+Do you want to continue?, آیا ادامه می‌دهید؟
+Foreign Amount, مبلغ ارز
+Cost Entry, سند تراکنش
 
 Equal Distribution, توزیع برابر
 
@@ -11,6 +18,8 @@ Container, کانتینر
 CONTAINER, کانتینر
 Packing List, پکینگ لیست
 PACKING_LIST, پکینگ لیست
+ORDER, سفارش
+INVOICE, صورتحساب
 
 Add row, اضافه کردن سطر
 Add multiple, اضافه کردن چند سطر
@@ -39,6 +48,7 @@ Vehicle Holder Details, آیتم‌ها
 Holder Details, آیتم‌ها
 Document Nr, شماره سند
 Vehicles, وسایل نقلیه
+Vehicle Unit, وسیله نقلیه
 Vehicle Holder Validation, اعتبارسنجی سند تراکنش
 Item {0} is duplicated., آیتم {0} تکراری است.
 Quantity for item {0} cannot be less than assigned vehicles ({1})., مقدار آیتم {0} نمی‌تواند کمتر از تعداد کدهای اختصاص یافته ({1}) باشد. 
@@ -53,6 +63,7 @@ Duplicate Vehicles, آیتم تکراری
 The following vehicles were duplicated and were skipped:{0}{1}, آیتم‌های زیر تکراری بود و درج نشد:{0}{1}
 First, اولی
 Last, آخری  
+Imported successfully., با موفقیت وارد شد.
 
 Assign VINs, اختصاص VIN
 Selected Product, آیتم انتخاب شده
@@ -78,14 +89,17 @@ Amount, مبلغ
 Description, شرح
 Save, ثبت
 Saving..., در حال ذخیره...
-Cost Entry created., رکورد هزینه ثبت شد.
+Cost Entry created., هزینه ثبت شد.
 
 No costs found., هزینه‌ای ثبت نشده است.
 
 Please use the 'Cancel Vehicle Holder' action., از کلید 'لغو سند تراکنش' استفاده کنید.
+Please use the 'Submit Vehicle Holder' action., از کلید 'تایید سند تراکنش' استفاده کنید.
+Submit Vehicle Holder, تایید سند تراکنش
 Cancel Vehicle Holder, لغو سند تراکنش
 The following related documents will also be cancelled:, این اسناد مرتبط نیز لغو می‌شود:
-Do you want to continue?, آیا ادامه می‌دهید؟
+Submitted successfully., با موفقیت تایید شد.
+Cancelled successfully., با موفقیت لغو شد.
 
 Export to Excel, خروجی اکسل
 Records, تعداد سطر
