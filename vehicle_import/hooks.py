@@ -9,6 +9,7 @@ app_include_js = [
     "/assets/vehicle_import/js/dialogs/import_vehicles_dialog.js",
     "/assets/vehicle_import/js/dialogs/assign_vins_dialog.js",
     "/assets/vehicle_import/js/dialogs/cost_entry_dialog.js",
+    "/assets/vehicle_import/js/vehicle_holder_costs.js",
     "/assets/vehicle_import/js/vehicle_holder_cost_report.js",
 
     "/assets/vehicle_import/js/jalaali.js",

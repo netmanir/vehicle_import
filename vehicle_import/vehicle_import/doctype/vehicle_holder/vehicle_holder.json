@@ -24,7 +24,9 @@
   "vehicle_holder_detail",
   "section_break_i3hp",
   "vehicle_holder_history",
-  "report_tab",
+  "costs_tab",
+  "vehicle_holder_costs",
+  "costs_report_tab",
   "vehicle_holder_cost_report"
  ],
  "fields": [
@@ -151,16 +153,25 @@
    "label": "Data"
   },
   {
-   "fieldname": "report_tab",
+   "fieldname": "costs_report_tab",
    "fieldtype": "Tab Break",
-   "label": "Report"
+   "label": "Costs Report"
+  },
+  {
+   "fieldname": "costs_tab",
+   "fieldtype": "Tab Break",
+   "label": "Costs"
+  },
+  {
+   "fieldname": "vehicle_holder_costs",
+   "fieldtype": "HTML"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-07-13 10:29:59.238681",
+ "modified": "2026-07-14 15:15:32.681873",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Vehicle Holder",

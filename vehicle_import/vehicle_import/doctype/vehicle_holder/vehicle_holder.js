@@ -84,9 +84,19 @@ frappe.ui.form.on("Vehicle Holder", {
         // Add "Add Cost" button to Vehicle Detial Grid
         setup_cost_entry_button_in_detail_grid(frm);
         
+        // Vehicle Holder Costs
+        vehicle_import.load_vehicle_holder_costs(frm);
+        frm.layout.tabs[2].tab_link
+            .off("click.vehicle_holder_costs")
+            .on("click.vehicle_holder_costs", function () {
+                setTimeout(() => {
+                    vehicle_import.load_vehicle_holder_costs(frm);
+                }, 50);
+            });
+        
         // Vehicle Holder Cost Report
         vehicle_import.load_vehicle_holder_cost_report(frm);
-        frm.layout.tabs[2].tab_link
+        frm.layout.tabs[3].tab_link
             .off("click.vehicle_holder_report")
             .on("click.vehicle_holder_report", function () {
                 setTimeout(() => {

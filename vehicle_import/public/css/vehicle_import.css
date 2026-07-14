@@ -1,4 +1,4 @@
-.vehicle-holder-cost-summary {
+.vehicle-holder-cost-report-summary, .vehicle-holder-costs-summary {
     display: flex;
     justify-content: flex-end;
     gap: 30px;
@@ -7,11 +7,11 @@
     align-items: center;
 }
 
-.vehicle-holder-cost-summary b {
+.vehicle-holder-cost-report-summary b, .vehicle-holder-costs-summary b {
     transition: opacity .5s;
 }
 
-.vehicle-holder-cost-summary b.summary-updated {
+.vehicle-holder-cost-report-summary b.summary-updated, .vehicle-holder-costs-summary b.summary-updated {
     opacity: .35;
 }
 

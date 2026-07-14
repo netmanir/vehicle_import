@@ -1,9 +1,9 @@
 window.vehicle_import = window.vehicle_import || {};
 
-window.vehicle_import.load_vehicle_holder_cost_report = function (frm) {
+window.vehicle_import.load_vehicle_holder_costs = function (frm) {
 
     const field = frm.get_field(
-        "vehicle_holder_cost_report"
+        "vehicle_holder_costs"
     );
 
     if (!field) {
@@ -13,7 +13,7 @@ window.vehicle_import.load_vehicle_holder_cost_report = function (frm) {
     field.$wrapper.empty();
 
     const summary = $(`
-        <div class="vehicle-holder-cost-report-summary"></div>
+        <div class="vehicle-holder-costs-summary"></div>
     `);
 
     const wrapper = $(
@@ -25,7 +25,7 @@ window.vehicle_import.load_vehicle_holder_cost_report = function (frm) {
 
     frappe.call({
         method:
-            "vehicle_import.vehicle_import.services.vehicle_holder_cost_report.get_vehicle_holder_cost_report",
+            "vehicle_import.vehicle_import.services.vehicle_holder_costs.get_vehicle_holder_costs",
         freeze: false,
         args: {
             vehicle_holder: frm.doc.name,
@@ -40,22 +40,22 @@ window.vehicle_import.load_vehicle_holder_cost_report = function (frm) {
             //
             // Format Columns
             //
-            r.message.columns.forEach(col => {
+            // r.message.columns.forEach(col => {
 
-                switch (col.id) {
+            //     switch (col.id) {
 
-                    case "vin":
-                        col.format = (value, row, column, data) =>
-                            `<a target="_blank" href="/app/vehicle-unit/${data.vehicle}">${value}</a>`;
-                        break;
+            //         case "vin":
+            //             col.format = (value, row, column, data) =>
+            //                 `<a target="_blank" href="/app/vehicle-unit/${data.vehicle}">${value}</a>`;
+            //             break;
 
-                    case "cost_holder":
-                        col.format = value =>
-                            `<a target="_blank" href="/app/vehicle-holder/${value}">${value}</a>`;
-                        break;
-                }
+            //         case "cost_holder":
+            //             col.format = value =>
+            //                 `<a target="_blank" href="/app/vehicle-holder/${value}">${value}</a>`;
+            //             break;
+            //     }
 
-            });
+            // });
 
             //
             // DataTable
@@ -82,7 +82,7 @@ window.vehicle_import.load_vehicle_holder_cost_report = function (frm) {
                 );
             datatable.bodyRenderer.renderRows = function (...args) {
                 const result = originalRenderRows(...args);
-                refresh_cost_report_summary(
+                refresh_costs_summary(
                     summary,
                     datatable,
                     frm.doc.name,
@@ -105,7 +105,7 @@ window.vehicle_import.load_vehicle_holder_cost_report = function (frm) {
     });
 };
 
-function refresh_cost_report_summary(
+function refresh_costs_summary(
     summary,
     datatable,
     vehicle_holder,
@@ -130,14 +130,14 @@ function refresh_cost_report_summary(
                 ${__("Total Amount")}:
                 <b class="summary-amount"></b>
             </span>
-            <button class="btn btn-primary btn-sm export-cost-report">
+            <button class="btn btn-primary btn-sm export-costs">
                 ${__("Export to Excel")}
             </button>
         `);
 
-        summary.find(".export-cost-report").on("click", () => {
+        summary.find(".export-costs").on("click", () => {
             window.open(
-                `/api/method/vehicle_import.vehicle_import.services.vehicle_holder_cost_report.export_vehicle_holder_cost_report?vehicle_holder=${vehicle_holder}`
+                `/api/method/vehicle_import.vehicle_import.services.vehicle_holder_costs.export_vehicle_holder_costs?vehicle_holder=${vehicle_holder}`
             );
         });
         summary.data("initialized", true);

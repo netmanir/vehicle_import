@@ -14,7 +14,7 @@ from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, Alignment
 
 
-class VehicleHolderCostReport:
+class VehicleHolderCosts:
 
     def execute(
         self,
@@ -32,11 +32,6 @@ class VehicleHolderCostReport:
     def get_columns(self):
 
         return [
-
-            {
-                "id": "vin",
-                "name": _("VIN"),
-            },
 
             {
                 "id": "item",
@@ -59,30 +54,23 @@ class VehicleHolderCostReport:
             },
 
             {
+                "id": "currency",
+                "name": _("Currency"),
+            },
+
+            {
+                "id": "exchange_rate",
+                "name": _("Rate"),
+            },
+
+            {
+                "id": "foreign_amount",
+                "name": _("Foreign Amount"),
+            },
+
+            {
                 "id": "base_amount",
                 "name": _("Amount"),
-            },
-
-            # {
-            #     "id": "currency",
-            #     "name": _("Foreign Currency"),
-            #     "width": 90,
-            # },
-
-            # {
-            #     "id": "foreign_amount",
-            #     "name": _("Foreign Amount"),
-            #     "width": 120,
-            # },
-
-            {
-                "id": "cost_holder",
-                "name": _("Document"),
-            },
-
-            {
-                "id": "cost_reference_holder_type",
-                "name": _("Type"),
             },
 
             {
@@ -104,104 +92,43 @@ class VehicleHolderCostReport:
         vehicle_holder,
     ):
 
-        CostLedger = DocType("Cost Ledger")
         CostEntry = DocType("Cost Entry")
-        VehicleUnit = DocType("Vehicle Unit")
-        VehicleHistory = DocType("Vehicle History")
-        VehicleHolder = DocType("Vehicle Holder")
         VehicleHolderDetail = DocType("Vehicle Holder Detail")
-        RefVehicleHolder = DocType("Vehicle Holder").as_("ref_vh")
-        RefVehicleHolderDetail = DocType("Vehicle Holder Detail").as_("ref_vhd")
-        RefVehicleHolderDetail_Holder = DocType("Vehicle Holder").as_("ref_vhd_h")
 
         rows = (
 
             frappe.qb
 
-            .from_(VehicleHolder)
-
-            .inner_join(VehicleHolderDetail)
-            .on(
-                VehicleHolderDetail.parent == VehicleHolder.name
-            )
-
-            .inner_join(VehicleHistory)
-            .on(
-                (VehicleHistory.parent == VehicleHolder.name)
-                &
-                (VehicleHistory.vehicle_history_vehicle_holder_detail == VehicleHolderDetail.name)
-            )
-
-            .inner_join(VehicleUnit)
-            .on(
-                VehicleUnit.name == VehicleHistory.vehicle_history_vehicle
-            )
-
-            .inner_join(CostLedger)
-            .on(
-                CostLedger.cost_ledger_vin == VehicleUnit.name
-            )
+            .from_(VehicleHolderDetail)
 
             .inner_join(CostEntry)
             .on(
-                CostEntry.name == CostLedger.cost_ledger_cost_entry
-            )
-
-            .left_join(RefVehicleHolder)
-            .on(
-                (CostEntry.cost_entry_reference_doctype == "Vehicle Holder")
-                &
-                (RefVehicleHolder.name == CostEntry.cost_entry_reference_name)
-            )
-
-            .left_join(RefVehicleHolderDetail)
-            .on(
-                (CostEntry.cost_entry_reference_doctype == "Vehicle Holder Detail")
-                &
-                (RefVehicleHolderDetail.name == CostEntry.cost_entry_reference_name)
-            )
-
-            .left_join(RefVehicleHolderDetail_Holder)
-            .on(
-                (CostEntry.cost_entry_reference_doctype == "Vehicle Holder Detail")
-                &
-                (RefVehicleHolderDetail_Holder.name == RefVehicleHolderDetail.parent)
+                (
+                    (CostEntry.cost_entry_reference_doctype == "Vehicle Holder")
+                    &
+                    (CostEntry.cost_entry_reference_name == vehicle_holder)
+                )
+                |
+                (
+                    (CostEntry.cost_entry_reference_doctype == "Vehicle Holder Detail")
+                    &
+                    (CostEntry.cost_entry_reference_name == VehicleHolderDetail.name)
+                )
             )
 
             .select(
-                VehicleUnit.name.as_("vehicle"),
-                Case()
-                    .when(
-                        (VehicleUnit.vehicle_vin.isnull())
-                        |
-                        (VehicleUnit.vehicle_vin == ""),
-                        VehicleUnit.name,
-                    )
-                    .else_(VehicleUnit.vehicle_vin)
-                .as_("vin"),
                 VehicleHolderDetail.vehicle_holder_detail_item.as_("item"),
                 CostEntry.docstatus.as_("status"),
                 CostEntry.cost_entry_date.as_("cost_date"),
                 CostEntry.creation.as_("creation_date"),
                 CostEntry.cost_entry_cost_category.as_("cost_category"),
-                CostLedger.cost_ledger_base_amount.as_("base_amount"),
-                CostLedger.cost_ledger_currency.as_("currency"),
-                CostLedger.cost_ledger_foreign_amount.as_("foreign_amount"),
+                CostEntry.cost_entry_currency.as_("currency"),
+                CostEntry.cost_entry_exchange_rate.as_("exchange_rate"),
+                CostEntry.cost_entry_foreign_amount.as_("foreign_amount"),
+                CostEntry.cost_entry_base_amount.as_("base_amount"),
 
                 CostEntry.cost_entry_reference_name.as_("cost_reference"),
                 CostEntry.cost_entry_reference_doctype.as_("cost_reference_doctype"),
-
-                Case()
-                    .when(
-                        CostEntry.cost_entry_reference_doctype == "Vehicle Holder",
-                        RefVehicleHolder.name,
-                    )
-                    .when(
-                        CostEntry.cost_entry_reference_doctype == "Vehicle Holder Detail",
-                        RefVehicleHolderDetail.parent,
-                    )
-                    .else_(None)
-                .as_("cost_holder"),     
 
                 Case()
                     .when(
@@ -214,22 +141,10 @@ class VehicleHolderCostReport:
                     )
                     .else_(None)
                 .as_("cost_holder_detail"),     
-
-                Case()
-                    .when(
-                        CostEntry.cost_entry_reference_doctype == "Vehicle Holder",
-                        RefVehicleHolder.vehicle_holder_type,
-                    )
-                    .when(
-                        CostEntry.cost_entry_reference_doctype == "Vehicle Holder Detail",
-                        RefVehicleHolderDetail_Holder.vehicle_holder_type,
-                    )
-                    .else_(None)
-                .as_("cost_reference_holder_type"),
             )
 
             .where(
-                VehicleHolder.name == vehicle_holder
+                VehicleHolderDetail.parent == vehicle_holder
             )
 
             .orderby(
@@ -251,13 +166,23 @@ class VehicleHolderCostReport:
 
             row["cost_category"] = _(row["cost_category"])
 
+            row["exchange_rate_raw"] = row["exchange_rate"]
+            row["exchange_rate"] = fmt_money(
+                row["exchange_rate_raw"],
+                precision=0,
+            )
+
+            row["foreign_amount_raw"] = row["foreign_amount"]
+            row["foreign_amount"] = fmt_money(
+                row["foreign_amount_raw"],
+                precision=0,
+            )
+
             row["base_amount_raw"] = row["base_amount"]
             row["base_amount"] = fmt_money(
                 row["base_amount_raw"],
                 precision=0,
             )
-
-            row["cost_reference_holder_type"] = _(row["cost_reference_holder_type"])
 
             if frappe.local.lang == "fa":
                 row["cost_date"] = jdatetime.date.fromgregorian(date=row["cost_date"]).strftime("%Y/%m/%d")
@@ -276,7 +201,7 @@ class VehicleHolderCostReport:
 
         wb = openpyxl.Workbook()
         ws = wb.active
-        ws.title = _("Cost Report")
+        ws.title = _("Costs")
 
         #
         # Header
@@ -321,6 +246,12 @@ class VehicleHolderCostReport:
 
                 value = row.get(column["id"])
 
+                if column["id"] == "exchange_rate":
+                    value = row["exchange_rate_raw"]
+
+                if column["id"] == "foreign_amount":
+                    value = row["foreign_amount_raw"]
+
                 if column["id"] == "base_amount":
                     value = row["base_amount_raw"]
 
@@ -330,7 +261,7 @@ class VehicleHolderCostReport:
                     value=value,
                 )
 
-                if column["id"] == "base_amount":
+                if column["id"] in ["exchange_rate", "foreign_amount", "base_amount"]:
                     cell.number_format = "#,##0"
 
         #
@@ -339,7 +270,7 @@ class VehicleHolderCostReport:
         last_row = len(rows) + 1           # Header + Data
         last_col = len(columns) + 1        # + Row Number column
         table = Table(
-            displayName="CostReport",
+            displayName="Costs",
             ref=f"A1:{get_column_letter(last_col)}{last_row}",
         )
         style = TableStyleInfo(
@@ -353,6 +284,7 @@ class VehicleHolderCostReport:
         table.headerRowCount = 1
         table.totalsRowShown = False
 
+
         ws.add_table(table)
 
         #
@@ -364,7 +296,7 @@ class VehicleHolderCostReport:
             column=6,
             value=_("Total"),
         ).font = Font(bold=True)
-        amount_col = 7    # با احتساب ستون شماره ردیف
+        amount_col = 9    # با احتساب ستون شماره ردیف
         letter = get_column_letter(amount_col)
         cell = ws.cell(
             row=total_row,
@@ -404,26 +336,26 @@ class VehicleHolderCostReport:
         output = BytesIO()
         wb.save(output)
         frappe.response.filename = (
-            f"Cost Report - {vehicle_holder}.xlsx"
+            f"Costs - {vehicle_holder}.xlsx"
         )
         frappe.response.filecontent = output.getvalue()
         frappe.response.type = "binary"
 
 @frappe.whitelist()
-def get_vehicle_holder_cost_report(
+def get_vehicle_holder_costs(
     vehicle_holder,
 ):
 
-    return VehicleHolderCostReport().execute(
+    return VehicleHolderCosts().execute(
         vehicle_holder,
     )
 
 
 @frappe.whitelist()
-def export_vehicle_holder_cost_report(
+def export_vehicle_holder_costs(
     vehicle_holder,
 ):
 
-    VehicleHolderCostReport().export_excel(
+    VehicleHolderCosts().export_excel(
         vehicle_holder,
     )
