@@ -36,37 +36,31 @@ class VehicleHolderCostReport:
             {
                 "id": "vin",
                 "name": _("VIN"),
-                # "width": 90,
             },
 
             {
                 "id": "item",
                 "name": _("Item"),
-                # "width": 120,
             },
 
             {
                 "id": "status",
                 "name": _("Status"),
-                # "width": 90,
             },
 
             {
                 "id": "cost_date",
                 "name": _("Cost Date"),
-                # "width": 110,
             },
 
             {
                 "id": "cost_category",
                 "name": _("Cost Category"),
-                # "width": 120,
             },
 
             {
                 "id": "base_amount",
                 "name": _("Amount"),
-                # "width": 200,
             },
 
             # {
@@ -82,21 +76,23 @@ class VehicleHolderCostReport:
             # },
 
             {
-                "id": "holder",
+                "id": "cost_holder",
                 "name": _("Document"),
-                # "width": 60,
             },
 
             {
-                "id": "holder_type",
+                "id": "cost_reference_holder_type",
                 "name": _("Type"),
-                # "width": 60,
+            },
+
+            {
+                "id": "cost_holder_detail",
+                "name": _("Vehicle Holder Detail"),
             },
 
             {
                 "id": "creation_date",
                 "name": _("Creation"),
-                # "width": 110,
             },
 
 
@@ -114,7 +110,9 @@ class VehicleHolderCostReport:
         VehicleHistory = DocType("Vehicle History")
         VehicleHolder = DocType("Vehicle Holder")
         VehicleHolderDetail = DocType("Vehicle Holder Detail")
-        RefVehicleHolder = DocType("Vehicle Holder")
+        RefVehicleHolder = DocType("Vehicle Holder").as_("ref_vh")
+        RefVehicleHolderDetail = DocType("Vehicle Holder Detail").as_("ref_vhd")
+        RefVehicleHolderDetail_Holder = DocType("Vehicle Holder").as_("ref_vhd_h")
 
         rows = (
 
@@ -149,9 +147,25 @@ class VehicleHolderCostReport:
                 CostEntry.name == CostLedger.cost_ledger_cost_entry
             )
 
-            .inner_join(RefVehicleHolder)
+            .left_join(RefVehicleHolder)
             .on(
-                RefVehicleHolder.name == CostEntry.cost_entry_reference_name
+                (CostEntry.cost_entry_reference_doctype == "Vehicle Holder")
+                &
+                (RefVehicleHolder.name == CostEntry.cost_entry_reference_name)
+            )
+
+            .left_join(RefVehicleHolderDetail)
+            .on(
+                (CostEntry.cost_entry_reference_doctype == "Vehicle Holder Detail")
+                &
+                (RefVehicleHolderDetail.name == CostEntry.cost_entry_reference_name)
+            )
+
+            .left_join(RefVehicleHolderDetail_Holder)
+            .on(
+                (CostEntry.cost_entry_reference_doctype == "Vehicle Holder Detail")
+                &
+                (RefVehicleHolderDetail_Holder.name == RefVehicleHolderDetail.parent)
             )
 
             .select(
@@ -174,8 +188,45 @@ class VehicleHolderCostReport:
                 CostLedger.cost_ledger_base_amount.as_("base_amount_raw"),
                 CostLedger.cost_ledger_currency.as_("currency"),
                 CostLedger.cost_ledger_foreign_amount.as_("foreign_amount"),
-                CostEntry.cost_entry_reference_name.as_("holder"),
-                RefVehicleHolder.vehicle_holder_type.as_("holder_type"),
+
+                CostEntry.cost_entry_reference_name.as_("cost_reference"),
+                CostEntry.cost_entry_reference_doctype.as_("cost_reference_doctype"),
+
+                Case()
+                    .when(
+                        CostEntry.cost_entry_reference_doctype == "Vehicle Holder",
+                        RefVehicleHolder.name,
+                    )
+                    .when(
+                        CostEntry.cost_entry_reference_doctype == "Vehicle Holder Detail",
+                        RefVehicleHolderDetail.parent,
+                    )
+                    .else_(None)
+                .as_("cost_holder"),     
+
+                Case()
+                    .when(
+                        CostEntry.cost_entry_reference_doctype == "Vehicle Holder",
+                        None,
+                    )
+                    .when(
+                        CostEntry.cost_entry_reference_doctype == "Vehicle Holder Detail",
+                        CostEntry.cost_entry_reference_name,
+                    )
+                    .else_(None)
+                .as_("cost_holder_detail"),     
+
+                Case()
+                    .when(
+                        CostEntry.cost_entry_reference_doctype == "Vehicle Holder",
+                        RefVehicleHolder.vehicle_holder_type,
+                    )
+                    .when(
+                        CostEntry.cost_entry_reference_doctype == "Vehicle Holder Detail",
+                        RefVehicleHolderDetail_Holder.vehicle_holder_type,
+                    )
+                    .else_(None)
+                .as_("cost_reference_holder_type"),
             )
 
             .where(
@@ -207,7 +258,7 @@ class VehicleHolderCostReport:
                 precision=0,
             )
 
-            row["holder_type"] = _(row["holder_type"])
+            row["cost_reference_holder_type"] = _(row["cost_reference_holder_type"])
 
             if frappe.local.lang == "fa":
                 row["cost_date"] = jdatetime.date.fromgregorian(date=row["cost_date"]).strftime("%Y/%m/%d")

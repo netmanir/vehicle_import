@@ -49,7 +49,7 @@ window.vehicle_import.load_vehicle_holder_cost_report = function (frm) {
                             `<a target="_blank" href="/app/vehicle-unit/${data.vehicle}">${value}</a>`;
                         break;
 
-                    case "holder":
+                    case "cost_holder":
                         col.format = value =>
                             `<a target="_blank" href="/app/vehicle-holder/${value}">${value}</a>`;
                         break;
