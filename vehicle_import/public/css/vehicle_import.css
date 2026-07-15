@@ -1,4 +1,6 @@
-.vehicle-holder-cost-report-summary, .vehicle-holder-costs-summary {
+/* Datatable Summary  */
+.vehicle-holder-cost-report-summary,
+.vehicle-holder-costs-summary {
     display: flex;
     justify-content: flex-end;
     gap: 30px;
@@ -6,27 +8,28 @@
     font-weight: 600;
     align-items: center;
 }
-
-.vehicle-holder-cost-report-summary b, .vehicle-holder-costs-summary b {
+.vehicle-holder-cost-report-summary b,
+.vehicle-holder-costs-summary b {
     transition: opacity .5s;
 }
-
-.vehicle-holder-cost-report-summary b.summary-updated, .vehicle-holder-costs-summary b.summary-updated {
+.vehicle-holder-cost-report-summary b.summary-updated,
+.vehicle-holder-costs-summary b.summary-updated {
     opacity: .35;
 }
 
+
+/* Jalali DAtePicker */
 jdp-container {
     z-index: 999999 !important;
 }
-
 .frappe-control .link-btn {
     display: none !important;
 }
 
+/* Loading */
 .vehicle-import-spinner {
     animation: vehicle-import-spin 1s linear infinite;
 }
-
 @keyframes vehicle-import-spin {
     from {
         transform: rotate(0deg);
@@ -34,4 +37,18 @@ jdp-container {
     to {
         transform: rotate(360deg);
     }
+}
+
+
+/* Execel Browser Style */
+/* body:not(.full-width) .excel-browser-container {
+    max-width: var(--page-max-width);
+} */
+.excel-browser-container {
+    margin: 15px;
+}
+.excel-browser-excel-wrapper {
+    border: solid 1px silver;
+    max-height: 73vh;
+    overflow: hidden;
 }

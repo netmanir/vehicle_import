@@ -7,6 +7,16 @@
  "idx": 2,
  "items": [
   {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Vehicle Import",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Section Break"
+  },
+  {
    "child": 1,
    "collapsible": 1,
    "icon": "file-large",
@@ -54,10 +64,32 @@
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Reports",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Section Break"
+  },
+  {
+   "child": 1,
+   "collapsible": 1,
+   "icon": "table-properties",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Excel Browser",
+   "link_to": "excel-browser",
+   "link_type": "Page",
+   "show_arrow": 0,
+   "type": "Link"
   }
  ],
- "modified": "2026-07-13 14:13:55.049077",
- "modified_by": "netman@mail.ir",
+ "modified": "2026-07-15 14:20:59.326691",
+ "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Vehicle Import",
  "owner": "Administrator",

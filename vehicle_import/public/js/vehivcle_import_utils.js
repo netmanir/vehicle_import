@@ -32,3 +32,21 @@ window.vehicle_import.bind_tab_refresh = function (
             setTimeout(callback, delay);
         });
 }
+
+window.vehicle_import.bind_datatable_row_click = function (
+    datatable,
+    callback
+) {
+    $(datatable.datatableWrapper)
+        .off("click.vehicle_import_row")
+        .on(
+            "click.vehicle_import_row",
+            ".dt-row",
+            function () {
+                const row = datatable.datamanager.data[
+                    Number(this.dataset.rowIndex)
+                ];
+                callback(row);
+            }
+        );
+};
