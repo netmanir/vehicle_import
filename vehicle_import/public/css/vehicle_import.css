@@ -22,3 +22,16 @@ jdp-container {
 .frappe-control .link-btn {
     display: none !important;
 }
+
+.vehicle-import-spinner {
+    animation: vehicle-import-spin 1s linear infinite;
+}
+
+@keyframes vehicle-import-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

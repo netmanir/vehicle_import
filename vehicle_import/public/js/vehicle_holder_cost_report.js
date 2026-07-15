@@ -23,6 +23,11 @@ window.vehicle_import.load_vehicle_holder_cost_report = function (frm) {
     field.$wrapper.append(summary);
     field.$wrapper.append(wrapper);
 
+    vehicle_import.show_loading(
+        wrapper,
+        __("Loading data...")
+    );
+
     frappe.call({
         method:
             "vehicle_import.vehicle_import.services.vehicle_holder_cost_report.get_vehicle_holder_cost_report",
@@ -36,6 +41,8 @@ window.vehicle_import.load_vehicle_holder_cost_report = function (frm) {
             if (!r.message) {
                 return;
             }
+
+            wrapper.empty();
 
             //
             // Format Columns

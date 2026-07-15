@@ -6,8 +6,8 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "vehicle_holder_data_tab",
   "amended_from",
-  "data_tab",
   "section_break_oy6u",
   "vehicle_holder_type",
   "section_break_mexa",
@@ -17,6 +17,7 @@
   "section_break_bq12",
   "vehicle_holder_title",
   "vehicle_holder_doc_nr",
+  "vehicle_holder_state",
   "vehicle_holder_type_independent",
   "section_break_rwno",
   "vehicle_holder_remark",
@@ -24,9 +25,9 @@
   "vehicle_holder_detail",
   "section_break_i3hp",
   "vehicle_holder_history",
-  "costs_tab",
+  "vehicle_holder_costs_tab",
   "vehicle_holder_costs",
-  "costs_report_tab",
+  "vehicle_holder_costs_report_tab",
   "vehicle_holder_cost_report"
  ],
  "fields": [
@@ -136,6 +137,7 @@
   {
    "fieldname": "amended_from",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Amended From",
    "no_copy": 1,
    "options": "Vehicle Holder",
@@ -148,30 +150,39 @@
    "fieldtype": "HTML"
   },
   {
-   "fieldname": "data_tab",
+   "fieldname": "vehicle_holder_costs",
+   "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "vehicle_holder_state",
+   "fieldtype": "Select",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "State",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vehicle_holder_data_tab",
    "fieldtype": "Tab Break",
    "label": "Data"
   },
   {
-   "fieldname": "costs_report_tab",
-   "fieldtype": "Tab Break",
-   "label": "Costs Report"
-  },
-  {
-   "fieldname": "costs_tab",
+   "fieldname": "vehicle_holder_costs_tab",
    "fieldtype": "Tab Break",
    "label": "Costs"
   },
   {
-   "fieldname": "vehicle_holder_costs",
-   "fieldtype": "HTML"
+   "fieldname": "vehicle_holder_costs_report_tab",
+   "fieldtype": "Tab Break",
+   "label": "Costs Report"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-07-14 15:15:32.681873",
+ "modified": "2026-07-15 09:26:28.510683",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Vehicle Holder",

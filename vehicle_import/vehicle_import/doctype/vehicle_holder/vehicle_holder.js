@@ -85,24 +85,20 @@ frappe.ui.form.on("Vehicle Holder", {
         setup_cost_entry_button_in_detail_grid(frm);
         
         // Vehicle Holder Costs
-        vehicle_import.load_vehicle_holder_costs(frm);
-        frm.layout.tabs[2].tab_link
-            .off("click.vehicle_holder_costs")
-            .on("click.vehicle_holder_costs", function () {
-                setTimeout(() => {
-                    vehicle_import.load_vehicle_holder_costs(frm);
-                }, 50);
-            });
+        vehicle_import.bind_tab_refresh(
+            frm,
+            "vehicle_holder_costs_tab",
+            "vehicle_holder_costs",
+            () => vehicle_import.load_vehicle_holder_costs(frm)
+        );
         
         // Vehicle Holder Cost Report
-        vehicle_import.load_vehicle_holder_cost_report(frm);
-        frm.layout.tabs[3].tab_link
-            .off("click.vehicle_holder_report")
-            .on("click.vehicle_holder_report", function () {
-                setTimeout(() => {
-                    vehicle_import.load_vehicle_holder_cost_report(frm);
-                }, 50);
-            });
+        vehicle_import.bind_tab_refresh(
+            frm,
+            "vehicle_holder_costs_report_tab",
+            "vehicle_holder_report",
+            () => vehicle_import.load_vehicle_holder_cost_report(frm)
+        );
 
         // Add "Submit Vehicle Holder" button
         if (frm.doc.docstatus !== 1) {
@@ -218,6 +214,20 @@ function setup_cost_entry_button_in_detail_grid(frm) {
         if (row.open_form_button.find(".btn-cost-entry").length) {
             return;
         }
+
+        const header = frm.fields_dict.vehicle_holder_detail.grid.wrapper.find(
+            ".grid-heading-row .col:last"
+        );
+        header.css({
+            minWidth: "45px",
+            display: "flex",
+            justifyContent: "center"
+        });        
+        row.open_form_button.parent().css({
+            display: "flex",
+            justifyContent: "center",
+            minWidth: "45px",
+        });
         row.open_form_button.css({
             display: "flex",
             alignItems: "center",
@@ -226,7 +236,7 @@ function setup_cost_entry_button_in_detail_grid(frm) {
         const button = $(`
             <a class="btn-cost-entry"
                title="${__("Add Cost")}">
-                ${frappe.utils.icon("dollar-sign", "xs")}
+                ${frappe.utils.icon("circle-dollar-sign", "xs")}
             </a>
         `);
         button.tooltip({
@@ -266,3 +276,4 @@ function show_detail_names(frm) {
     });
 
 }
+
