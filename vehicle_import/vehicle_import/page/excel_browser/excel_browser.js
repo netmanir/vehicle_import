@@ -44,10 +44,10 @@ function load_files(page) {
             page.body.empty();
             page.body.append(container);
 
-            const files_wrapper = $("<div></div>");
+            const files_wrapper = $(`<div class="mx-5"></div>`);
             container.append(files_wrapper);
 
-            const excel_wrapper  = $(`<div class="mt-3 pt-3 excel-browser-excel-wrapper"></div>`);
+            const excel_wrapper  = $(`<div class="mt-3 excel-browser-excel-wrapper"></div>`);
             container.append(excel_wrapper );
 
             const datatable = new frappe.DataTable(

@@ -2,6 +2,17 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Vehicle Holder", {
+    
+    setup(frm) {
+        frm.set_query("vehicle_holder_warehouse", function () {
+            return {
+                filters: {
+                    is_group: 0
+                }
+            };
+        });
+    },
+
     refresh(frm) {
         
         // Make "Vehicle Holder Detail" read-only if "Vehicle Holder" is not "Independent"

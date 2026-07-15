@@ -19,6 +19,18 @@
   {
    "child": 1,
    "collapsible": 1,
+   "icon": "dashboard-list",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Vehicle Import Dashboard",
+   "link_to": "vehicle-import-dashb",
+   "link_type": "Page",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 1,
+   "collapsible": 1,
    "icon": "file-large",
    "indent": 0,
    "keep_closed": 0,
@@ -88,7 +100,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-07-15 14:20:59.326691",
+ "modified": "2026-07-15 19:35:27.233249",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Vehicle Import",

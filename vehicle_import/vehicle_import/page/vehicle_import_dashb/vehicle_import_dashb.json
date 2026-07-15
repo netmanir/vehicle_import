@@ -1,16 +1,15 @@
 {
  "content": null,
- "creation": "2026-07-15 11:03:41.574451",
+ "creation": "2026-07-15 17:21:31.408340",
  "docstatus": 0,
  "doctype": "Page",
- "icon": "table",
  "idx": 0,
- "modified": "2026-07-15 17:01:54.549887",
+ "modified": "2026-07-15 17:21:31.408340",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
- "name": "excel-browser",
+ "name": "vehicle-import-dashb",
  "owner": "Administrator",
- "page_name": "excel-browser",
+ "page_name": "vehicle-import-dashb",
  "roles": [
   {
    "role": "Vehicle Import User"
@@ -23,5 +22,5 @@
  "standard": "Yes",
  "style": null,
  "system_page": 0,
- "title": "Excel Browser"
+ "title": "Vehicle Import Dashboard"
 }

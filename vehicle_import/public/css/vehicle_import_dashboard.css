@@ -1,0 +1,61 @@
+#vi-dashboard-board {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 12px;
+    height: calc(100vh - 90px);
+}
+
+.vi-column {
+    flex: 0 0 150px;
+    display: flex;
+    flex-direction: column;
+    background: var(--vi-column-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+}
+
+.vi-column-header {
+    padding: 12px 16px;
+    font-size: 15px;
+    font-weight: 600;
+    background: var(--vi-column-color);
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.vi-column-body {
+    flex: 1;
+    min-height: 0;
+    padding: 8px;
+    overflow-y: auto;
+}
+
+.vi-card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    padding: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: .15s;
+}
+
+.vi-card:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+
+}
+.vi-card-title {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+.vi-card-doc {
+    color: var(--text-muted);
+    font-size: 12px;
+}

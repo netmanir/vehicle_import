@@ -17,8 +17,8 @@
   "section_break_bq12",
   "vehicle_holder_title",
   "vehicle_holder_doc_nr",
-  "vehicle_holder_state",
   "vehicle_holder_type_independent",
+  "vehicle_holder_warehouse",
   "section_break_rwno",
   "vehicle_holder_remark",
   "section_break_e08a",
@@ -154,15 +154,6 @@
    "fieldtype": "HTML"
   },
   {
-   "fieldname": "vehicle_holder_state",
-   "fieldtype": "Select",
-   "in_filter": 1,
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "State",
-   "read_only": 1
-  },
-  {
    "fieldname": "vehicle_holder_data_tab",
    "fieldtype": "Tab Break",
    "label": "Data"
@@ -176,14 +167,21 @@
    "fieldname": "vehicle_holder_costs_report_tab",
    "fieldtype": "Tab Break",
    "label": "Costs Report"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "vehicle_holder_warehouse",
+   "fieldtype": "Link",
+   "label": "Warehouse",
+   "options": "Warehouse"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-07-15 09:26:28.510683",
- "modified_by": "Administrator",
+ "modified": "2026-07-15 19:41:02.638388",
+ "modified_by": "netman@mail.ir",
  "module": "Vehicle Import",
  "name": "Vehicle Holder",
  "naming_rule": "Autoincrement",
