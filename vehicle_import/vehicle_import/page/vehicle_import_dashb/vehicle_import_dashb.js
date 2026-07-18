@@ -22,6 +22,33 @@ function get_column_color(name) {
     return COLUMN_COLORS[Math.abs(hash) % COLUMN_COLORS.length];
 }
 
+function format_money(amount) {
+    amount = amount || 0;
+    if (amount >= 1000000000)
+        return (amount / 1000000000).toFixed(1) + ` ${__("B")}`;
+    if (amount >= 1000000)
+        return (amount / 1000000).toFixed(1) + ` ${__("M")}`;
+    if (amount >= 1000)
+        return (amount / 1000).toFixed(1) + ` ${__("K")}`;
+    return Number(amount).toLocaleString();
+}
+
+function update_column_summary(column, currency) {
+    let items = 0;
+    let cost = 0;
+    $(column).find(".vi-card").each(function () {
+        items += Number(this.dataset.items || 0);
+        cost += Number(this.dataset.cost || 0);
+    });
+    $(column).find(".vi-column-items").text(items);
+    $(column).find(".vi-column-cost")
+        .text(format_money(cost))
+        .attr(
+            "title",
+            `${Number(cost).toLocaleString()} ${__(currency)}`
+        );
+}
+
 frappe.pages["vehicle-import-dashb"].on_page_load = function (wrapper) {
 
 	const page = frappe.ui.make_app_page({
@@ -39,9 +66,8 @@ frappe.pages["vehicle-import-dashb"].on_page_load = function (wrapper) {
 	frappe.call({
 		method: "vehicle_import.vehicle_import.services.vehicle_import_dashboard.get_dashboard_data",
 		callback: function (r) {
-
-			const warehouses = r.message || [];
-
+			const currency = r.message.currency;
+			const warehouses = r.message.warehouses || [];
 			warehouses.forEach(warehouse => {
 				const color = get_column_color(warehouse.name);
 				const column = $(`
@@ -52,9 +78,21 @@ frappe.pages["vehicle-import-dashb"].on_page_load = function (wrapper) {
 							--vi-column-bg: ${color}1A;
 						">
 
-						<div class="vi-column-header"
-							title="${warehouse.warehouse_name}">
-							${warehouse.warehouse_name}
+						<div class="vi-column-header">
+							<div class="vi-column-title"
+								title="${warehouse.warehouse_name}">
+								${warehouse.warehouse_name}
+							</div>
+							<div class="vi-card-summary">
+								<div class="vi-card-summary-item">
+									${frappe.utils.icon("package", "xs")}
+									<span class="vi-column-items">0</span>
+								</div>
+								<div class="vi-card-summary-item" title="">
+									${frappe.utils.icon("circle-dollar-sign", "xs")}
+									<span class="vi-column-cost">0</span>
+								</div>
+							</div>
 						</div>
 						<div class="vi-column-body"></div>
 					</div>
@@ -63,61 +101,100 @@ frappe.pages["vehicle-import-dashb"].on_page_load = function (wrapper) {
 				const body = column.find(".vi-column-body");
 				(warehouse.holders || []).forEach(holder => {
 					body.append(`
-						<div class="vi-card" 
+						<div class="vi-card"
 							draggable="true"
-							data-holder="${holder.name}">
+							data-holder="${holder.name}"
+							data-items="${holder.summary.item_count}"
+							data-cost="${holder.summary.total_cost}">
+
 							<div class="vi-card-title">
-								${holder.vehicle_holder_title || ""}
+								<a
+									href="/app/vehicle-holder/${holder.name}"
+									target="_blank"
+									class="vi-holder-link"
+									title="${frappe.utils.escape_html(holder.vehicle_holder_title || "")}">
+									${frappe.utils.escape_html(holder.vehicle_holder_title || "")}
+								</a>
 							</div>
+
 							<div class="vi-card-doc">
 								${holder.vehicle_holder_doc_nr || ""}
+							</div>
+
+							<div class="vi-card-summary">
+
+								<div class="vi-card-summary-item">
+									${frappe.utils.icon("package", "xs")}
+									<span class="vi-card-summary-value">
+										${holder.summary.item_count}
+									</span>
+								</div>
+
+								<div class="vi-card-summary-item"
+									title="${Number(holder.summary.total_cost).toLocaleString()} ${__(currency)}"
+									${frappe.utils.icon("circle-dollar-sign", "xs")}
+									<span class="vi-card-summary-value">
+										${format_money(holder.summary.total_cost)}
+									</span>
+								</div>
 							</div>
 						</div>
 					`);
 				});
 
+				update_column_summary(column, currency);
 				board.append(column);
+			});
 
-				let dragged_card = null;
-				// Start Drag
-				board.on("dragstart", ".vi-card", function (e) {
-					dragged_card = this;
-					e.originalEvent.dataTransfer.effectAllowed = "move";
-				});
+			// Init Tooltips
+			board.find("[title]").tooltip({
+				delay: {
+					show: 600,
+					hide: 100
+				}
+			});
 
-				// Allow Drop
-				board.on("dragover", ".vi-column-body", function (e) {
-					e.preventDefault();
-				});
+			let dragged_card = null;
+			// Start Drag
+			board.on("dragstart", ".vi-card", function (e) {
+				dragged_card = this;
+				e.originalEvent.dataTransfer.effectAllowed = "move";
+			});
 
-				// Drop
-				board.on("drop", ".vi-column-body", function (e) {
-					e.preventDefault();
-					if (!dragged_card)
-						return;
-					
-					const body = this;
-					const old_body = dragged_card.parentElement;
-					if (old_body === body)
-						return;
+			// Allow Drop
+			board.on("dragover", ".vi-column-body", function (e) {
+				e.preventDefault();
+			});
 
-					body.appendChild(dragged_card);
-					frappe.call({
-						method: "vehicle_import.vehicle_import.services.vehicle_import_dashboard.move_holder",
-						args: {
-							holder: dragged_card.dataset.holder,
-							warehouse: body.parentElement.dataset.warehouse
-						},
-						callback() {
+			// Drop
+			board.on("drop", ".vi-column-body", function (e) {
+				e.preventDefault();
+				if (!dragged_card)
+					return;
 
-							frappe.show_alert(__("Moved"));
+				const body = this;
+				const old_body = dragged_card.parentElement;
+				if (old_body === body)
+					return;
 
-						},
-						error() {
-							old_body.appendChild(dragged_card);
-							frappe.msgprint(__("Unable to move!"));
-						}
-					});
+				body.appendChild(dragged_card);
+				update_column_summary(old_body.parentElement, currency);
+				update_column_summary(body.parentElement, currency);
+				frappe.call({
+					method: "vehicle_import.vehicle_import.services.vehicle_import_dashboard.move_holder",
+					args: {
+						holder: dragged_card.dataset.holder,
+						warehouse: body.parentElement.dataset.warehouse
+					},
+					callback() {
+						frappe.show_alert(__("Moved"));
+					},
+					error() {
+						old_body.appendChild(dragged_card);
+						update_column_summary(old_body.parentElement, currency);
+						update_column_summary(body.parentElement, currency);
+						frappe.msgprint(__("Unable to move!"));
+					}
 				});
 			});
 		}
