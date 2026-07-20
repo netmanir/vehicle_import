@@ -233,7 +233,7 @@ class VehicleHolderCostReport:
             )
 
             .orderby(
-                CostEntry.cost_entry_date
+                CostLedger.creation
             )
 
             .run(

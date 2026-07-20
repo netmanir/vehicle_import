@@ -114,21 +114,33 @@ window.vehicle_import.open_assign_vins_dialog = function (frm) {
         },
     });
 
-    const options = [""];
+    frappe.call({
+        method: "vehicle_import.vehicle_import.doctype.vehicle_holder.vehicle_holder.get_assigned_vin_counts",
+        args: {
+            vehicle_holder: frm.doc.name,
+        },
+        callback(r) {
+            const assigned_count = r.message || {};
+            const options = [""];
+            (frm.doc.vehicle_holder_detail || []).forEach(detail => {
+                const assigned =
+                    assigned_count[detail.vehicle_holder_detail_item] || 0;
+                const remaining =
+                    Math.max(
+                        0,
+                        detail.vehicle_holder_detail_quantity - assigned
+                    );
+                options.push({
+                    value: detail.name,
+                    label:
+                        `${detail.vehicle_holder_detail_item} (${remaining})`,
+                });
 
-    (frm.doc.vehicle_holder_detail || []).forEach(detail => {
+            });
 
-        options.push({
-            value: detail.name,
-            label:
-                `${detail.vehicle_holder_detail_item} (${detail.vehicle_holder_detail_quantity})`,
-        });
-
+            dialog.fields_dict.vehicle_holder_detail.df.options = options;
+            dialog.refresh();
+            dialog.show();
+        }
     });
-
-    dialog.fields_dict.vehicle_holder_detail.df.options = options;
-
-    dialog.refresh();
-
-    dialog.show();
 }

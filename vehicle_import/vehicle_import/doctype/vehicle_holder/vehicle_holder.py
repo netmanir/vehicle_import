@@ -438,3 +438,8 @@ def submit_vehicle_holder(holder):
 
     finally:
         frappe.flags.vehicle_holder_submit = False
+
+
+@frappe.whitelist()
+def get_assigned_vin_counts(vehicle_holder):
+    return VehicleHolderService.get_assigned_vin_counts(vehicle_holder)

@@ -67,6 +67,7 @@ class VehicleHolderService:
             "errors": errors,
         }
 
+
     def _normalize_vin(
         self,
         vin,
@@ -79,6 +80,7 @@ class VehicleHolderService:
         )
 
         return vin.upper()
+
 
     def _validate_vin(
         self,
@@ -95,6 +97,7 @@ class VehicleHolderService:
                 _("Invalid VIN.")
             )
 
+
     def _check_duplicate(
         self,
         vin,
@@ -109,6 +112,7 @@ class VehicleHolderService:
             raise frappe.ValidationError(
                 _("Duplicate VIN.")
             )
+
 
     def _check_capacity(
         self,
@@ -148,6 +152,7 @@ class VehicleHolderService:
             )
 
         return remaining
+
 
     def _update_vin(
         self,
@@ -201,6 +206,7 @@ class VehicleHolderService:
 
         return vehicle.name
 
+
     def _create_savepoint(
         self,
     ):
@@ -211,12 +217,14 @@ class VehicleHolderService:
 
         return savepoint
 
+
     def _rollback_savepoint(
         self,
         savepoint,
     ):
 
         frappe.db.rollback(save_point=savepoint)
+
 
     def _commit(
         self,
@@ -243,3 +251,36 @@ class VehicleHolderService:
 
     def do_submit(self, holder):
         frappe.get_doc("Vehicle Holder", holder).submit()
+
+
+    @staticmethod
+    def get_assigned_vin_counts(vehicle_holder):
+
+        VehicleHistory = DocType("Vehicle History")
+        VehicleUnit = DocType("Vehicle Unit")
+
+        rows = (
+            frappe.qb
+            .from_(VehicleHistory)
+            .inner_join(VehicleUnit)
+            .on(VehicleHistory.vehicle_history_vehicle == VehicleUnit.name)
+            .select(
+                VehicleUnit.vehicle_item,
+                Count("*").as_("count"),
+            )
+            .where(
+                (VehicleHistory.parent == vehicle_holder)
+                &
+                (VehicleUnit.vehicle_vin != "")
+                &
+                (Length(VehicleUnit.vehicle_vin) == 17)
+            )
+            .groupby(
+                VehicleUnit.vehicle_item
+            )
+        ).run(as_dict=True)
+
+        return {
+            row["vehicle_item"]: row["count"]
+            for row in rows
+        }
