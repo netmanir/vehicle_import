@@ -52,6 +52,7 @@ frappe.ui.form.on("Vehicle Holder", {
                     message: __("Imported successfully."),
                     indicator: "green",
                 });
+                frappe.utils.play_sound("submit");
             });
         }
 
@@ -65,7 +66,6 @@ frappe.ui.form.on("Vehicle Holder", {
                 __("Assign VINs"),
                 () => {
                     vehicle_import.open_assign_vins_dialog(frm);
-                    // frappe.show_alert is called inside method
                 }
             );
         }
@@ -87,7 +87,6 @@ frappe.ui.form.on("Vehicle Holder", {
                             frm.reload_doc();
                         },
                     });
-                    // frappe.show_alert is called inside method
                 }
             );
         }
@@ -133,6 +132,7 @@ frappe.ui.form.on("Vehicle Holder", {
                             message: __("Submitted successfully."),
                             indicator: "green",
                         });
+                        frappe.utils.play_sound("submit");
                     });
 
                 }, __("Actions"));
@@ -182,6 +182,7 @@ frappe.ui.form.on("Vehicle Holder", {
                             message: __("Cancelled successfully."),
                             indicator: "green",
                         });
+						frappe.utils.play_sound("delete");
                     });
 
                 }, __("Actions"));
@@ -266,7 +267,6 @@ function setup_cost_entry_button_in_detail_grid(frm) {
                     frm.reload_doc();
                 }
             });
-            // frappe.show_alert is called inside method
         });
         row.open_form_button.append(button);
     });

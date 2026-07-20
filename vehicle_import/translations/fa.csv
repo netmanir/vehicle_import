@@ -5,7 +5,8 @@ Permanently Submit {0}?, سند «{0}» به طور دائمی و بدون بر�
 This documents will submitted permanently!, این سند به طور دائمی و بدون برگشت تایید می‌شود!
 Do you want to continue?, آیا ادامه می‌دهید؟
 Foreign Amount, مبلغ ارز
-Cost Entry, سند تراکنش
+Cost Entry, سند هزینه
+Cost Ledger, ردیف هزینه
 
 Equal Distribution, توزیع برابر
 
@@ -34,6 +35,7 @@ RED_CCRESCENT, هلال احمر
 VAT, ارزش افزوده
 INSURANCE, بیمه
 FREIGHT, باربری
+TECHNICAL_SERVICES, خدمات فنی
 
 Please fill the following mandatory fields before saving:, قبل از ذخیره، فیلد(های) اجباری زیر را وارد کنید: 
 "In {0}, {1} is required in row {2}.", در {0}، در سطر {2}، فیلد {1} وارد نشده است.

@@ -115,6 +115,7 @@ window.vehicle_import.open_cost_entry_dialog = function (options) {
                         message: __("Cost Entry created."),
                         indicator: "green",
                     });
+                    frappe.utils.play_sound("submit");
 
                     if (options.callback) {
                         options.callback(r.message);

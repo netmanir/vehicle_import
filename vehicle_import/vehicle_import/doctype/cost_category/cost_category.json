@@ -61,8 +61,8 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-08 16:07:44.500338",
- "modified_by": "Administrator",
+ "modified": "2026-07-19 15:09:41.284091",
+ "modified_by": "netman@mail.ir",
  "module": "Vehicle Import",
  "name": "Cost Category",
  "naming_rule": "By fieldname",
@@ -89,6 +89,5 @@
  "sort_order": "DESC",
  "states": [],
  "title_field": "cost_category_title",
- "track_changes": 1,
- "translated_doctype": 1
+ "track_changes": 1
 }

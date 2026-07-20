@@ -94,6 +94,7 @@ window.vehicle_import.open_assign_vins_dialog = function (frm) {
                             indicator: "red",
                             message: r.message.errors.join("<br>"),
                         });
+						frappe.utils.play_sound("error");
 
                         frm.reload_doc();
                         return;
@@ -107,6 +108,7 @@ window.vehicle_import.open_assign_vins_dialog = function (frm) {
                         message: __("VINs assigned successfully."),
                         indicator: "green",
                     });
+                    frappe.utils.play_sound("submit");
                 },
             });
         },

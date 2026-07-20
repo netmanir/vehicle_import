@@ -91,6 +91,8 @@
 }
 .vi-card-summary-item {
     font-size: 12px;
+    direction: ltr;
+    text-align: left;
 }
 .vi-card-summary-item svg {
     width: 14px;

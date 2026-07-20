@@ -40,7 +40,7 @@ function update_column_summary(column, currency) {
         items += Number(this.dataset.items || 0);
         cost += Number(this.dataset.cost || 0);
     });
-    $(column).find(".vi-column-items").text(items);
+    $(column).find(".vi-column-items").text(items.toLocaleString());
     $(column).find(".vi-column-cost")
         .text(format_money(cost))
         .attr(
@@ -126,12 +126,12 @@ frappe.pages["vehicle-import-dashb"].on_page_load = function (wrapper) {
 								<div class="vi-card-summary-item">
 									${frappe.utils.icon("package", "xs")}
 									<span class="vi-card-summary-value">
-										${holder.summary.item_count}
+										${Number(holder.summary.item_count).toLocaleString()}
 									</span>
 								</div>
 
 								<div class="vi-card-summary-item"
-									title="${Number(holder.summary.total_cost).toLocaleString()} ${__(currency)}"
+									title="${Number(holder.summary.total_cost).toLocaleString()} ${__(currency)}">
 									${frappe.utils.icon("circle-dollar-sign", "xs")}
 									<span class="vi-card-summary-value">
 										${format_money(holder.summary.total_cost)}
@@ -187,13 +187,21 @@ frappe.pages["vehicle-import-dashb"].on_page_load = function (wrapper) {
 						warehouse: body.parentElement.dataset.warehouse
 					},
 					callback() {
-						frappe.show_alert(__("Moved"));
+						frappe.show_alert({
+							message: __("Moved"),
+							indicator: "green",
+						});
+						frappe.utils.play_sound("click");
 					},
 					error() {
 						old_body.appendChild(dragged_card);
 						update_column_summary(old_body.parentElement, currency);
 						update_column_summary(body.parentElement, currency);
-						frappe.msgprint(__("Unable to move!"));
+						frappe.msgprint({ 
+							message: __("Unable to move!"),
+							indicator: "red",
+						});
+						frappe.utils.play_sound("error");
 					}
 				});
 			});
