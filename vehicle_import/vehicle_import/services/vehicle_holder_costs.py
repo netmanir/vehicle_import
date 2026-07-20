@@ -95,27 +95,47 @@ class VehicleHolderCosts:
         CostEntry = DocType("Cost Entry")
         VehicleHolderDetail = DocType("Vehicle Holder Detail")
 
-        rows = (
-
+        #
+        # Holder Costs
+        #
+        holder_rows = (
             frappe.qb
+            .from_(CostEntry)
+            .select(
+                frappe.qb.terms.ValueWrapper("").as_("item"),
+                CostEntry.docstatus.as_("status"),
+                CostEntry.cost_entry_date.as_("cost_date"),
+                CostEntry.creation.as_("creation_date"),
+                CostEntry.cost_entry_cost_category.as_("cost_category"),
+                CostEntry.cost_entry_currency.as_("currency"),
+                CostEntry.cost_entry_exchange_rate.as_("exchange_rate"),
+                CostEntry.cost_entry_foreign_amount.as_("foreign_amount"),
+                CostEntry.cost_entry_base_amount.as_("base_amount"),
 
+                CostEntry.cost_entry_reference_name.as_("cost_reference"),
+                CostEntry.cost_entry_reference_doctype.as_("cost_reference_doctype"),
+
+                frappe.qb.terms.ValueWrapper(None).as_("cost_holder_detail"),
+            )
+            .where(
+                (CostEntry.cost_entry_reference_doctype == "Vehicle Holder")
+                &
+                (CostEntry.cost_entry_reference_name == vehicle_holder)
+            )
+        ).run(as_dict=True)
+
+        #
+        # Detail Costs
+        #
+        detail_rows = (
+            frappe.qb
             .from_(VehicleHolderDetail)
-
             .inner_join(CostEntry)
             .on(
-                (
-                    (CostEntry.cost_entry_reference_doctype == "Vehicle Holder")
-                    &
-                    (CostEntry.cost_entry_reference_name == vehicle_holder)
-                )
-                |
-                (
-                    (CostEntry.cost_entry_reference_doctype == "Vehicle Holder Detail")
-                    &
-                    (CostEntry.cost_entry_reference_name == VehicleHolderDetail.name)
-                )
+                (CostEntry.cost_entry_reference_doctype == "Vehicle Holder Detail")
+                &
+                (CostEntry.cost_entry_reference_name == VehicleHolderDetail.name)
             )
-
             .select(
                 VehicleHolderDetail.vehicle_holder_detail_item.as_("item"),
                 CostEntry.docstatus.as_("status"),
@@ -130,29 +150,19 @@ class VehicleHolderCosts:
                 CostEntry.cost_entry_reference_name.as_("cost_reference"),
                 CostEntry.cost_entry_reference_doctype.as_("cost_reference_doctype"),
 
-                Case()
-                    .when(
-                        CostEntry.cost_entry_reference_doctype == "Vehicle Holder",
-                        None,
-                    )
-                    .when(
-                        CostEntry.cost_entry_reference_doctype == "Vehicle Holder Detail",
-                        CostEntry.cost_entry_reference_name,
-                    )
-                    .else_(None)
-                .as_("cost_holder_detail"),     
+                CostEntry.cost_entry_reference_name.as_("cost_holder_detail"),
             )
-
             .where(
                 VehicleHolderDetail.parent == vehicle_holder
             )
+        ).run(as_dict=True)
 
-            .orderby(
-                CostEntry.cost_entry_date
-            )
+        rows = holder_rows + detail_rows
 
-            .run(
-                as_dict=True,
+        rows.sort(
+            key=lambda r: (
+                r["cost_date"],
+                r["creation_date"],
             )
         )
 
@@ -185,11 +195,15 @@ class VehicleHolderCosts:
             )
 
             if frappe.local.lang == "fa":
-                row["cost_date"] = jdatetime.date.fromgregorian(date=row["cost_date"]).strftime("%Y/%m/%d")
-                row["creation_date"] = jdatetime.date.fromgregorian(date=row["creation_date"]).strftime("%Y/%m/%d")
+                row["cost_date"] = jdatetime.date.fromgregorian(
+                    date=row["cost_date"]
+                ).strftime("%Y/%m/%d")
+
+                row["creation_date"] = jdatetime.date.fromgregorian(
+                    date=row["creation_date"]
+                ).strftime("%Y/%m/%d")
 
         return rows
-
 
     def export_excel(
         self,
