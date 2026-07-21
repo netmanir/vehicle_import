@@ -233,44 +233,8 @@ class VehicleHolderService:
 
 
     def cascade_cancel(self, holder):
-        CostEntry = DocType("Cost Entry")
-        VehicleHolderDetail = DocType("Vehicle Holder Detail")
 
-        detail_names = (
-            frappe.qb
-            .from_(VehicleHolderDetail)
-            .select(VehicleHolderDetail.name)
-            .where(VehicleHolderDetail.parent == holder)
-        ).run(pluck=True)
-
-        cost_entries = (
-            frappe.qb
-            .from_(CostEntry)
-            .select(CostEntry.name)
-            .where(
-                (CostEntry.docstatus == 1)
-                &
-                (
-                    (
-                        (CostEntry.cost_entry_reference_doctype == "Vehicle Holder")
-                        &
-                        (CostEntry.cost_entry_reference_name == holder)
-                    )
-                    |
-                    (
-                        (CostEntry.cost_entry_reference_doctype == "Vehicle Holder Detail")
-                        &
-                        (
-                            CostEntry.cost_entry_reference_name.isin(
-                                detail_names or [""]
-                            )
-                        )
-                    )
-                )
-            )
-        ).run(pluck=True)
-
-        frappe.throw(f"Cost Entries: {cost_entries}")
+        cost_entries = self.get_related_cost_entries(holder)
 
         for name in cost_entries:
             frappe.get_doc("Cost Entry", name).cancel()
@@ -313,3 +277,46 @@ class VehicleHolderService:
             row["vehicle_item"]: row["count"]
             for row in rows
         }
+
+
+    @staticmethod
+    def get_related_cost_entries(holder):
+
+        CostEntry = DocType("Cost Entry")
+        VehicleHolderDetail = DocType("Vehicle Holder Detail")
+
+        detail_names = (
+            frappe.qb
+            .from_(VehicleHolderDetail)
+            .select(VehicleHolderDetail.name)
+            .where(
+                VehicleHolderDetail.parent == holder
+            )
+        ).run(pluck=True)
+
+        return (
+            frappe.qb
+            .from_(CostEntry)
+            .select(CostEntry.name)
+            .where(
+                (CostEntry.docstatus == 1)
+                &
+                (
+                    (
+                        (CostEntry.cost_entry_reference_doctype == "Vehicle Holder")
+                        &
+                        (CostEntry.cost_entry_reference_name == holder)
+                    )
+                    |
+                    (
+                        (CostEntry.cost_entry_reference_doctype == "Vehicle Holder Detail")
+                        &
+                        (
+                            CostEntry.cost_entry_reference_name.isin(
+                                detail_names or [""]
+                            )
+                        )
+                    )
+                )
+            )
+        ).run(pluck=True)

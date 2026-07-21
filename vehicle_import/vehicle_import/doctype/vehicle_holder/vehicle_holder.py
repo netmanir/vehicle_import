@@ -407,12 +407,31 @@ def assign_vins(
 
 @frappe.whitelist()
 def get_cancel_preview(holder):
-
     doc = frappe.get_doc("Vehicle Holder", holder)
     links = (
         get_linked_docs(doc, "Cancel")
         + get_dynamic_linked_docs(doc, "Cancel")
     )
+
+    cost_entries = VehicleHolderService.get_related_cost_entries(holder)
+
+    existing = {
+        row["reference_docname"]
+        for row in links
+        if row["reference_doctype"] == "Cost Entry"
+    }
+    
+    for name in cost_entries:
+
+        if name not in existing:
+
+            links.append({
+                "doc": doc.name,
+                "reference_doctype": "Cost Entry",
+                "reference_docname": name,
+                "at_position": "",
+            })
+
     return links
 
 
