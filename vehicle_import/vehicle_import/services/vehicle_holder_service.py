@@ -233,13 +233,35 @@ class VehicleHolderService:
 
 
     def cascade_cancel(self, holder):
+
+        detail_names = frappe.get_all(
+            "Vehicle Holder Detail",
+            filters={
+                "parent": holder,
+            },
+            pluck="name",
+        )
+
         cost_entries = frappe.get_all(
             "Cost Entry",
-            filters={
-                "docstatus": 1,
-                "cost_entry_reference_doctype": "Vehicle Holder",
-                "cost_entry_reference_name": holder,
-            },
+            filters=[
+                [
+                    "Cost Entry",
+                    "docstatus",
+                    "=",
+                    1,
+                ]
+            ],
+            or_filters=[
+                {
+                    "cost_entry_reference_doctype": "Vehicle Holder",
+                    "cost_entry_reference_name": holder,
+                },
+                {
+                    "cost_entry_reference_doctype": "Vehicle Holder Detail",
+                    "cost_entry_reference_name": ["in", detail_names or [""]],
+                },
+            ],
             pluck="name",
         )
 
