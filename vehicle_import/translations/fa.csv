@@ -13,14 +13,13 @@ Equal Distribution, توزیع برابر
 Vehicle Holder Type, نوع سند تراکنش
 Quotage, کوتاژ
 QUOTAGE, کوتاژ
-Proforma, پروفرما
 PROFORMA, پروفرما
-Container, کانتینر
 CONTAINER, کانتینر
-Packing List, پکینگ لیست
 PACKING_LIST, پکینگ لیست
 ORDER, سفارش
 INVOICE, صورتحساب
+WAREHOUSE, انبار
+DELIVERY, تحویل
 
 Add row, اضافه کردن سطر
 Add multiple, اضافه کردن چند سطر
@@ -28,14 +27,18 @@ Delete row, حذف سطر
 Delete {0} rows, حذف {0} سطر
 Duplicate row, کپی کردن سطر
 
-WAREHOUSE, انبار
-CUSTOMS, عوارض گمرکی
+
+WAREHOUSING, انبارداری
+CUSTOMS, گمرک
 ENV, محیط زیست
 RED_CCRESCENT, هلال احمر
 VAT, ارزش افزوده
 INSURANCE, بیمه
 FREIGHT, باربری
 TECHNICAL_SERVICES, خدمات فنی
+PURCHASE, خرید
+MISCELLANEOUS, متفرقه
+INSPECTION, بازرسی
 
 Please fill the following mandatory fields before saving:, قبل از ذخیره، فیلد(های) اجباری زیر را وارد کنید: 
 "In {0}, {1} is required in row {2}.", در {0}، در سطر {2}، فیلد {1} وارد نشده است.

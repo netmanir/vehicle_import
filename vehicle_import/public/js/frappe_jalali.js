@@ -126,7 +126,7 @@
         hidden.addEventListener("input", sync);
 
         sync();
-
+        requestAnimationFrame(sync);
     };
 
 

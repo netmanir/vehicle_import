@@ -23,6 +23,7 @@ window.vehicle_import.open_cost_entry_dialog = function (options) {
                 fieldtype: "Date",
                 fieldname: "cost_date",
                 label: __("Cost Date"),
+                default: options.reference_date || undefined,
                 reqd: 1,
             },
 
@@ -139,7 +140,7 @@ window.vehicle_import.open_cost_entry_dialog = function (options) {
     `);
 
     setTimeout(() => {
-        dialog.get_field("cost_date").$input.focus();
+        console.log(dialog.get_value("cost_date"));
     }, 2000);
 
 };

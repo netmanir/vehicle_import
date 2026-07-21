@@ -111,7 +111,7 @@ frappe.ui.form.on("Vehicle Holder", {
         );
 
         // Add "Submit Vehicle Holder" button
-        if (frm.doc.docstatus !== 1) {
+        if (frm.doc.docstatus === 0) {
             frm.add_custom_button(
                 __("Submit Vehicle Holder"),
                 async () => {
@@ -263,6 +263,7 @@ function setup_cost_entry_button_in_detail_grid(frm) {
             vehicle_import.open_cost_entry_dialog({
                 reference_doctype: row.doc.doctype,
                 reference_name: row.doc.name,
+                reference_date: frm.doc.vehicle_holder_posting_date,
                 callback() {
                     frm.reload_doc();
                 }
