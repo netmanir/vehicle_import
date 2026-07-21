@@ -47,22 +47,17 @@ window.vehicle_import.load_vehicle_holder_costs = function (frm) {
             //
             // Format Columns
             //
-            // r.message.columns.forEach(col => {
+            r.message.columns.forEach(col => {
 
-            //     switch (col.id) {
+                switch (col.id) {
 
-            //         case "vin":
-            //             col.format = (value, row, column, data) =>
-            //                 `<a target="_blank" href="/app/vehicle-unit/${data.vehicle}">${value}</a>`;
-            //             break;
+                    case "cost_entry":
+                        col.format = (value, row, column, data) =>
+                            `<a target="_blank" href="/app/cost-entry/${value}">${__("Document")}</a>`;
+                        break;
+                }
 
-            //         case "cost_holder":
-            //             col.format = value =>
-            //                 `<a target="_blank" href="/app/vehicle-holder/${value}">${value}</a>`;
-            //             break;
-            //     }
-
-            // });
+            });
 
             //
             // DataTable

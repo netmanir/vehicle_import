@@ -83,7 +83,10 @@ class VehicleHolderCosts:
                 "name": _("Creation"),
             },
 
-
+            {
+                "id": "cost_entry",
+                "name": _("Cost Entry"),
+            },
         ]
 
 
@@ -116,6 +119,8 @@ class VehicleHolderCosts:
                 CostEntry.cost_entry_reference_doctype.as_("cost_reference_doctype"),
 
                 frappe.qb.terms.ValueWrapper(None).as_("cost_holder_detail"),
+
+                CostEntry.name.as_("cost_entry"),
             )
             .where(
                 (CostEntry.cost_entry_reference_doctype == "Vehicle Holder")
@@ -151,6 +156,8 @@ class VehicleHolderCosts:
                 CostEntry.cost_entry_reference_doctype.as_("cost_reference_doctype"),
 
                 CostEntry.cost_entry_reference_name.as_("cost_holder_detail"),
+
+                CostEntry.name.as_("cost_entry"),
             )
             .where(
                 VehicleHolderDetail.parent == vehicle_holder
