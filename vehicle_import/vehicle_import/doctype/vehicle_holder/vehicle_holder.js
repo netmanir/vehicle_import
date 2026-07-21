@@ -139,7 +139,7 @@ frappe.ui.form.on("Vehicle Holder", {
         } 
 
         // Add "Cancel Vehicle Holder" button
-        if (frm.doc.docstatus === 1) {
+        if (frm.doc.docstatus !== 0) {
             frm.add_custom_button(
                 __("Cancel Vehicle Holder"),
                 async () => {

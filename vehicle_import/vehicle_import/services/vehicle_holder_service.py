@@ -233,37 +233,44 @@ class VehicleHolderService:
 
 
     def cascade_cancel(self, holder):
+        CostEntry = DocType("Cost Entry")
+        VehicleHolderDetail = DocType("Vehicle Holder Detail")
 
-        detail_names = frappe.get_all(
-            "Vehicle Holder Detail",
-            filters={
-                "parent": holder,
-            },
-            pluck="name",
-        )
+        detail_names = (
+            frappe.qb
+            .from_(VehicleHolderDetail)
+            .select(VehicleHolderDetail.name)
+            .where(VehicleHolderDetail.parent == holder)
+        ).run(pluck=True)
 
-        cost_entries = frappe.get_all(
-            "Cost Entry",
-            filters=[
-                [
-                    "Cost Entry",
-                    "docstatus",
-                    "=",
-                    1,
-                ]
-            ],
-            or_filters=[
-                {
-                    "cost_entry_reference_doctype": "Vehicle Holder",
-                    "cost_entry_reference_name": holder,
-                },
-                {
-                    "cost_entry_reference_doctype": "Vehicle Holder Detail",
-                    "cost_entry_reference_name": ["in", detail_names or [""]],
-                },
-            ],
-            pluck="name",
-        )
+        cost_entries = (
+            frappe.qb
+            .from_(CostEntry)
+            .select(CostEntry.name)
+            .where(
+                (CostEntry.docstatus == 1)
+                &
+                (
+                    (
+                        (CostEntry.cost_entry_reference_doctype == "Vehicle Holder")
+                        &
+                        (CostEntry.cost_entry_reference_name == holder)
+                    )
+                    |
+                    (
+                        (CostEntry.cost_entry_reference_doctype == "Vehicle Holder Detail")
+                        &
+                        (
+                            CostEntry.cost_entry_reference_name.isin(
+                                detail_names or [""]
+                            )
+                        )
+                    )
+                )
+            )
+        ).run(pluck=True)
+
+        frappe.throw(f"Cost Entries: {cost_entries}")
 
         for name in cost_entries:
             frappe.get_doc("Cost Entry", name).cancel()
