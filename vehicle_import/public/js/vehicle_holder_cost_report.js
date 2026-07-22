@@ -131,11 +131,11 @@ function refresh_cost_report_summary(
         summary.html(`
             <span>
                 ${__("Records")}:
-                <b class="summary-records"></b>
+                <span class="summary-records"></span>
             </span>
             <span>
                 ${__("Total Amount")}:
-                <b class="summary-amount"></b>
+                <span class="summary-amount"></span>
             </span>
             <button class="btn btn-primary btn-sm export-cost-report">
                 ${__("Export to Excel")}
@@ -150,17 +150,21 @@ function refresh_cost_report_summary(
         summary.data("initialized", true);
     }
     summary.find(".summary-records").text(
-        rows.length
+        rows.length.toLocaleString()
     );
     summary.find(".summary-amount").text(
-        format_number(total, null, 0)
+        vehicle_import.format_compact_amount(total)
+        // format_number(total, null, 0)
     );
 
     // Add fade effect
     const records = summary.find(".summary-records");
     const amount = summary.find(".summary-amount");
-    records.text(rows.length);
-    amount.text(format_number(total, null, 0));
+    records.text(rows.length.toLocaleString());
+
+    amount.text(vehicle_import.format_compact_amount(total));
+    // amount.text(format_number(total, null, 0));
+
     records.addClass("summary-updated");
     amount.addClass("summary-updated");
     setTimeout(() => {

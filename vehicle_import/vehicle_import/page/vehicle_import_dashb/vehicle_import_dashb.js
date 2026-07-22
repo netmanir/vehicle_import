@@ -22,17 +22,6 @@ function get_column_color(name) {
     return COLUMN_COLORS[Math.abs(hash) % COLUMN_COLORS.length];
 }
 
-function format_money(amount) {
-    amount = amount || 0;
-    if (amount >= 1000000000)
-        return (amount / 1000000000).toFixed(1) + ` ${__("B")}`;
-    if (amount >= 1000000)
-        return (amount / 1000000).toFixed(1) + ` ${__("M")}`;
-    if (amount >= 1000)
-        return (amount / 1000).toFixed(1) + ` ${__("K")}`;
-    return Number(amount).toLocaleString();
-}
-
 function update_column_summary(column, currency) {
     let items = 0;
     let cost = 0;
@@ -42,7 +31,7 @@ function update_column_summary(column, currency) {
     });
     $(column).find(".vi-column-items").text(items.toLocaleString());
     $(column).find(".vi-column-cost")
-        .text(format_money(cost))
+        .text(vehicle_import.format_compact_amount(cost))
         .attr(
             "title",
             `${Number(cost).toLocaleString()} ${__(currency)}`
@@ -134,7 +123,7 @@ frappe.pages["vehicle-import-dashb"].on_page_load = function (wrapper) {
 									title="${Number(holder.summary.total_cost).toLocaleString()} ${__(currency)}">
 									${frappe.utils.icon("circle-dollar-sign", "xs")}
 									<span class="vi-card-summary-value">
-										${format_money(holder.summary.total_cost)}
+										${vehicle_import.format_compact_amount(holder.summary.total_cost)}
 									</span>
 								</div>
 							</div>

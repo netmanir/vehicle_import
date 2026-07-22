@@ -9,11 +9,15 @@
     align-items: center;
 }
 .vehicle-holder-cost-report-summary b,
-.vehicle-holder-costs-summary b {
+.vehicle-holder-costs-summary b,
+.vehicle-holder-cost-report-summary span,
+.vehicle-holder-costs-summary span {
     transition: opacity .5s;
 }
 .vehicle-holder-cost-report-summary b.summary-updated,
-.vehicle-holder-costs-summary b.summary-updated {
+.vehicle-holder-costs-summary b.summary-updated,
+.vehicle-holder-cost-report-summary span.summary-updated,
+.vehicle-holder-costs-summary span.summary-updated {
     opacity: .35;
 }
 

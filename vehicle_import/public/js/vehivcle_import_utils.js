@@ -50,3 +50,22 @@ window.vehicle_import.bind_datatable_row_click = function (
             }
         );
 };
+
+window.vehicle_import.format_compact_amount = function (amount) {
+
+    amount = Number(amount || 0);
+
+    if (amount >= 1_000_000_000) {
+        return (amount / 1_000_000_000).toLocaleString(undefined, {maximumFractionDigits: 2,}) + ` ${__("B")}`;
+    }
+
+    if (amount >= 1000000) {
+        return (amount / 1_000_000).toFixed(1).toLocaleString() + ` ${__("M")}`;
+    }
+
+    if (amount >= 1_000) {
+        return (amount / 1_000).toFixed(1).toLocaleString() + ` ${__("K")}`;
+    }
+
+    return amount.toLocaleString();
+};
