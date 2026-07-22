@@ -20,6 +20,9 @@ ORDER, سفارش
 INVOICE, صورتحساب
 WAREHOUSE, انبار
 DELIVERY, تحویل
+PACKING, بسته بندی
+Aggregation, تجمیع
+AGGREGATION, تجمیع
 
 Add row, اضافه کردن سطر
 Add multiple, اضافه کردن چند سطر

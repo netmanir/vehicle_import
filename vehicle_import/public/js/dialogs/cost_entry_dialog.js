@@ -1,7 +1,13 @@
 window.vehicle_import = window.vehicle_import || {};
 
+const STORAGE_KEY = "vehicle_import.last_cost_entry";
+
 window.vehicle_import.open_cost_entry_dialog = function (options) {
 
+    const defaults = JSON.parse(
+        localStorage.getItem(STORAGE_KEY) || "{}"
+    );
+    
     const dialog = new frappe.ui.Dialog({
 
         title: __("Add Cost"),
@@ -14,6 +20,7 @@ window.vehicle_import.open_cost_entry_dialog = function (options) {
                 fieldname: "cost_category",
                 label: __("Cost Category"),
                 options: "Cost Category",
+                default: defaults.cost_category,
                 reqd: 1,
             },
             {
@@ -36,7 +43,7 @@ window.vehicle_import.open_cost_entry_dialog = function (options) {
                 fieldname: "currency",
                 label: __("Currency"),
                 options: "Currency",
-                default: frappe.defaults.get_default("currency"),
+                default: defaults.currency || frappe.defaults.get_default("currency"),
                 reqd: 1,
             },
             {
@@ -46,7 +53,7 @@ window.vehicle_import.open_cost_entry_dialog = function (options) {
                 fieldtype: "Float",
                 fieldname: "exchange_rate",
                 label: __("Exchange Rate"),
-                default: 1,
+                default: defaults.exchange_rate || 1,
                 reqd: 1,
             },
             {
@@ -109,7 +116,16 @@ window.vehicle_import.open_cost_entry_dialog = function (options) {
                 },
 
                 callback(r) {
-                    
+
+                    localStorage.setItem(
+                        STORAGE_KEY,
+                        JSON.stringify({
+                            cost_category: values.cost_category,
+                            currency: values.currency,
+                            exchange_rate: values.exchange_rate,
+                        })
+                    );
+
                     dialog.hide();
 
                     frappe.show_alert({
@@ -139,8 +155,8 @@ window.vehicle_import.open_cost_entry_dialog = function (options) {
         </small>
     `);
 
-    setTimeout(() => {
-        console.log(dialog.get_value("cost_date"));
-    }, 2000);
+    // setTimeout(() => {
+    //     console.log(dialog.get_value("cost_date"));
+    // }, 2000);
 
 };
