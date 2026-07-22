@@ -21,3 +21,6 @@ class CostEntry(Document):
         AllocationEngine().cancel(
             self,
         )
+
+    def on_trash(self):
+        AllocationEngine().delete(self)

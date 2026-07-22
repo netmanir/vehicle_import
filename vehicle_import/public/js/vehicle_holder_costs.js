@@ -60,6 +60,29 @@ window.vehicle_import.load_vehicle_holder_costs = function (frm) {
             });
 
             //
+            // Action Column
+            //
+            r.message.columns.push({
+                id: "action",
+                name: "",
+                width: 90,
+                editable: false,
+                sortable: false,
+                focusable: false,
+                align: "center",
+                format(value, row, column, data) {
+                    return `
+                        <a
+                            class="btn-delete-cost-entry"
+                            data-name="${data.cost_entry}"
+                            title="${__("Delete")}">
+                            ${frappe.utils.icon("trash-2", "xs")}
+                        </a>
+                    `;
+                }
+            });
+
+            //
             // DataTable
             //
             const datatable = new frappe.DataTable(
@@ -102,7 +125,63 @@ window.vehicle_import.load_vehicle_holder_costs = function (frm) {
                 return result;
             };
 
-            datatable.refresh();         
+            datatable.refresh();
+
+            $(".btn-delete-cost-entry").tooltip({
+                delay: {
+                    show: 600,
+                    hide: 100,
+                },
+            });
+            datatable.wrapper
+                .querySelectorAll(".btn-delete-cost-entry")
+                .forEach(button  => {
+                    // Set vertical align
+                    button .parentElement.style.display = "flex";
+                    button .parentElement.style.alignItems = "center";
+                    button .parentElement.style.justifyContent = "center";
+
+                    // Set tootip
+                    $(button).tooltip({
+                        delay: {
+                            show: 600,
+                            hide: 100,
+                        },
+                    });  
+                    
+                    // Set action
+                    button.addEventListener("click", e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const cost_entry = button.dataset.name;
+                        frappe.confirm(
+                            __("Delete this Cost Entry?"),
+                            () => {
+                                frappe.call({
+                                    method:
+                                        "vehicle_import.vehicle_import.services.cost_entry_service.delete_cost_entry",
+
+                                    freeze: true,
+                                    freeze_message: __("Deleting..."),
+
+                                    args: {
+                                        cost_entry,
+                                    },
+                                    callback() {
+                                        frappe.show_alert({
+                                            message: __("Cost Entry deleted."),
+                                            indicator: "green",
+                                        });
+                                        frappe.utils.play_sound("delete");
+                                        
+                                        frm.reload_doc();
+                                        window.vehicle_import.load_vehicle_holder_costs(frm);
+                                    },
+                                });
+                            }
+                        );
+                    });
+                });
         },
     });
 };

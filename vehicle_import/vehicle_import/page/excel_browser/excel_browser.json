@@ -5,7 +5,7 @@
  "doctype": "Page",
  "icon": "table",
  "idx": 0,
- "modified": "2026-07-15 17:01:54.549887",
+ "modified": "2026-07-22 09:17:12.025333",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "excel-browser",
@@ -17,6 +17,9 @@
   },
   {
    "role": "System Manager"
+  },
+  {
+   "role": "Vehicle Stock User"
   }
  ],
  "script": null,

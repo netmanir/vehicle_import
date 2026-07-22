@@ -52,3 +52,16 @@ jdp-container {
     max-height: 73vh;
     overflow: hidden;
 }
+
+
+.btn-delete-cost-entry {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--red-500);
+    cursor: pointer;
+}
+.btn-delete-cost-entry svg {
+    stroke: currentColor;
+}

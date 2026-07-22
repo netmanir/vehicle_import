@@ -2,6 +2,7 @@ from decimal import Decimal
 from decimal import ROUND_HALF_UP
 
 import frappe
+from frappe import _
 
 class CostEntryService:
 
@@ -119,6 +120,54 @@ class CostEntryService:
         )
 
 
+    def add_delete_activity(
+        self,
+        holder,
+        cost_entry,
+    ):
+
+        user = frappe.utils.get_fullname(frappe.session.user)
+
+        frappe.get_doc({
+            "doctype": "Comment",
+            "comment_type": "Info",
+            "reference_doctype": "Vehicle Holder",
+            "reference_name": holder,
+            "content": ("Deleted the Cost Entry {0}.").format(frappe.bold(cost_entry),),
+        }).insert(ignore_permissions=True)
+
+
+    def delete(
+        self,
+        cost_entry,
+    ):
+        doc = frappe.get_doc("Cost Entry", cost_entry)
+
+        # Find holder
+        if doc.cost_entry_reference_doctype == "Vehicle Holder":
+            holder = doc.cost_entry_reference_name
+
+        elif doc.cost_entry_reference_doctype == "Vehicle Holder Detail":
+            holder = frappe.db.get_value(
+                "Vehicle Holder Detail",
+                doc.cost_entry_reference_name,
+                "parent",
+            )
+
+        else:
+            frappe.throw("Unsupported reference doctype")
+
+        if doc.docstatus == 1:
+            doc.cancel()
+
+        doc.delete()
+
+        self.add_delete_activity(
+            holder=holder,
+            cost_entry=cost_entry,
+        )
+
+
 @frappe.whitelist()
 def create_cost_entry(
     reference_doctype,
@@ -146,4 +195,13 @@ def create_cost_entry(
         foreign_amount=foreign_amount,
 
         description=description,
+    )
+
+
+@frappe.whitelist()
+def delete_cost_entry(
+    cost_entry,
+):
+    return CostEntryService().delete(
+        cost_entry=cost_entry,
     )

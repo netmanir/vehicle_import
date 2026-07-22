@@ -66,3 +66,17 @@ class AllocationEngine:
             ledger.cancel()
 
         return ledgers
+
+
+    def delete(self, cost_entry):
+        ledger_names = (
+            frappe.get_all(
+                "Cost Ledger",
+                filters={
+                    "cost_ledger_cost_entry": cost_entry.name,
+                },
+                pluck="name",
+            )
+        )
+        for name in ledger_names:
+            frappe.get_doc("Cost Ledger", name).delete()
