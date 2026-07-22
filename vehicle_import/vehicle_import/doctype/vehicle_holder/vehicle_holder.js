@@ -15,18 +15,19 @@ frappe.ui.form.on("Vehicle Holder", {
 
     refresh(frm) {
         
-        // Make "Vehicle Holder Detail" read-only if "Vehicle Holder" is not "Independent"
+        // Make "Vehicle Holder Detail" read-only if "Vehicle Holder" is not "Independent" or "Initialized"
         frm.set_df_property(
             "vehicle_holder_detail", 
             "read_only", 
-            !frm.doc.vehicle_holder_type_independent);
+            !frm.doc.vehicle_holder_type_independent || frm.doc.vehicle_holder_finalized);
         frm.refresh_field("vehicle_holder_detail");
 
         // Add "Import Vehicles" button
         const can_import =
             !frm.is_new() &&
             frm.doc.docstatus === 0 &&
-            !frm.doc.vehicle_holder_type_independent;
+            !frm.doc.vehicle_holder_type_independent &&
+            !frm.doc.vehicle_holder_finalized;
         if (can_import) {
             frm.add_custom_button(__("Import Vehicles"), async () => {
 
@@ -60,7 +61,8 @@ frappe.ui.form.on("Vehicle Holder", {
         const can_assign_vin =
             !frm.is_new() &&
             frm.doc.docstatus === 0 &&
-            !!frm.doc.vehicle_holder_history.length;
+            !!frm.doc.vehicle_holder_history.length &&
+            !frm.doc.vehicle_holder_finalized;
         if (can_assign_vin) {
             frm.add_custom_button(
                 __("Assign VINs"),
@@ -73,7 +75,8 @@ frappe.ui.form.on("Vehicle Holder", {
         // Add "Add Cost" button to Form
         const can_add_cost =
             !frm.is_new() &&
-            frm.doc.docstatus === 1;
+            frm.doc.docstatus === 1 &&
+            !frm.doc.vehicle_holder_finalized;
         if (can_add_cost) {
             frm.add_custom_button(
                 __("Add Cost"),
@@ -92,8 +95,10 @@ frappe.ui.form.on("Vehicle Holder", {
         }
 
         // Add "Add Cost" button to Vehicle Detial Grid
-        setup_cost_entry_button_in_detail_grid(frm);
-        
+        if (can_add_cost) {
+            setup_cost_entry_button_in_detail_grid(frm);
+        }
+
         // Vehicle Holder Costs
         vehicle_import.bind_tab_refresh(
             frm,
@@ -111,7 +116,7 @@ frappe.ui.form.on("Vehicle Holder", {
         );
 
         // Add "Submit Vehicle Holder" button
-        if (frm.doc.docstatus === 0) {
+        if (frm.doc.docstatus === 0 && !frm.doc.vehicle_holder_finalized) {
             frm.add_custom_button(
                 __("Submit Vehicle Holder"),
                 async () => {
@@ -120,13 +125,13 @@ frappe.ui.form.on("Vehicle Holder", {
 
                     frappe.confirm(message, async () => {
                         await frappe.call({
-                            method: "vehicle_import.vehicle_import.doctype.vehicle_holder.vehicle_holder.submit_vehicle_holder  ",
+                            method: "vehicle_import.vehicle_import.doctype.vehicle_holder.vehicle_holder.submit_vehicle_holder",
                             args: {
                                 holder: frm.doc.name
                             }
                         });
 
-                        frm.reload_doc();
+                        await frm.reload_doc();
 
                         frappe.show_alert({
                             message: __("Submitted successfully."),
@@ -139,7 +144,7 @@ frappe.ui.form.on("Vehicle Holder", {
         } 
 
         // Add "Cancel Vehicle Holder" button
-        if (frm.doc.docstatus === 1) {
+        if (frm.doc.docstatus === 1 && !frm.doc.vehicle_holder_finalized) {
             frm.add_custom_button(
                 __("Cancel Vehicle Holder"),
                 async () => {
@@ -176,7 +181,7 @@ frappe.ui.form.on("Vehicle Holder", {
                             }
                         });
 
-                        frm.reload_doc();
+                        await frm.reload_doc();
 
                         frappe.show_alert({
                             message: __("Cancelled successfully."),
@@ -189,6 +194,13 @@ frappe.ui.form.on("Vehicle Holder", {
         }
         
         show_detail_names(frm);
+
+        if (frm.doc.vehicle_holder_finalized) {
+            frm.dashboard.set_headline_alert(
+                __("Finalized"),
+                "orange"
+            );
+        }
     },
 });
 

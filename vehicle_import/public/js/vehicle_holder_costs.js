@@ -62,16 +62,17 @@ window.vehicle_import.load_vehicle_holder_costs = function (frm) {
             //
             // Action Column
             //
-            r.message.columns.push({
-                id: "action",
-                name: "",
-                width: 90,
-                editable: false,
-                sortable: false,
-                focusable: false,
-                align: "center",
-                format(value, row, column, data) {
-                    return `
+            if (!frm.doc.vehicle_holder_finalized) {
+                r.message.columns.push({
+                    id: "action",
+                    name: "",
+                    width: 90,
+                    editable: false,
+                    sortable: false,
+                    focusable: false,
+                    align: "center",
+                    format(value, row, column, data) {
+                        return `
                         <a
                             class="btn-delete-cost-entry"
                             data-name="${data.cost_entry}"
@@ -79,8 +80,9 @@ window.vehicle_import.load_vehicle_holder_costs = function (frm) {
                             ${frappe.utils.icon("trash-2", "xs")}
                         </a>
                     `;
-                }
-            });
+                    }
+                });
+            }
 
             //
             // DataTable
@@ -173,7 +175,7 @@ window.vehicle_import.load_vehicle_holder_costs = function (frm) {
                                             indicator: "green",
                                         });
                                         frappe.utils.play_sound("delete");
-                                        
+
                                         frm.reload_doc();
                                         window.vehicle_import.load_vehicle_holder_costs(frm);
                                     },

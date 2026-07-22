@@ -20,6 +20,7 @@ from vehicle_import.vehicle_import.services.vehicle_holder_service import Vehicl
 class VehicleHolder(Document):
 
     def validate(self):
+        self._validate_not_finalized()
         if not getattr(self, "_is_importing", False):
             self._validate_duplicate_items()
             self._validate_vehicle_quantities()
@@ -32,6 +33,7 @@ class VehicleHolder(Document):
 
 
     def before_cancel(self):
+        self._validate_not_finalized()
         if not frappe.flags.vehicle_holder_cancel:
             frappe.throw(
                 _("Please use the 'Cancel Vehicle Holder' action.")
@@ -39,6 +41,7 @@ class VehicleHolder(Document):
 
 
     def before_submit(self):
+        self._validate_not_finalized()
         if not frappe.flags.vehicle_holder_submit:
             frappe.throw(
                 _("Please use the 'Submit Vehicle Holder' action.")
@@ -77,6 +80,26 @@ class VehicleHolder(Document):
                     ),
                     title=_("Vehicle Holder Validation"),
                 )
+
+
+    def _validate_not_finalized(self):
+        if self.is_new():
+            return
+
+        old = self.get_doc_before_save()
+        if not old or not old.vehicle_holder_finalized:
+            return
+
+        # Only allow changing "Finalized" field
+        if (
+            self.has_value_changed("vehicle_holder_finalized")
+            and self.get_dirty_fields() == {"vehicle_holder_finalized": 0}
+        ):
+            return
+
+        frappe.throw(
+            _("Vehicle Holder is finalized. Change is not allowed!")
+        )
 
 
     # ---------------------------------------------------------

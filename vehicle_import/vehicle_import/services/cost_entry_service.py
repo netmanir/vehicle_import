@@ -143,27 +143,13 @@ class CostEntryService:
     ):
         doc = frappe.get_doc("Cost Entry", cost_entry)
 
-        # Find holder
-        if doc.cost_entry_reference_doctype == "Vehicle Holder":
-            holder = doc.cost_entry_reference_name
-
-        elif doc.cost_entry_reference_doctype == "Vehicle Holder Detail":
-            holder = frappe.db.get_value(
-                "Vehicle Holder Detail",
-                doc.cost_entry_reference_name,
-                "parent",
-            )
-
-        else:
-            frappe.throw("Unsupported reference doctype")
-
         if doc.docstatus == 1:
             doc.cancel()
 
         doc.delete()
 
         self.add_delete_activity(
-            holder=holder,
+            holder=doc.get_vehicle_holder(),
             cost_entry=cost_entry,
         )
 

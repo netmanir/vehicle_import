@@ -45,6 +45,7 @@ Please fill the following mandatory fields before saving:, قبل از ذخیر�
 Product, محصول
 
 Independent, سند پایه
+Finalized, نهایی شده
 Vehicle Holder, سند تراکنش
 Vehicle Holders, اسناد تراکنش
 Vehicle Holder Detail, آیتم
@@ -135,3 +136,4 @@ B, میلیارد
 Delete this Cost Entry?, این سند هزینه حذف شود؟
 Deleting..., در حال حذف ...
 Cost Entry deleted., سند هزینه حذف شد.
+Vehicle Holder is finalized. Change is not allowed!, سند تراکنش نهایی شده است. تغییر مجاز نیست!
