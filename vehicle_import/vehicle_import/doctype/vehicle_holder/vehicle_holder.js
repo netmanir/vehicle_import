@@ -40,6 +40,10 @@ frappe.ui.form.on("Vehicle Holder", {
 
                 await frappe.call({
                     method: "vehicle_import.vehicle_import.doctype.vehicle_holder.vehicle_holder.import_vehicles",
+
+                    freeze: true,
+                    freeze_message: __("Importing vehicles..."),
+
                     args: {
                         holder: frm.doc.name,
                         vehicles: result.vehicles,
