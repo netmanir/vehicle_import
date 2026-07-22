@@ -199,6 +199,8 @@ frappe.ui.form.on("Vehicle Holder", {
         
         show_detail_names(frm);
 
+        update_grid_counts(frm);
+
         if (frm.doc.vehicle_holder_finalized) {
             frm.dashboard.set_headline_alert(
                 __("Finalized"),
@@ -305,3 +307,31 @@ function show_detail_names(frm) {
 
 }
 
+function update_grid_counts(frm) {
+    [
+        {
+            field: "vehicle_holder_detail",
+            count: frm.doc.vehicle_holder_detail?.length || 0,
+        },
+        {
+            field: "vehicle_holder_history",
+            count: frm.doc.vehicle_holder_history?.length || 0,
+        },
+    ].forEach(item => {
+
+        const label = frm.fields_dict[item.field]
+            .grid.wrapper
+            .children("label.control-label");
+
+        const original_text =
+            label.data("original-text") || label.text().trim();
+
+        label.data("original-text", original_text);
+
+        const count = Number(item.count).toLocaleString();
+
+        label.html(
+            `${original_text} <small class="text-muted">(${count})</small>`
+        );
+    });
+}
