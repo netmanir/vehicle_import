@@ -141,3 +141,14 @@ Delete this Cost Entry?, این سند هزینه حذف شود؟
 Deleting..., در حال حذف ...
 Cost Entry deleted., سند هزینه حذف شد.
 Vehicle Holder is finalized. Change is not allowed!, سند تراکنش نهایی شده است. تغییر مجاز نیست!
+
+Settings, تنظیمات
+Warehouse Manager, مدیریت انبار
+Display Order, ترتیب نمایش
+Valid VIN Required for Input, برای ورود باید VIN معتبر باشد
+Valid VIN Required for Output, برای خروج باید VIN معتبر باشد
+Required Cost Categories for Input, نوع هزینه‌های ضروری برای ورود
+Required Cost Categories for Output, نوع هزینه‌های ضروری برای خروج
+Current changes are not saved. Save them?, تغییرات فعلی ذخیره نشده است. ذخیره شود؟
+Warehouse settings saved., تنظیمات انبار ذخیره شد.
+

@@ -1,3 +1,9 @@
+/* Workaround: DataTable incorrect fixed width prevents proper scrollbar rendering */
+.dt-scrollable {
+    width: auto !important;
+    min-width: 100%;
+}
+
 /* Datatable Summary  */
 .vehicle-holder-cost-report-summary,
 .vehicle-holder-costs-summary {

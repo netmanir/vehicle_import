@@ -13,15 +13,6 @@ const COLUMN_COLORS = [
     "#689F38", // Lime
 ];
 
-function get_column_color(name) {
-    let hash = 0;
-    for (const c of name) {
-        hash = ((hash << 5) - hash) + c.charCodeAt(0);
-        hash |= 0;
-    }
-    return COLUMN_COLORS[Math.abs(hash) % COLUMN_COLORS.length];
-}
-
 function update_column_summary(column, currency) {
     let items = 0;
     let cost = 0;
@@ -57,8 +48,8 @@ frappe.pages["vehicle-import-dashb"].on_page_load = function (wrapper) {
 		callback: function (r) {
 			const currency = r.message.currency;
 			const warehouses = r.message.warehouses || [];
-			warehouses.forEach(warehouse => {
-				const color = get_column_color(warehouse.name);
+			warehouses.forEach((warehouse, index) => {
+				const color = COLUMN_COLORS[index % COLUMN_COLORS.length];
 				const column = $(`
 					<div class="vi-column"
 						data-warehouse="${warehouse.name}"
@@ -69,8 +60,8 @@ frappe.pages["vehicle-import-dashb"].on_page_load = function (wrapper) {
 
 						<div class="vi-column-header">
 							<div class="vi-column-title"
-								title="${warehouse.warehouse_name}">
-								${warehouse.warehouse_name}
+								title="${warehouse.name}">
+								${warehouse.name}
 							</div>
 							<div class="vi-card-summary">
 								<div class="vi-card-summary-item">

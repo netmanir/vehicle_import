@@ -2,21 +2,29 @@ import frappe
 from collections import defaultdict
 from frappe.query_builder.functions import Sum
 from frappe.query_builder import DocType
-
+from frappe.query_builder.functions import Cast
 
 @frappe.whitelist()
 def get_dashboard_data():
 
     Warehouse = DocType("Warehouse")
+    WarehouseRule = DocType("Warehouse Rule")
     VehicleHolder = DocType("Vehicle Holder")
 
     warehouses = (
-        frappe.qb.from_(Warehouse)
+        frappe.qb
+        .from_(Warehouse)
+        .left_join(WarehouseRule)
+        .on(
+            (Warehouse.name == WarehouseRule.warehouse)
+            & (WarehouseRule.rule_type == "Display Order")
+        )
         .select(
             Warehouse.name,
-            Warehouse.warehouse_name,
         )
         .where(Warehouse.is_group == 0)
+        .orderby(WarehouseRule.rule_value.isnull())
+        .orderby(Cast(WarehouseRule.rule_value, "SIGNED"))
         .orderby(Warehouse.lft)
     ).run(as_dict=True)
 
