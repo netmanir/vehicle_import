@@ -83,6 +83,8 @@ Assign, اختصاص
 Validation Errors, خطای اعتبارسنجی
 VINs assigned successfully., VINها با موفقیت تخصیص داده شد.
 Invalid VIN., VIN نامعتبر.
+Invalid VIN Lenght., طول VIN نامعتبر.
+VIN is empty., VIN خالی است
 Duplicate VIN., VIN تکراری.
 Unassigned VIN not found!, VIN اختصاص نیافته پیدا نشد!
 Row, ردیف
@@ -152,3 +154,9 @@ Required Cost Categories for Output, نوع هزینه‌های ضروری بر�
 Current changes are not saved. Save them?, تغییرات فعلی ذخیره نشده است. ذخیره شود؟
 Warehouse settings saved., تنظیمات انبار ذخیره شد.
 
+Warehouse Rule Validation, اعتبارسنجی قواعد انبار
+{0} warehouse '{1}' is missing required Cost Categories: {2}, {0} انبار '{1}' این انواع هزینه را ندارد: {2}
+{0} warehouse '{1}' contains invalid VIN: {2}, {0} انبار '{1}' شامل VIN نامعتبر است: {2}
+(Empty), (خالی)
+Input, ورودی
+Output, خروجی

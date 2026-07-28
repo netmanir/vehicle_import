@@ -55,9 +55,6 @@
   {
    "fieldname": "vehicle_holder_detail_currency",
    "fieldtype": "Link",
-   "in_filter": 1,
-   "in_list_view": 1,
-   "in_standard_filter": 1,
    "label": "Currency",
    "options": "Currency",
    "remember_last_selected_value": 1
@@ -65,9 +62,6 @@
   {
    "fieldname": "vehicle_holder_detail_exchange_rate",
    "fieldtype": "Currency",
-   "in_filter": 1,
-   "in_list_view": 1,
-   "in_standard_filter": 1,
    "label": "Exchange Rate",
    "length": 10,
    "non_negative": 1,
@@ -76,9 +70,6 @@
   {
    "fieldname": "vehicle_holder_detail_amount",
    "fieldtype": "Currency",
-   "in_filter": 1,
-   "in_list_view": 1,
-   "in_standard_filter": 1,
    "label": "Amount",
    "length": 32,
    "non_negative": 1,
@@ -137,7 +128,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-07-21 13:52:33.554795",
+ "modified": "2026-07-28 17:41:33.980101",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Vehicle Holder Detail",

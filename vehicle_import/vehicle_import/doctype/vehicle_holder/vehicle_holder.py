@@ -5,9 +5,8 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.query_builder import DocType
-from pypika import Case
-from frappe.desk.search import validate_and_sanitize_search_inputs
-from frappe import qb
+from pypika.functions import Cast
+from pypika import Case, Order
 
 from frappe.model.delete_doc import (
     get_linked_docs,
@@ -24,6 +23,11 @@ class VehicleHolder(Document):
         if not getattr(self, "_is_importing", False):
             self._validate_duplicate_items()
             self._validate_vehicle_quantities()
+            VehicleHolderService().validate_warehouse_rules(self)
+
+
+    def before_update_after_submit(self):
+        VehicleHolderService().validate_warehouse_rules(self)
 
 
     def before_save(self):
@@ -201,7 +205,7 @@ class VehicleHolder(Document):
                     "vehicle_history_vehicle_holder_detail": detail.name,
                 },
             )
-
+            
 
 @frappe.whitelist()
 def get_holders(search="", exclude_holder=None):
@@ -485,3 +489,48 @@ def submit_vehicle_holder(holder):
 @frappe.whitelist()
 def get_assigned_vin_counts(vehicle_holder):
     return VehicleHolderService.get_assigned_vin_counts(vehicle_holder)
+
+
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def warehouse_query(
+    doctype,
+    txt,
+    searchfield,
+    start,
+    page_len,
+    filters,
+):
+    Warehouse = DocType("Warehouse")
+    WarehouseRule = DocType("Warehouse Rule")
+
+    return (
+        frappe.qb
+        .from_(Warehouse)
+        .left_join(WarehouseRule)
+        .on(
+            (Warehouse.name == WarehouseRule.warehouse)
+            & (WarehouseRule.rule_type == "Display Order")
+        )
+        .select(
+            Warehouse.name,
+            Warehouse.name.as_('warehouse_name'),
+        )
+        .where(
+            (Warehouse.is_group == 0)
+            & (Warehouse.name.like(f"%{txt}%"))
+        )
+        .orderby(
+            Cast(
+                WarehouseRule.rule_value,
+                "SIGNED",
+            ),
+            order=Order.asc,
+        )
+        .orderby(
+            Warehouse.lft,
+            order=Order.asc,
+        )
+        .limit(page_len)
+        .offset(start)
+    ).run()

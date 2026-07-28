@@ -86,6 +86,10 @@ class VehicleHolderService:
         self,
         vin,
     ):
+        if not vin:
+            raise frappe.ValidationError(
+                _("VIN is empty.")
+            )
 
         if len(vin) != 17:
             raise frappe.ValidationError(
@@ -96,7 +100,7 @@ class VehicleHolderService:
             raise frappe.ValidationError(
                 _("Invalid VIN.")
             )
-
+    
 
     def _check_duplicate(
         self,
@@ -244,6 +248,237 @@ class VehicleHolderService:
 
     def do_submit(self, holder):
         frappe.get_doc("Vehicle Holder", holder).submit()
+
+
+    def validate_warehouse_rules(
+        self,
+        doc,
+    ):
+        old_doc = doc.get_doc_before_save()
+        old_warehouse = (
+            old_doc.vehicle_holder_warehouse
+            if old_doc
+            else None
+        )
+        new_warehouse = (
+            doc.vehicle_holder_warehouse
+        )
+
+        #
+        # Warehouse not changed
+        #
+        if old_warehouse == new_warehouse:
+            return
+
+        #
+        # Validate Output Rules
+        #
+        if old_warehouse:
+            self._validate_warehouse_output_rules(
+                doc=doc,
+                warehouse=old_warehouse,
+            )
+
+        #
+        # Validate Input Rules
+        #
+        if new_warehouse:
+            self._validate_warehouse_input_rules(
+                doc=doc,
+                warehouse=new_warehouse,
+            )
+
+
+    def _validate_warehouse_output_rules(
+        self,
+        doc,
+        warehouse,
+    ):
+        rules = self._get_warehouse_rules(
+            warehouse=warehouse,
+            direction="Out",
+        )
+        if not rules:
+            return
+        
+        if any(
+            rule["rule_type"] == "Valid VIN"
+            for rule in rules
+        ):
+            self._validate_vins(
+                doc,
+                warehouse=warehouse,
+                direction="Output",
+            )
+
+        if any(
+            rule["rule_type"] == "Cost Category"
+            for rule in rules
+        ):
+            self._validate_required_cost_categories(
+                doc=doc,
+                rules=rules,
+                warehouse=warehouse,
+                direction="Output",
+            )
+
+
+    def _validate_warehouse_input_rules(
+        self,
+        doc,
+        warehouse,
+    ):
+        rules = self._get_warehouse_rules(
+            warehouse=warehouse,
+            direction="In",
+        )
+        if not rules:
+            return
+
+        if any(
+            rule["rule_type"] == "Valid VIN"
+            for rule in rules
+        ):
+            self._validate_vins(
+                doc,
+                warehouse=warehouse,
+                direction="Input",
+            )
+
+        if any(
+            rule["rule_type"] == "Cost Category"
+            for rule in rules
+        ):
+            self._validate_required_cost_categories(
+                doc=doc,
+                rules=rules,
+                warehouse=warehouse,
+                direction="Input",
+            )
+
+
+    def _get_warehouse_rules(
+        self,
+        warehouse,
+        direction,
+    ):
+        WarehouseRule = DocType("Warehouse Rule")
+        return (
+            frappe.qb
+            .from_(WarehouseRule)
+            .select(
+                WarehouseRule.rule_type,
+                WarehouseRule.rule_value,
+            )
+            .where(
+                (WarehouseRule.warehouse == warehouse)
+                & (WarehouseRule.direction == direction)
+            )
+        ).run(as_dict=True)
+
+
+    def _validate_required_cost_categories(
+        self,
+        doc,
+        rules,
+        warehouse,
+        direction,
+    ):
+        required_categories = {
+            rule["rule_value"]
+            for rule in rules
+            if rule["rule_type"] == "Cost Category"
+        }
+        if not required_categories:
+            return
+        
+        holder_detail = [
+            d.name
+            for d in doc.vehicle_holder_detail
+        ]
+
+        CostEntry = DocType("Cost Entry")
+        existing_categories = set(
+            frappe.qb
+            .from_(CostEntry)
+            .select(CostEntry.cost_entry_cost_category)
+            .where(
+                (CostEntry.docstatus == 1)
+                & (
+                    (
+                        (CostEntry.cost_entry_reference_doctype == "Vehicle Holder")
+                        & (CostEntry.cost_entry_reference_name == doc.name)
+                    )
+                    |
+                    (
+                        (CostEntry.cost_entry_reference_doctype == "Vehicle Holder Detail")
+                        & (CostEntry.cost_entry_reference_name.isin(holder_detail))
+                    )
+                )
+            )
+            .run(pluck="cost_entry_cost_category")
+        )
+        missing_categories = (
+            required_categories
+            - existing_categories
+        )
+        if missing_categories:
+            CostCategory = DocType("Cost Category")
+            category_titles = dict(
+                frappe.qb
+                .from_(CostCategory)
+                .select(
+                    CostCategory.name,
+                    CostCategory.cost_category_title,
+                )
+                .where(
+                    CostCategory.name.isin(missing_categories)
+                )
+                .run()
+            )
+
+            frappe.throw(
+                _(
+                    "{0} warehouse '{1}' is missing required Cost Categories: {2}"
+                ).format(
+                    _(direction),
+                    warehouse,
+                    ", ".join(
+                        category_titles.get(name, name)
+                        for name in sorted(missing_categories)
+                    ),
+                ),
+                title=_("Warehouse Rule Validation"),
+            )
+
+
+    def _validate_vins(
+        self,
+        doc,
+        warehouse,
+        direction,
+    ):
+        for history in doc.vehicle_holder_history:
+            if history.vehicle_history_vehicle:
+                vehicle_unit = frappe.get_doc(
+                    "Vehicle Unit",
+                    history.vehicle_history_vehicle,
+                )
+                try:
+                    self._validate_vin(
+                        vehicle_unit.vehicle_vin,
+                    )
+                except frappe.ValidationError:
+                    frappe.throw(
+                        _(
+                            "{0} warehouse '{1}' contains invalid VIN: {2}"
+                        ).format(
+                            _(direction),
+                            warehouse,
+                            vehicle_unit.vehicle_vin or _("(Empty)"),
+                        ),
+                        title=_("Warehouse Rule Validation")
+                    )
 
 
     @staticmethod

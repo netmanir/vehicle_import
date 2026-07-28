@@ -4,11 +4,9 @@
 frappe.ui.form.on("Vehicle Holder", {
     
     setup(frm) {
-        frm.set_query("vehicle_holder_warehouse", function () {
+        frm.set_query("vehicle_holder_warehouse", () => {
             return {
-                filters: {
-                    is_group: 0
-                }
+                query: "vehicle_import.vehicle_import.doctype.vehicle_holder.vehicle_holder.warehouse_query"
             };
         });
     },

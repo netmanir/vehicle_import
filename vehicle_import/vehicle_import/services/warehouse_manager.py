@@ -2,6 +2,18 @@ import frappe
 from frappe.query_builder import DocType
 from frappe.query_builder.functions import Cast
 
+def as_bool(value):
+    if isinstance(value, bool):
+        return value
+
+    return str(value).lower() in (
+        "1",
+        "true",
+        "yes",
+        "on"
+    )
+
+
 @frappe.whitelist()
 def get_warehouses():
 
@@ -68,6 +80,7 @@ def get_warehouse_settings(warehouse):
         "cost_categories": cost_categories,
     }
 
+
 @frappe.whitelist()
 def save_warehouse_settings(
     warehouse,
@@ -132,14 +145,3 @@ def save_warehouse_settings(
         )
 
     frappe.db.commit()
-
-def as_bool(value):
-    if isinstance(value, bool):
-        return value
-
-    return str(value).lower() in (
-        "1",
-        "true",
-        "yes",
-        "on"
-    )
