@@ -20,29 +20,120 @@ def get_warehouses():
     Warehouse = DocType("Warehouse")
     WarehouseRule = DocType("Warehouse Rule")
 
-    rows = (
+    #
+    # Warehouses
+    #
+    warehouses = (
         frappe.qb
         .from_(Warehouse)
-        .left_join(WarehouseRule)
-        .on(
-            (Warehouse.name == WarehouseRule.warehouse)
-            & (WarehouseRule.rule_type == "Display Order")
-        )
         .select(
             Warehouse.name,
-            WarehouseRule.rule_value.as_("display_order"),
+            Warehouse.lft,
         )
         .where(Warehouse.is_group == 0)
-        .orderby(
-            WarehouseRule.rule_value.isnull()
-        )
-        .orderby(
-            Cast(WarehouseRule.rule_value, "SIGNED")
-        )
-        .orderby(
-            Warehouse.lft
+        .orderby(Warehouse.lft)
+    ).run(as_dict=True)
+
+    #
+    # Warehouse Rules
+    #
+    rules = (
+        frappe.qb
+        .from_(WarehouseRule)
+        .select(
+            WarehouseRule.warehouse,
+            WarehouseRule.rule_type,
+            WarehouseRule.direction,
+            WarehouseRule.rule_value,
         )
     ).run(as_dict=True)
+
+    #
+    # Build Warehouse Map
+    #
+    warehouse_map = {}
+
+    for warehouse in warehouses:
+        warehouse_map[warehouse.name] = {
+            "name": warehouse.name,
+            "display_order": None,
+            "valid_vin_required_for_input": False,
+            "valid_vin_required_for_output": False,
+            "input_cost_categories": [],
+            "output_cost_categories": [],
+            "lft": warehouse.lft,
+        }
+
+    #
+    # Merge Rules
+    #
+    for rule in rules:
+
+        warehouse = warehouse_map.get(
+            rule.warehouse
+        )
+
+        if not warehouse:
+            continue
+
+        #
+        # Display Order
+        #
+        if rule.rule_type == "Display Order":
+            warehouse["display_order"] = (
+                rule.rule_value
+            )
+            continue
+
+        #
+        # Valid VIN
+        #
+        if rule.rule_type == "Valid VIN":
+
+            if rule.direction == "In":
+                warehouse[
+                    "valid_vin_required_for_input"
+                ] = True
+
+            elif rule.direction == "Out":
+                warehouse[
+                    "valid_vin_required_for_output"
+                ] = True
+
+            continue
+
+        #
+        # Cost Categories
+        #
+        if rule.rule_type == "Cost Category":
+
+            if rule.direction == "In":
+                warehouse[
+                    "input_cost_categories"
+                ].append(rule.rule_value)
+
+            elif rule.direction == "Out":
+                warehouse[
+                    "output_cost_categories"
+                ].append(rule.rule_value)
+
+    #
+    # Sort
+    #
+    rows = sorted(
+        warehouse_map.values(),
+        key=lambda row: (
+            row["display_order"] is None,
+            int(row["display_order"] or 0),
+            row["lft"],
+        ),
+    )
+
+    #
+    # Cleanup
+    #
+    for row in rows:
+        del row["lft"]
 
     return rows
 

@@ -127,14 +127,37 @@ class WarehouseManager {
         this.table = new DataTable(this.$table[0], {
             columns: [
                 {
+                    id: "idx",
                     name: "#",
                 },
                 {
+                    id: "warehouse",
                     name: __("Warehouse"),
                 },
                 {
+                    id: "display_order",
                     name: __("Display Order"),
-                }
+                },
+                {
+                    id: "vin_in",
+                    name: __("VIN In"),
+                    format: value => value ? "✔" : "",
+                },
+                {
+                    id: "vin_out",
+                    name: __("VIN Out"),
+                    format: value => value ? "✔" : "",
+                },
+                {
+                    id: "input_costs",
+                    name: __("Input Costs"),
+                    format: cost_category_badges,
+                },
+                {
+                    id: "output_costs",
+                    name: __("Output Costs"),
+                    format: cost_category_badges,
+                },
             ],
             data: [],
             layout: "fluid",
@@ -233,11 +256,7 @@ class WarehouseManager {
         });
         this.warehouses = message || [];
         this.table.refresh(
-            this.warehouses.map((w, i) => [
-                i + 1,
-                w.name,
-                w.display_order ?? ""
-            ])
+            this.get_table_data()
         );
     }
 
@@ -434,15 +453,28 @@ class WarehouseManager {
         const row_index = this.warehouses.findIndex(
             w => w.name === this.current_warehouse
         );
+
         if (row_index >= 0) {
-            this.warehouses[row_index].display_order =
+            const warehouse =
+                this.warehouses[row_index];
+
+            warehouse.display_order =
                 cint($("#display-order").val()) || 0;
+
+            warehouse.valid_vin_required_for_input =
+                $("#valid-vin-in").prop("checked");
+
+            warehouse.valid_vin_required_for_output =
+                $("#valid-vin-out").prop("checked");
+
+            warehouse.input_cost_categories =
+                [...input_cost_categories];
+
+            warehouse.output_cost_categories =
+                [...output_cost_categories];
+
             this.table.refresh(
-                this.warehouses.map((w, i) => [
-                    i + 1,
-                    w.name,
-                    w.display_order ?? ""
-                ])
+                this.get_table_data()
             );
             this.highlight_selected_row(row_index);
         }
@@ -452,4 +484,39 @@ class WarehouseManager {
             indicator: "green"
         });
     }
+
+    get_table_data() {
+        return this.warehouses.map((w, i) => [
+            i + 1,
+            w.name,
+            w.display_order ?? "",
+            w.valid_vin_required_for_input,
+            w.valid_vin_required_for_output,
+            w.input_cost_categories,
+            w.output_cost_categories,
+        ]);
+    }
+}
+
+function cost_category_badges(
+    value,
+    cells,
+    column,
+    row
+) {
+    const values = row[column.colIndex];
+
+    if (!values?.length) {
+        return "";
+    }
+
+    return `
+        <div class="wm-cost-badges">
+            ${values.map(category => `
+                <span class="badge badge-secondary p-2">
+                    ${__(category)}
+                </span>
+            `).join("")}
+        </div>
+    `;
 }

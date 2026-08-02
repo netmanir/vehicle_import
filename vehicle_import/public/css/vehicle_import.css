@@ -98,3 +98,27 @@ jdp-container {
     justify-content: space-between;
     margin-top: 8px;
 }
+
+
+.warehouse-manager .wm-cost-badges {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 4px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    scrollbar-width: thin;
+}
+
+.warehouse-manager .wm-cost-badges::-webkit-scrollbar {
+    height: 5px;
+}
+
+.warehouse-manager .wm-cost-badges::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 10px;
+}
+
+.warehouse-manager .wm-cost-badges .badge {
+    flex: 0 0 auto;
+}

@@ -149,14 +149,18 @@ Warehouse Manager, مدیریت انبار
 Display Order, ترتیب نمایش
 Valid VIN Required for Input, برای ورود باید VIN معتبر باشد
 Valid VIN Required for Output, برای خروج باید VIN معتبر باشد
-Required Cost Categories for Input, نوع هزینه‌های ضروری برای ورود
-Required Cost Categories for Output, نوع هزینه‌های ضروری برای خروج
+Required Cost Categories for Input, هزینه‌های ضروری برای ورود
+Required Cost Categories for Output, هزینه‌های ضروری برای خروج
 Current changes are not saved. Save them?, تغییرات فعلی ذخیره نشده است. ذخیره شود؟
 Warehouse settings saved., تنظیمات انبار ذخیره شد.
 
 Warehouse Rule Validation, اعتبارسنجی قواعد انبار
-{0} warehouse '{1}' is missing required Cost Categories: {2}, {0} انبار '{1}' این انواع هزینه را ندارد: {2}
+{0} warehouse '{1}' is missing required Cost Categories: {2}, {0} انبار '{1}' این هزینه(ها) را ندارد: {2}
 {0} warehouse '{1}' contains invalid VIN: {2}, {0} انبار '{1}' شامل VIN نامعتبر است: {2}
 (Empty), (خالی)
 Input, ورودی
 Output, خروجی
+VIN In, VIN ورودی
+VIN Out, VIN خروجی
+Input Costs, هزینه ورودی
+Output Costs, هزینه خروجی
