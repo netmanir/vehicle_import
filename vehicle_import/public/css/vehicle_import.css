@@ -75,3 +75,26 @@ jdp-container {
 .btn-delete-cost-entry svg {
     stroke: currentColor;
 }
+
+
+/* Datatable Filters */
+.vehicle-import-filter-dropdown {
+    position: absolute;
+    width: 220px;
+    background: white;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
+    padding: 8px;
+    z-index: 999;
+}
+
+.vehicle-import-filter-item {
+    display: block;
+    padding: 0;
+}
+
+.vehicle-import-filter-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+}

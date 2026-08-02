@@ -108,6 +108,15 @@ window.vehicle_import.load_vehicle_holder_cost_report = function (frm) {
             };
 
             datatable.refresh();         
+
+            vehicle_import.datatable_filters.attach({
+                datatable,
+                filters: [
+                    { column: "item" },
+                    { column: "status" },
+                    { column: "cost_category" },
+                ],
+            });
         },
     });
 };
