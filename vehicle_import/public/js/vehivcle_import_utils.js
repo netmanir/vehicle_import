@@ -77,6 +77,17 @@ window.vehicle_import.format_compact_amount = function (amount) {
 
 window.vehicle_import.datatable_filters = {};
 
+//
+// Resolve actual column id
+//
+const normalize = s =>
+    String(s)
+        .trim()
+        .replace(/\u00A0/g, " ")
+        .replace(/\u200C/g, "")
+        .replace(/ي/g, "ی")
+        .replace(/ك/g, "ک");
+
 window.vehicle_import.datatable_filters.attach = function ({
     datatable,
     filters,
@@ -85,6 +96,16 @@ window.vehicle_import.datatable_filters.attach = function ({
     if (!datatable || !filters?.length) {
         return;
     }
+
+    //
+    // Build Column Map
+    //
+    const column_map = {};
+    datatable.datamanager.columns.forEach(col => {
+        column_map[
+            normalize(col.id)
+        ] = col.id;
+    });
 
     //
     // Internal State
@@ -97,19 +118,25 @@ window.vehicle_import.datatable_filters.attach = function ({
             cache_built: false,
         };
 
+    datatable.__vehicle_import.column_map =
+        column_map;
+
     //
     // Patch renderHeader once
     //
     if (!datatable.__vehicle_import.header_patched) {
         const originalRenderHeader =
             datatable.renderHeader.bind(datatable);
+
         datatable.renderHeader = function () {
             originalRenderHeader();
+
             vehicle_import.datatable_filters.attach({
                 datatable,
                 filters,
             });
         };
+
         datatable.__vehicle_import.header_patched = true;
     }
 
@@ -124,10 +151,24 @@ window.vehicle_import.datatable_filters.attach = function ({
     //
     if (!datatable.__vehicle_import.cache_built) {
 
-        filters.forEach(filter => {
+        filters.forEach(column_name => {
+
+            const real_column =
+                column_map[
+                    normalize(column_name)
+                ];
+
+            if (!real_column) {
+                return;
+            }
+
             const values = new Set();
+
             datatable.__vehicle_import.original_data.forEach(row => {
-                const value = row[filter.column];
+
+                const value =
+                    row[real_column];
+
                 if (
                     value !== undefined &&
                     value !== null &&
@@ -138,7 +179,7 @@ window.vehicle_import.datatable_filters.attach = function ({
             });
 
             datatable.__vehicle_import.values[
-                filter.column
+                real_column
             ] = [...values].sort((a, b) =>
                 String(a).localeCompare(
                     String(b),
@@ -147,12 +188,12 @@ window.vehicle_import.datatable_filters.attach = function ({
             );
 
             datatable.__vehicle_import.filters[
-                filter.column
+                real_column
             ] = [
-                    ...datatable.__vehicle_import.values[
-                    filter.column
-                    ]
-                ];
+                ...datatable.__vehicle_import.values[
+                    real_column
+                ]
+            ];
         });
 
         datatable.__vehicle_import.cache_built = true;
@@ -161,10 +202,20 @@ window.vehicle_import.datatable_filters.attach = function ({
     //
     // Replace Header Inputs
     //
-    filters.forEach(filter => {
+    filters.forEach(column_name => {
+
+        const real_column =
+            column_map[
+                normalize(column_name)
+            ];
+
+        if (!real_column) {
+            return;
+        }
+
         const column =
             datatable.datamanager.columns.find(
-                c => c.id === filter.column
+                c => c.id === real_column
             );
 
         if (!column) {
@@ -185,10 +236,12 @@ window.vehicle_import.datatable_filters.attach = function ({
         input.placeholder = "▼";
 
         if (!input.__vehicle_import_bound) {
+
             input.addEventListener("click", () => {
+
                 vehicle_import.datatable_filters.show(
                     datatable,
-                    filter,
+                    real_column,
                     input
                 );
             });
@@ -208,9 +261,17 @@ window.vehicle_import.datatable_filters.get_filtered_rows =
 
 window.vehicle_import.datatable_filters.show = function (
     datatable,
-    filter,
+    column_name,
     input
 ) {
+    const actual_column =
+        datatable.__vehicle_import.column_map[
+            normalize(column_name)
+        ];
+
+    if (!actual_column) {
+        return;
+    }
 
     //
     // Create once
@@ -218,15 +279,20 @@ window.vehicle_import.datatable_filters.show = function (
     if (!datatable.__vehicle_import.dropdown) {
         const dropdown =
             document.createElement("div");
+
         dropdown.className =
             "vehicle-import-filter-dropdown";
+
         dropdown.style.display = "none";
+
         datatable.datatableWrapper.appendChild(
             dropdown
         );
+
         datatable.__vehicle_import.dropdown =
             dropdown;
     }
+
     const dropdown =
         datatable.__vehicle_import.dropdown;
 
@@ -234,28 +300,33 @@ window.vehicle_import.datatable_filters.show = function (
     // Bind Events
     //
     if (!dropdown.__events_bound) {
+
         dropdown.addEventListener(
             "click",
             function (e) {
 
+                //
                 // Apply
+                //
                 if (e.target.matches(".apply")) {
-                    const filter =
-                        dropdown.__filter;
+
                     const column =
-                        filter.column;
+                        dropdown.__column;
 
                     const selected = [
                         ...dropdown.querySelectorAll(
                             "input[type=checkbox]:checked"
                         )
                     ].map(c => c.value);
+
                     datatable.__vehicle_import.filters[
                         column
                     ] = selected;
+
                     vehicle_import.datatable_filters.apply(
                         datatable
                     );
+
                     dropdown.style.display = "none";
                 }
 
@@ -263,25 +334,21 @@ window.vehicle_import.datatable_filters.show = function (
                 // Reset
                 //
                 if (e.target.matches(".reset")) {
-                    const filter =
-                        dropdown.__filter;
+
                     const column =
-                        filter.column;
+                        dropdown.__column;
 
                     //
-                    // Restore all possible values for this column
+                    // Restore all possible values
                     //
                     datatable.__vehicle_import.filters[
                         column
                     ] = [
-                            ...datatable.__vehicle_import.values[
+                        ...datatable.__vehicle_import.values[
                             column
-                            ]
-                        ];
+                        ]
+                    ];
 
-                    //
-                    // Rebuild table from the ORIGINAL dataset
-                    //
                     vehicle_import.datatable_filters.apply(
                         datatable
                     );
@@ -299,22 +366,28 @@ window.vehicle_import.datatable_filters.show = function (
     //
     if (
         dropdown.style.display === "block" &&
-        dropdown.__filter?.column === filter.column
+        dropdown.__column === actual_column
     ) {
         dropdown.style.display = "none";
         return;
     }
 
-    dropdown.__filter = filter;
+    dropdown.__column =
+        actual_column;
+
     dropdown.replaceChildren();
 
-    datatable.__vehicle_import.values[
-        filter.column
-    ].forEach(value => {
+    (
+        datatable.__vehicle_import.values[
+            actual_column
+        ] || []
+    ).forEach(value => {
+
         const checked =
             datatable.__vehicle_import.filters[
-                filter.column
+                actual_column
             ].includes(value);
+
         dropdown.insertAdjacentHTML(
             "beforeend",
             `
@@ -349,21 +422,29 @@ window.vehicle_import.datatable_filters.show = function (
     //
     const inputRect =
         input.getBoundingClientRect();
+
     const wrapperRect =
         datatable.datatableWrapper.getBoundingClientRect();
+
     dropdown.style.display = "block";
+
     const dropdownWidth =
         dropdown.offsetWidth;
+
     let left =
         inputRect.left - wrapperRect.left;
-    
-        // Prevent overflow on the right
+
+    //
+    // Prevent overflow on the right
+    //
     left = Math.min(
         left,
         wrapperRect.width - dropdownWidth - 5
     );
-    
+
+    //
     // Prevent overflow on the left
+    //
     left = Math.max(
         left,
         5
@@ -371,6 +452,7 @@ window.vehicle_import.datatable_filters.show = function (
 
     dropdown.style.left =
         left + "px";
+
     dropdown.style.top =
         (inputRect.bottom - wrapperRect.top + 5) + "px";
 };
@@ -380,16 +462,24 @@ window.vehicle_import.datatable_filters.show = function (
 //
 // Never patch Frappe DataTable internals.
 // Always keep original dataset and refresh DataTable with filtered rows.
+//
 window.vehicle_import.datatable_filters.apply = function (datatable) {
 
     const original =
         datatable.__vehicle_import.original_data;
+
     const filters =
         datatable.__vehicle_import.filters;
 
+    const column_map =
+        datatable.__vehicle_import.column_map;
+
     const filtered = original.filter(row => {
-        for (const column in filters) {
-            const allowed = filters[column];
+
+        for (const column_name in filters) {
+
+            const allowed =
+                filters[column_name];
 
             //
             // Nothing selected -> show nothing
@@ -398,13 +488,21 @@ window.vehicle_import.datatable_filters.apply = function (datatable) {
                 return false;
             }
 
+            const real_column =
+                column_map[column_name] || column_name;
+
             if (
-                !allowed.includes(row[column])
+                !allowed.includes(
+                    row[real_column]
+                )
             ) {
                 return false;
             }
         }
+
         return true;
     });
+
     datatable.refresh(filtered);
 };
+

@@ -1,3 +1,5 @@
+window.vehicle_import = window.vehicle_import || {};
+
 frappe.pages["excel-browser"].on_page_load = function (wrapper) {
 
     const page = frappe.ui.make_app_page({
@@ -32,7 +34,7 @@ function load_files(page) {
             page.body.empty();
             if (!r.message.length) {
                 page.body.html(`
-					<div class="text-muted">
+					<div class="text-muted excel-browser-container text-center">
 						${__("No Excel files found.")}
 					</div>
 				`);
@@ -125,5 +127,17 @@ function load_files(page) {
             );
         datatable.datatableWrapper.dir =
             frappe.utils.is_rtl() ? "rtl" : "ltr";
+
+        vehicle_import.datatable_filters.attach({
+            datatable,
+            filters: [
+                "کد انبار",
+                "نام انبار",
+                "مشخصه فنی",
+                "کد کالا",
+                "نام کالا",
+                "سال ساخت",
+            ],
+        });
     }
 }

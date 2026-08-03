@@ -112,9 +112,9 @@ window.vehicle_import.load_vehicle_holder_cost_report = function (frm) {
             vehicle_import.datatable_filters.attach({
                 datatable,
                 filters: [
-                    { column: "item" },
-                    { column: "status" },
-                    { column: "cost_category" },
+                    "item",
+                    "status",
+                    "cost_category",
                 ],
             });
         },
