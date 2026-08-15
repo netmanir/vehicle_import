@@ -98,6 +98,7 @@ frappe.ui.form.on("Vehicle Holder", {
 
         // Add "Add Cost" button to Vehicle Detial Grid
         if (can_add_cost) {
+            patch_cost_entry_button_render(frm);
             setup_cost_entry_button_in_detail_grid(frm);
         }
 
@@ -225,15 +226,41 @@ frappe.form.link_formatters["Vehicle Holder Detail"] = function (value) {
     return detail.vehicle_holder_detail_item || value;
 };
 
+function patch_cost_entry_button_render(frm) {
+    const grid =
+        frm.fields_dict.vehicle_holder_detail.grid;
+
+    if (grid.__vehicle_import_cost_render_patched) {
+        return;
+    }
+
+    const original_render_result_rows =
+        grid.render_result_rows.bind(grid);
+
+    grid.render_result_rows = function ($rows) {
+        const result =
+            original_render_result_rows($rows);
+
+        setup_cost_entry_button_in_detail_grid(frm);
+
+        return result;
+    };
+
+    grid.__vehicle_import_cost_render_patched = true;
+}
+
 function setup_cost_entry_button_in_detail_grid(frm) {
     if (frm.doc.docstatus !== 1) {
         return;
     }
+
     const grid = frm.fields_dict.vehicle_holder_detail.grid;
+
     grid.grid_rows.forEach(row => {
         if (!row.open_form_button) {
             row.add_open_form_button();
         }
+
         if (!row.open_form_button) {
             return;
         }
@@ -243,48 +270,58 @@ function setup_cost_entry_button_in_detail_grid(frm) {
             return;
         }
 
-        const header = frm.fields_dict.vehicle_holder_detail.grid.wrapper.find(
-            ".grid-heading-row .col:last"
-        );
+        const header =
+            frm.fields_dict.vehicle_holder_detail.grid.wrapper.find(
+                ".grid-heading-row .col:last"
+            );
+
         header.css({
             minWidth: "45px",
             display: "flex",
             justifyContent: "center"
-        });        
+        });
+
         row.open_form_button.parent().css({
             display: "flex",
             justifyContent: "center",
             minWidth: "45px",
         });
+
         row.open_form_button.css({
             display: "flex",
             alignItems: "center",
             gap: "6px"
         });
+
         const button = $(`
             <a class="btn-cost-entry"
                title="${__("Add Cost")}">
                 ${frappe.utils.icon("circle-dollar-sign", "xs")}
             </a>
         `);
+
         button.tooltip({
             delay: {
                 show: 600,
                 hide: 100
             }
         });
+
         button.on("click", function (e) {
             e.preventDefault();
             e.stopPropagation();
+
             vehicle_import.open_cost_entry_dialog({
                 reference_doctype: row.doc.doctype,
                 reference_name: row.doc.name,
                 reference_date: frm.doc.vehicle_holder_posting_date,
+
                 callback() {
                     frm.reload_doc();
                 }
             });
         });
+
         row.open_form_button.append(button);
     });
 }

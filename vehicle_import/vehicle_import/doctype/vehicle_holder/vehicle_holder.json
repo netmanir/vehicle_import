@@ -83,6 +83,7 @@
    "reqd": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "vehicle_holder_remark",
    "fieldtype": "Small Text",
    "label": "Remark"
@@ -193,7 +194,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-07-22 13:06:20.180165",
+ "modified": "2026-08-10 12:19:56.356149",
  "modified_by": "Administrator",
  "module": "Vehicle Import",
  "name": "Vehicle Holder",
