@@ -110,3 +110,9 @@
 .vi-column-header .vi-card-summary-item svg {
     stroke: white;
 }
+
+.vi-card.is-finalized {
+    background-color: lightseagreen;
+    border: 1px solid #168b8b;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}

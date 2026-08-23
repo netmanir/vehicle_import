@@ -2,15 +2,14 @@ frappe.require("/assets/vehicle_import/css/vehicle_import_dashboard.css");
 
 const COLUMN_COLORS = [
     "#1976D2", // Blue
-    "#388E3C", // Green
     "#F57C00", // Orange
     "#7B1FA2", // Purple
+    "#689F38", // Lime
     "#C2185B", // Pink
     "#0097A7", // Cyan
     "#5D4037", // Brown
     "#455A64", // Blue Grey
     "#D32F2F", // Red
-    "#689F38", // Lime
 ];
 
 function update_column_summary(column, currency) {
@@ -80,8 +79,13 @@ frappe.pages["vehicle-import-dashb"].on_page_load = function (wrapper) {
 
 				const body = column.find(".vi-column-body");
 				(warehouse.holders || []).forEach(holder => {
+					const finalized_class =
+						holder.vehicle_holder_finalized
+							? " is-finalized"
+							: "";
+
 					body.append(`
-						<div class="vi-card"
+						<div class="vi-card${finalized_class}"
 							draggable="true"
 							data-holder="${holder.name}"
 							data-items="${holder.summary.item_count}"
@@ -177,7 +181,7 @@ frappe.pages["vehicle-import-dashb"].on_page_load = function (wrapper) {
 						old_body.appendChild(dragged_card);
 						update_column_summary(old_body.parentElement, currency);
 						update_column_summary(body.parentElement, currency);
-						frappe.msgprint({ 
+						frappe.msgprint({
 							message: __("Unable to move!"),
 							indicator: "red",
 						});

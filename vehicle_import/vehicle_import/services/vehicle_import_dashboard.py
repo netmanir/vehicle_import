@@ -36,6 +36,7 @@ def get_dashboard_data():
             VehicleHolder.vehicle_holder_doc_nr,
             VehicleHolder.vehicle_holder_type,
             VehicleHolder.vehicle_holder_warehouse,
+            VehicleHolder.vehicle_holder_finalized,
         )
         .orderby(VehicleHolder.modified, order=frappe.qb.desc)
     ).run(as_dict=True)
