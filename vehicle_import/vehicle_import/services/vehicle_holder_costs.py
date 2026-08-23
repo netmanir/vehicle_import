@@ -38,15 +38,15 @@ class VehicleHolderCosts:
                 "name": _("Item"),
             },
 
-            {
-                "id": "status",
-                "name": _("Status"),
-            },
+            # {
+            #     "id": "status",
+            #     "name": _("Status"),
+            # },
 
-            {
-                "id": "cost_date",
-                "name": _("Cost Date"),
-            },
+            # {
+            #     "id": "cost_date",
+            #     "name": _("Cost Date"),
+            # },
 
             {
                 "id": "cost_category",
@@ -58,10 +58,10 @@ class VehicleHolderCosts:
                 "name": _("Currency"),
             },
 
-            {
-                "id": "exchange_rate",
-                "name": _("Rate"),
-            },
+            # {
+            #     "id": "exchange_rate",
+            #     "name": _("Rate"),
+            # },
 
             {
                 "id": "foreign_amount",
@@ -73,20 +73,26 @@ class VehicleHolderCosts:
                 "name": _("Amount"),
             },
 
+            # {
+            #     "id": "creation_date",
+            #     "name": _("Creation"),
+            # },
+
+            {
+                "id": "cost_entry",
+                "name": _("Cost Entry"),
+            },
+
             {
                 "id": "cost_holder_detail",
                 "name": _("Detail Row"),
             },
 
             {
-                "id": "creation_date",
-                "name": _("Creation"),
+                "id": "description",
+                "name": _("Description"),
             },
 
-            {
-                "id": "cost_entry",
-                "name": _("Cost Entry"),
-            },
         ]
 
 
@@ -114,6 +120,7 @@ class VehicleHolderCosts:
                 CostEntry.cost_entry_exchange_rate.as_("exchange_rate"),
                 CostEntry.cost_entry_foreign_amount.as_("foreign_amount"),
                 CostEntry.cost_entry_base_amount.as_("base_amount"),
+                CostEntry.cost_entry_description.as_("description"),                
 
                 CostEntry.cost_entry_reference_name.as_("cost_reference"),
                 CostEntry.cost_entry_reference_doctype.as_("cost_reference_doctype"),
@@ -192,7 +199,7 @@ class VehicleHolderCosts:
             row["foreign_amount_raw"] = row["foreign_amount"]
             row["foreign_amount"] = fmt_money(
                 row["foreign_amount_raw"],
-                precision=0,
+                precision=2,
             )
 
             row["base_amount_raw"] = row["base_amount"]
@@ -312,12 +319,12 @@ class VehicleHolderCosts:
         # Total Row
         # 
         total_row = last_row + 1
+        amount_col = 6    # با احتساب ستون شماره ردیف
         ws.cell(
             row=total_row,
-            column=6,
+            column=amount_col-1,
             value=_("Total"),
         ).font = Font(bold=True)
-        amount_col = 9    # با احتساب ستون شماره ردیف
         letter = get_column_letter(amount_col)
         cell = ws.cell(
             row=total_row,

@@ -1,13 +1,11 @@
 class ImportVehicles_Dialog {
 
     static async show(options = {}) {
-
         const import_vehicle_dialog = new ImportVehicles_Dialog(options);
         return await import_vehicle_dialog.show();
     }
 
     constructor(options = {}) {
-
         // Configuration
         this.options = options;
 
@@ -21,17 +19,22 @@ class ImportVehicles_Dialog {
         this.holders = [];
         this.details = [];
         this.histories = [];
+        this.selected_details = [];
     }
 
-
     async show() {
-
         this.create_dialog();
 
         return new Promise((resolve) => {
 
-            this.dialog.set_primary_action(__("Import"), () => {
-                resolve(this.get_result());
+            this.dialog.set_primary_action(__("Import"), async () => {
+                const result = await this.get_result();
+
+                if (!result) {
+                    return;
+                }
+
+                resolve(result);
                 this.dialog.hide();
             });
 
@@ -39,8 +42,8 @@ class ImportVehicles_Dialog {
                 resolve(null);
             });
 
-            this.dialog.show();        
-            
+            this.dialog.show();
+
             // Create Table
             this.dialog.$wrapper.one("shown.bs.modal", async () => {
                 this.create_tables();
@@ -69,6 +72,7 @@ class ImportVehicles_Dialog {
             width: "95vw",
             "max-width": "95vw"
         });
+
         this.dialog.$wrapper.find(".modal-content").css({
             height: "92vh",
             display: "flex"
@@ -134,7 +138,7 @@ class ImportVehicles_Dialog {
                 </div>
 
             </div>
-         `;
+        `;
 
         this.dialog.fields_dict.explorer_html.$wrapper.html(html);
 
@@ -165,6 +169,7 @@ class ImportVehicles_Dialog {
         });
 
         this.detail_table = new DataTable(this.$detail[0], {
+            checkboxColumn: true,
             columns: [
                 { name: __("Item") },
                 { name: __("Quantity") },
@@ -185,7 +190,6 @@ class ImportVehicles_Dialog {
             layout: "fluid",
             serialNoColumn: false
         });
-
 
         // Set Style
         const dir = frappe.utils.is_rtl() ? "rtl" : "ltr";
@@ -240,41 +244,105 @@ class ImportVehicles_Dialog {
             }, 500);
         });
 
-
         // Holder Row Click
         this.$holder.on("click", ".dt-row", (e) => {
-
             const rowIndex = Number($(e.currentTarget).attr("data-row-index"));
 
             this.selected_holder = this.holders[rowIndex];
             this.selected_detail = null;
+            this.selected_details = [];
+
+            this.detail_table.rowmanager.checkMap = [];
 
             this.detail_table.refresh([]);
             this.reset_history_table();
+            this.enable_history_table();
 
             this.load_details(this.selected_holder.name);
         });
 
+        // Detail Checkbox Change
+        this.$detail.on(
+            "change",
+            'input[type="checkbox"]',
+            () => {
+                this.update_selected_details();
+            }
+        );
 
         // Detail Row Click
         this.$detail.on("click", ".dt-row", (e) => {
 
-            const rowIndex = Number($(e.currentTarget).attr("data-row-index"));
+            // Do not treat checkbox clicks as row selection.
+            if ($(e.target).is('input[type="checkbox"]')) {
+                return;
+            }
 
-            this.selected_detail = this.details[rowIndex];
+            // If one or more details are selected,
+            // Vehicle selection is controlled by Details.
+            if (this.selected_details.length) {
+                return;
+            }
+
+            const rowIndex =
+                Number(
+                    $(e.currentTarget).attr("data-row-index")
+                );
+
+            this.selected_detail =
+                this.details[rowIndex];
 
             this.reset_history_table();
 
-            this.load_histories(this.selected_detail.name);
+            this.load_histories(
+                this.selected_detail.name
+            );
         });
 
     }
 
-    reset_history_table() {
+    update_selected_details() {
 
+        const checkMap =
+            this.detail_table.rowmanager.checkMap || [];
+
+        this.selected_details =
+            this.details.filter(
+                (_, index) => !!checkMap[index]
+            );
+
+        if (this.selected_details.length) {
+            this.selected_detail = null;
+            this.disable_history_table();
+            return;
+        }
+
+        this.selected_detail = null;
+        this.enable_history_table();
+        this.reset_history_table();
+    }
+
+    disable_history_table() {
+
+        this.$history.css({
+            opacity: 0.45,
+            pointerEvents: "none"
+        });
+
+        this.reset_history_table();
+    }
+
+    enable_history_table() {
+
+        this.$history.css({
+            opacity: 1,
+            pointerEvents: "auto"
+        });
+    }
+
+    reset_history_table() {
         this.history_table.rowmanager.checkMap = [];
         this.history_table.refresh([]);
-
     }
 
     async load_holders(search = "") {
@@ -291,6 +359,7 @@ class ImportVehicles_Dialog {
 
         this.selected_holder = null;
         this.selected_detail = null;
+        this.selected_details = [];
 
         this.holder_table.refresh(
             this.holders.map(h => [
@@ -300,15 +369,21 @@ class ImportVehicles_Dialog {
             ])
         );
 
+        this.detail_table.rowmanager.checkMap = [];
+
         this.detail_table.refresh(
             [],
             this.detail_table.options.columns
         );
 
+        this.history_table.rowmanager.checkMap = [];
+
         this.history_table.refresh(
             [],
             this.history_table.options.columns
         );
+
+        this.enable_history_table();
     }
 
     async load_details(holder_name) {
@@ -323,6 +398,9 @@ class ImportVehicles_Dialog {
         this.details = r.message;
 
         this.selected_detail = null;
+        this.selected_details = [];
+
+        this.detail_table.rowmanager.checkMap = [];
 
         this.detail_table.refresh(
             this.details.map(d => [
@@ -332,10 +410,14 @@ class ImportVehicles_Dialog {
             ])
         );
 
+        this.history_table.rowmanager.checkMap = [];
+
         this.history_table.refresh(
             [],
             this.history_table.options.columns
         );
+
+        this.enable_history_table();
     }
 
     async load_histories(detail_name) {
@@ -351,6 +433,8 @@ class ImportVehicles_Dialog {
 
         this.histories = r.message;
 
+        this.history_table.rowmanager.checkMap = [];
+
         this.history_table.refresh(
             this.histories.map(h => [
                 h.vehicle,
@@ -359,14 +443,95 @@ class ImportVehicles_Dialog {
         );
     }
 
-    get_result() {
+    async get_result() {
+
+        if (!this.selected_holder) {
+            frappe.show_alert({
+                message: __("Please select a Vehicle Holder."),
+                indicator: "orange",
+            });
+
+            return null;
+        }
+
+        //
+        // Import by selected Details
+        //
+        if (this.selected_details.length) {
+
+            const results =
+                await Promise.all(
+                    this.selected_details.map(detail =>
+                        frappe.call({
+                            method:
+                                "vehicle_import.vehicle_import.doctype.vehicle_holder.vehicle_holder.get_holder_histories",
+                            args: {
+                                current_holder:
+                                    this.options.current_holder,
+                                reference_detail_name:
+                                    detail.name,
+                            },
+                        })
+                    )
+                );
+
+            const vehicles = [];
+            const vehicle_names = new Set();
+
+            results.forEach(r => {
+                (r.message || []).forEach(vehicle => {
+
+                    if (vehicle_names.has(vehicle.vehicle)) {
+                        return;
+                    }
+
+                    vehicle_names.add(vehicle.vehicle);
+                    vehicles.push(vehicle);
+                });
+            });
+
+            if (!vehicles.length) {
+                frappe.show_alert({
+                    message: __("No vehicles found for the selected Items."),
+                    indicator: "orange",
+                });
+
+                return null;
+            }
+
+            return {
+                holder: this.selected_holder,
+                details: this.selected_details,
+                detail: null,
+                vehicles: vehicles
+            };
+        }
+
+        //
+        // Import by selected Vehicles
+        //
+        const checkMap =
+            this.history_table.rowmanager.checkMap || [];
+
+        const vehicles =
+            this.histories.filter(
+                (_, index) => !!checkMap[index]
+            );
+
+        if (!vehicles.length) {
+            frappe.show_alert({
+                message: __("Please select at least one Vehicle or Item."),
+                indicator: "orange",
+            });
+
+            return null;
+        }
 
         return {
             holder: this.selected_holder,
+            details: [],
             detail: this.selected_detail,
-            vehicles: this.histories.filter(
-                (_, index) => this.history_table.rowmanager.checkMap[index]
-            )
+            vehicles: vehicles
         };
     }
 }

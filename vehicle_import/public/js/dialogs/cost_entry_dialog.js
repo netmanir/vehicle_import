@@ -60,7 +60,7 @@ window.vehicle_import.open_cost_entry_dialog = function (options) {
                 fieldtype: "Column Break",
             },
             {
-                fieldtype: "Currency",
+                fieldtype: "Float",
                 fieldname: "foreign_amount",
                 label: __("Amount"),
                 reqd: 1,

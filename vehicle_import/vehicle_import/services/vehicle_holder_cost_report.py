@@ -43,15 +43,15 @@ class VehicleHolderCostReport:
                 "name": _("Item"),
             },
 
-            {
-                "id": "status",
-                "name": _("Status"),
-            },
+            # {
+            #     "id": "status",
+            #     "name": _("Status"),
+            # },
 
-            {
-                "id": "cost_date",
-                "name": _("Cost Date"),
-            },
+            # {
+            #     "id": "cost_date",
+            #     "name": _("Cost Date"),
+            # },
 
             {
                 "id": "cost_category",
@@ -90,12 +90,10 @@ class VehicleHolderCostReport:
                 "name": _("Detail Row"),
             },
 
-            {
-                "id": "creation_date",
-                "name": _("Creation"),
-            },
-
-
+            # {
+            #     "id": "creation_date",
+            #     "name": _("Creation"),
+            # },
         ]
 
 
@@ -359,12 +357,12 @@ class VehicleHolderCostReport:
         # Total Row
         # 
         total_row = last_row + 1
+        amount_col = 5    # با احتساب ستون شماره ردیف
         ws.cell(
             row=total_row,
-            column=6,
+            column=amount_col-1,
             value=_("Total"),
         ).font = Font(bold=True)
-        amount_col = 7    # با احتساب ستون شماره ردیف
         letter = get_column_letter(amount_col)
         cell = ws.cell(
             row=total_row,

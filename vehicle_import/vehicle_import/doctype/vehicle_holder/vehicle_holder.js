@@ -62,7 +62,7 @@ frappe.ui.form.on("Vehicle Holder", {
         // Add "Assign VINs" button
         const can_assign_vin =
             !frm.is_new() &&
-            frm.doc.docstatus === 0 &&
+            // frm.doc.docstatus === 0 &&
             !!frm.doc.vehicle_holder_history.length &&
             !frm.doc.vehicle_holder_finalized;
         if (can_assign_vin) {
