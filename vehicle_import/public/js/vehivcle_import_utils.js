@@ -54,6 +54,10 @@ window.vehicle_import.format_compact_amount = function (amount) {
 
     amount = Number(amount || 0);
 
+    if (amount >= 1_000_000_000_000) {
+        return (amount / 1_000_000_000_000).toLocaleString(undefined, {maximumFractionDigits: 2,}) + ` ${__("T")}`;
+    }
+
     if (amount >= 1_000_000_000) {
         return (amount / 1_000_000_000).toLocaleString(undefined, {maximumFractionDigits: 2,}) + ` ${__("B")}`;
     }

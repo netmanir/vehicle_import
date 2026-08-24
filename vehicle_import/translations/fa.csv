@@ -137,6 +137,7 @@ Unable to move!, قابل انتقال نیست!
 K, هزار
 M, میلیون
 B, میلیارد
+T, تریلیارد
 
 
 Delete this Cost Entry?, این سند هزینه حذف شود؟
@@ -157,6 +158,7 @@ Warehouse settings saved., تنظیمات انبار ذخیره شد.
 Warehouse Rule Validation, اعتبارسنجی قواعد انبار
 {0} warehouse '{1}' is missing required Cost Categories: {2}, {0} انبار '{1}' این هزینه(ها) را ندارد: {2}
 {0} warehouse '{1}' contains invalid VIN: {2}, {0} انبار '{1}' شامل VIN نامعتبر است: {2}
+{0} warehouse '{1}' has Vehicles with missing required Cost Categories:, {0} انبار '{1}' شامل دستگاه‌هایی است که این هزینه(ها) را ندارد:
 (Empty), (خالی)
 Input, ورودی
 Output, خروجی

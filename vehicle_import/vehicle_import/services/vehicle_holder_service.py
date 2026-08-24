@@ -391,65 +391,94 @@ class VehicleHolderService:
         }
         if not required_categories:
             return
-        
-        holder_detail = [
-            d.name
-            for d in doc.vehicle_holder_detail
-        ]
 
-        CostEntry = DocType("Cost Entry")
-        existing_categories = set(
+        #
+        # Get all costs for Vehicles belonging to this Holder.
+        #
+        vehicle_costs = self.get_vehicle_costs(
+            vehicle_holder=doc.name
+        )
+
+        #
+        # Validate every Vehicle independently.
+        #
+        vehicle_missing_categories = {}
+
+        for vehicle, vehicle_data in vehicle_costs.items():
+            existing_categories = set(
+                vehicle_data.get("cost_categories", [])
+            )
+
+            missing_categories = (
+                required_categories
+                - existing_categories
+            )
+
+            if missing_categories:
+                vehicle_missing_categories[vehicle] = (
+                    missing_categories
+                )
+
+        #
+        # No Vehicle has missing required Cost Categories.
+        #
+        if not vehicle_missing_categories:
+            return
+
+        #
+        # Resolve Cost Category titles.
+        #
+        all_missing_categories = set().union(
+            *vehicle_missing_categories.values()
+        )
+
+        CostCategory = DocType("Cost Category")
+        category_titles = dict(
             frappe.qb
-            .from_(CostEntry)
-            .select(CostEntry.cost_entry_cost_category)
+            .from_(CostCategory)
+            .select(
+                CostCategory.name,
+                CostCategory.cost_category_title,
+            )
             .where(
-                (CostEntry.docstatus == 1)
-                & (
-                    (
-                        (CostEntry.cost_entry_reference_doctype == "Vehicle Holder")
-                        & (CostEntry.cost_entry_reference_name == doc.name)
-                    )
-                    |
-                    (
-                        (CostEntry.cost_entry_reference_doctype == "Vehicle Holder Detail")
-                        & (CostEntry.cost_entry_reference_name.isin(holder_detail))
-                    )
+                CostCategory.name.isin(
+                    all_missing_categories
                 )
             )
-            .run(pluck="cost_entry_cost_category")
+            .run()
         )
-        missing_categories = (
-            required_categories
-            - existing_categories
-        )
-        if missing_categories:
-            CostCategory = DocType("Cost Category")
-            category_titles = dict(
-                frappe.qb
-                .from_(CostCategory)
-                .select(
-                    CostCategory.name,
-                    CostCategory.cost_category_title,
+
+        #
+        # Build validation message.
+        #
+        vehicle_messages = []
+
+        for vehicle, missing_categories in sorted(
+            vehicle_missing_categories.items()
+        ):
+            categories = ", ".join(
+                category_titles.get(
+                    name,
+                    name
                 )
-                .where(
-                    CostCategory.name.isin(missing_categories)
+                for name in sorted(
+                    missing_categories
                 )
-                .run()
             )
 
-            frappe.throw(
-                _(
-                    "{0} warehouse '{1}' is missing required Cost Categories: {2}"
-                ).format(
-                    _(direction),
-                    warehouse,
-                    ", ".join(
-                        category_titles.get(name, name)
-                        for name in sorted(missing_categories)
-                    ),
-                ),
-                title=_("Warehouse Rule Validation"),
+            vehicle_messages.append(
+                f"{vehicle}: {categories}\n"
             )
+
+        frappe.throw(
+            _(
+                "{0} warehouse '{1}' has Vehicles with missing required Cost Categories:"
+            ).format(
+                _(direction),
+                warehouse,
+            )+"<br>"+" - ".join(vehicle_messages),
+            title=_("Warehouse Rule Validation"),
+        )
 
 
     def _validate_vins(
@@ -555,3 +584,73 @@ class VehicleHolderService:
                 )
             )
         ).run(pluck=True)
+
+
+    @staticmethod
+    def get_vehicle_costs(vehicle_holder):
+        VehicleHolder = DocType("Vehicle Holder")
+        VehicleHolderDetail = DocType("Vehicle Holder Detail")
+        VehicleHistory = DocType("Vehicle History")
+        VehicleUnit = DocType("Vehicle Unit")
+        CostLedger = DocType("Cost Ledger")
+        CostEntry = DocType("Cost Entry")
+        rows = (
+            frappe.qb
+            .from_(VehicleHolder)
+            .inner_join(VehicleHolderDetail)
+            .on(
+                VehicleHolderDetail.parent == VehicleHolder.name
+            )
+            .inner_join(VehicleHistory)
+            .on(
+                (VehicleHistory.parent == VehicleHolder.name)
+                &
+                (
+                    VehicleHistory.vehicle_history_vehicle_holder_detail
+                    == VehicleHolderDetail.name
+                )
+            )
+            .inner_join(VehicleUnit)
+            .on(
+                VehicleUnit.name == VehicleHistory.vehicle_history_vehicle
+            )
+            .left_join(CostLedger)
+            .on(
+                CostLedger.cost_ledger_vin == VehicleUnit.name
+            )
+            .left_join(CostEntry)
+            .on(
+                (CostEntry.name == CostLedger.cost_ledger_cost_entry)
+                &
+                (CostEntry.docstatus == 1)
+            )
+            .select(
+                VehicleUnit.name.as_("vehicle"),
+                VehicleUnit.vehicle_vin.as_("vin"),
+                CostEntry.cost_entry_cost_category.as_("cost_category"),
+            )
+            .where(
+                (VehicleHolder.name == vehicle_holder)
+                &
+                (VehicleHistory.vehicle_history_vehicle.isnotnull())
+            )
+            .run(
+                as_dict=True,
+            )
+        )
+        result = {}
+        for row in rows:
+            vehicle = row["vehicle"]
+            if vehicle not in result:
+                result[vehicle] = {
+                    "vin": row["vin"],
+                    "cost_categories": set(),
+                }
+            category = row["cost_category"]
+            if category:
+                result[vehicle]["cost_categories"].add(category)
+        for vehicle in result:
+            result[vehicle]["cost_categories"] = sorted(
+                result[vehicle]["cost_categories"]
+            )
+        return result
