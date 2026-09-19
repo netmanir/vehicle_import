@@ -112,7 +112,10 @@
 }
 
 .vi-card.is-finalized {
-    background-color: lightseagreen;
-    border: 1px solid #168b8b;
+    background-color: var(--green-100);
+    border: 1px solid var(--green-800);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+.vi-card.is-finalized .vi-card-summary {
+    border-top: 1px solid var(--green-800);
 }

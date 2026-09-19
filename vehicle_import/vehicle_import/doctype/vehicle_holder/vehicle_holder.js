@@ -203,7 +203,7 @@ frappe.ui.form.on("Vehicle Holder", {
         if (frm.doc.vehicle_holder_finalized) {
             frm.dashboard.set_headline_alert(
                 __("Finalized"),
-                "orange"
+                "green"
             );
         }
     },
